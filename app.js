@@ -2016,7 +2016,7 @@ function renderEditProfileForm() {
     </div>`;
 }
 
-function saveProfileEdits() {
+function saveProfileEdits() { 
   const name = document.getElementById('editName')?.value.trim();
   const email = document.getElementById('editEmail')?.value.trim();
   const phone = document.getElementById('editPhone')?.value.trim();

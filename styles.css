@@ -4407,7 +4407,7 @@ body.dark-mode select:focus,
 body.dark-mode textarea:focus { border-color: var(--accent); }
 body.dark-mode label { color: var(--gray-700); }
 
-/* Cart / Wishlist */
+/* Cart / Wishlist */ 
 body.dark-mode .cart-item,
 body.dark-mode .wish-item { background: var(--gray-100); border-color: var(--gray-200); }
 body.dark-mode .cart-summary,
