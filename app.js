@@ -2037,7 +2037,7 @@ function saveProfileEdits() {
 
 function renderSecurityForm() {
   return `
-    <div class="po-section">
+    <div class="po-section"
       <h3 class="po-section-title">Alterar Senha</h3>
       <div class="profile-form">
         <div class="pf-group pf-group-full">

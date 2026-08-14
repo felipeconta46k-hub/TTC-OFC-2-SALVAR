@@ -4442,4 +4442,4 @@ body, header, .search-bar, .product-card, .mega-menu,
 input, select, textarea, footer, .cart-item, .cart-summary,
 .filter-chip, .sort-select, .auth-card, .profile-section {
   transition: background .3s, color .3s, border-color .3s;
-}
+} 
