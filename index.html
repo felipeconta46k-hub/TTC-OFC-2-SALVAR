@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urban Flow — Loja Oficial de Moda Urbana</title>
+  <meta name="description" content="Tênis, roupas e acessórios urbanos com qualidade premium. Frete grátis acima de R$ 299.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- PROMO BAR -->
+<div class="promo-bar">
+  <div class="promo-track">
+    <span class="promo-item">🚚 Frete Grátis acima de R$ 299</span><span class="promo-sep">✦</span>
+    <span class="promo-item">💳 10x Sem Juros no cartão</span><span class="promo-sep">✦</span>
+    <span class="promo-item">↩️ 30 dias para devolver</span><span class="promo-sep">✦</span>
+    <span class="promo-item">🔒 Compra 100% Segura</span><span class="promo-sep">✦</span>
+    <span class="promo-item">⚡ Novidades toda semana</span><span class="promo-sep">✦</span>
+    <span class="promo-item">🚚 Frete Grátis acima de R$ 299</span><span class="promo-sep">✦</span>
+    <span class="promo-item">💳 10x Sem Juros no cartão</span><span class="promo-sep">✦</span>
+    <span class="promo-item">↩️ 30 dias para devolver</span><span class="promo-sep">✦</span>
+    <span class="promo-item">🔒 Compra 100% Segura</span><span class="promo-sep">✦</span>
+    <span class="promo-item">⚡ Novidades toda semana</span><span class="promo-sep">✦</span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header id="mainHeader">
+  <div class="header-container">
+    <div class="header-left">
+      <div class="logo" onclick="navigateTo('home')">
+        <span class="logo-mark">UF</span>
+        <span class="logo-text">Urban Flow<small>Shop</small></span>
+      </div>
+      <nav>
+        <a href="#" onclick="navigateTo('home');return false;">Home</a>
+        <a href="#" id="navProdutos" class="nav-has-mega">Produtos ▾</a>
+        <a href="#" onclick="navigateTo('about');return false;">Sobre</a>
+        <a href="#" onclick="navigateTo('tracking');return false;">Rastrear</a>
+      </nav>
+      <!-- MEGA MENU -->
+      <div class="mega-menu" id="megaMenu">
+        <div class="mega-menu-inner">
+          <div class="mega-col">
+            <div class="mega-col-title">Masculino</div>
+            <a class="mega-link" href="#" onclick="filterByGender('masculino');filterByCategory('camisetas');closeMega();return false;">Camisetas</a>
+            <a class="mega-link" href="#" onclick="filterByGender('masculino');filterByCategory('hoodies');closeMega();return false;">Moletons</a>
+            <a class="mega-link" href="#" onclick="filterByGender('masculino');filterByCategory('calcas');closeMega();return false;">Calças</a>
+            <a class="mega-link" href="#" onclick="filterByGender('masculino');filterByCategory('shorts');closeMega();return false;">Jaquetas</a>
+          </div>
+          <div class="mega-col">
+            <div class="mega-col-title">Feminino</div>
+            <a class="mega-link" href="#" onclick="filterByGender('feminino');filterByCategory('calcas');closeMega();return false;">Vestidos</a>
+            <a class="mega-link" href="#" onclick="filterByGender('feminino');filterByCategory('camisetas');closeMega();return false;">Tops</a>
+            <a class="mega-link" href="#" onclick="filterByGender('feminino');filterByCategory('shorts');closeMega();return false;">Saias</a>
+            <a class="mega-link" href="#" onclick="filterByGender('feminino');filterByCategory('hoodies');closeMega();return false;">Casacos</a>
+          </div>
+          <div class="mega-col">
+            <div class="mega-col-title">Acessórios</div>
+            <a class="mega-link" href="#" onclick="filterByCategory('acessorios');closeMega();return false;">Bonés</a>
+            <a class="mega-link" href="#" onclick="filterByCategory('acessorios');closeMega();return false;">Bolsas</a>
+            <a class="mega-link" href="#" onclick="filterByCategory('acessorios');closeMega();return false;">Relógios</a>
+          </div>
+          <div class="mega-col">
+            <div class="mega-col-title">Destaques</div>
+            <a class="mega-link mega-link-hot" href="#" onclick="filterByCategory('tenis');closeMega();return false;"> Tênis em Oferta</a>
+            <a class="mega-link" href="#" onclick="filterByCategory('todos');navigateTo('products');closeMega();return false;">✨ Novidades</a>
+            <a class="mega-link" href="#" onclick="filterByCategory('todos');navigateTo('products');closeMega();return false;">⭐ Mais Vendidos</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="search-wrapper">
+        <div class="search-bar">
+          <svg class="search-icon-left" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" placeholder="Buscar produtos..." id="searchInput" autocomplete="off">
+          <button type="button" class="search-clear" id="searchClear" style="display:none">✕</button>
+        </div>
+        <div class="search-dropdown" id="searchDropdown"></div>
+      </div>
+      <button class="icon-btn dark-toggle-btn" id="darkToggle" onclick="toggleDarkMode()" aria-label="Alternar modo escuro" title="Modo escuro">
+        <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="icon-btn" id="cartIcon" onclick="navigateTo('cart')" aria-label="Carrinho">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="badge" style="display:none;">0</span>
+      </button>
+      <button class="icon-btn" id="wishIcon" onclick="navigateTo('wishlist')" aria-label="Favoritos">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="badge" style="display:none;">0</span>
+      </button>
+      <div class="user-menu">
+        <div class="user-icon" id="userIcon" tabindex="0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="user-dropdown" id="userDropdown"></div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#" onclick="navigateTo('home');closeMobileMenu();return false;">🏠 Home</a>
+    <a href="#" onclick="navigateTo('products');closeMobileMenu();return false;">👟 Produtos</a>
+    <a href="#" onclick="navigateTo('about');closeMobileMenu();return false;">ℹ️ Sobre</a>
+    <a href="#" onclick="navigateTo('cart');closeMobileMenu();return false;">🛒 Carrinho</a>
+    <a href="#" onclick="navigateTo('wishlist');closeMobileMenu();return false;">❤️ Favoritos</a>
+    <a href="#" onclick="navigateTo('tracking');closeMobileMenu();return false;">📦 Rastrear Pedido</a>
+    <a href="#" onclick="navigateTo('profile');closeMobileMenu();return false;">👤 Meu Perfil</a>
+  </div>
+</header>
+
+<!-- ===================== HOME PAGE ===================== -->
+<div class="page active" id="homePage">
+  <section class="hero" id="heroSection">
+    <div class="hero-slides">
+      <div class="hero-slide active" style="--bg:url('https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=2000&q=80')">
+        <div class="hero-bg-layer"></div>
+        <div class="hero-content">
+          <span class="hero-tag">✨ Nova Coleção 2026</span>
+          <h1>URBAN<br><span class="hero-accent">STORY</span></h1>
+          <p>Tênis e roupas para quem define tendências nas ruas.</p>
+          <div class="hero-btns">
+            <button class="btn-primary hero-btn-main" onclick="navigateTo('products')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              Comprar Agora
+            </button>
+            <button class="btn-outline" onclick="filterByCategory('tenis');navigateTo('products')">Ver Tênis</button>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat"><strong>70+</strong><span>Produtos</span></div>
+            <div class="hero-stat-sep"></div>
+            <div class="hero-stat"><strong>4.8★</strong><span>Avaliação</span></div>
+            <div class="hero-stat-sep"></div>
+            <div class="hero-stat"><strong>10k+</strong><span>Clientes</span></div>
+          </div>
+        </div>
+        <div class="hero-side-badge">
+          <div class="hsb-inner">
+            <span class="hsb-label">Frete Grátis</span>
+            <span class="hsb-value">acima de R$ 299</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-slide" style="--bg:url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=2000&q=80')">
+        <div class="hero-bg-layer"></div>
+        <div class="hero-content">
+          <span class="hero-tag"> Oferta Especial</span>
+          <h1>ATÉ 40%<br><span class="hero-accent">OFF</span></h1>
+          <p>Tênis selecionados com desconto imperdível por tempo limitado.</p>
+          <div class="hero-btns">
+            <button class="btn-primary hero-btn-main" onclick="filterByCategory('tenis');navigateTo('products')">
+              Ver Ofertas →
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="hero-slide" style="--bg:url('https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=2000&q=80')">
+        <div class="hero-bg-layer"></div>
+        <div class="hero-content">
+          <span class="hero-tag">🆓 Frete Grátis</span>
+          <h1>COLEÇÃO<br><span class="hero-accent">FEMININA</span></h1>
+          <p>Moda esportiva para todas as ocasiões, do treino ao look do dia.</p>
+          <div class="hero-btns">
+            <button class="btn-primary hero-btn-main" onclick="filterByGender('feminino');navigateTo('products')">Explorar →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="hero-nav hero-prev" onclick="changeSlide(-1)" aria-label="Slide anterior">&#8249;</button>
+    <button class="hero-nav hero-next" onclick="changeSlide(1)" aria-label="Próximo slide">&#8250;</button>
+    <div class="hero-dots" id="heroDots"></div>
+    <div class="hero-progress" id="heroProgress"></div>
+    <div class="hero-scroll-hint">
+      <span>Role para baixo</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+  </section>
+
+  <section class="benefits-bar">
+    <div class="container">
+      <div class="benefits-grid">
+        <div class="benefit-item"><span class="benefit-icon">🚚</span><div><strong>Frete Grátis</strong><small>Acima de R$ 299</small></div></div>
+        <div class="benefit-item"><span class="benefit-icon">💳</span><div><strong>10x Sem Juros</strong><small>No cartão</small></div></div>
+        <div class="benefit-item"><span class="benefit-icon">↩️</span><div><strong>30 dias</strong><small>Para devolver</small></div></div>
+        <div class="benefit-item"><span class="benefit-icon">🔒</span><div><strong>100% Seguro</strong><small>Compra protegida</small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-header">
+      <h2 class="section-title">Categorias</h2>
+      <p class="section-sub">Encontre o estilo que combina com você</p>
+    </div>
+    <div class="categories" id="categoriesGrid"></div>
+  </section>
+
+  <section class="countdown-section">
+    <div class="container">
+      <div class="countdown-inner">
+        <div class="countdown-label">
+          <div class="countdown-badge">⚡ Oferta do Dia</div>
+          <h3>Air Force 1 Low — 22% OFF</h3>
+          <p>Promoção encerra em:</p>
+        </div>
+        <div class="countdown-timer">
+          <div class="countdown-block"><span class="countdown-num" id="cdHours">00</span><span class="countdown-unit">horas</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-block"><span class="countdown-num" id="cdMinutes">00</span><span class="countdown-unit">min</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-block"><span class="countdown-num" id="cdSeconds">00</span><span class="countdown-unit">seg</span></div>
+        </div>
+        <div class="countdown-cta">
+          <button class="btn-primary" onclick="showProductDetail(11)">Garantir Desconto →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--gray-50);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title"> Mais Vendidos</h2>
+        <p class="section-sub">Os favoritos da nossa comunidade</p>
+      </div>
+      <div class="products-grid" id="featuredProducts"></div>
+      <div class="section-cta">
+        <button class="btn-secondary" onclick="navigateTo('products')">Ver Todos os Produtos →</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="mid-banner">
+    <div class="mid-banner-content">
+      <span class="hero-tag">Oferta Relâmpago ⚡</span>
+      <h2>FRETE GRÁTIS<br><span>EM TUDO</span></h2>
+      <p>Só hoje, em todos os pedidos acima de R$ 199</p>
+      <button class="btn-primary" onclick="navigateTo('products')">Aproveitar Agora</button>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-header">
+      <h2 class="section-title">Novidades</h2>
+      <p class="section-sub">Acabou de chegar na loja</p>
+    </div>
+    <div class="products-grid" id="newProducts"></div>
+  </section>
+
+  <section class="section testimonials-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">O que nossos clientes dizem</h2>
+        <p class="section-sub">Mais de 100 clientes satisfeitos</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p>"Qualidade incrível! O tênis chegou em 2 dias e superou todas as minhas expectativas. Vale cada centavo!"</p>
+          <div class="testimonial-author"><div class="testimonial-avatar">MR</div><div><strong>Marcos R.</strong><small>São Paulo, SP</small></div></div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p>"Produto original, entrega super rápida. A legging é maravilhosa, uso todo dia na academia!"</p>
+          <div class="testimonial-author"><div class="testimonial-avatar">JS</div><div><strong>Julia S.</strong><small>Rio de Janeiro, RJ</small></div></div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p>"Atendimento excelente! Tive uma dúvida e me responderam rapidinho pelo WhatsApp."</p>
+          <div class="testimonial-author"><div class="testimonial-avatar">LP</div><div><strong>Lucas P.</strong><small>Curitiba, PR</small></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== PRODUTOS PAGE ===================== -->
+<div class="page" id="productsPage">
+  <section class="section container">
+    <div class="section-header">
+      <h2 class="section-title">Nossa Coleção</h2>
+      <p class="section-sub" id="productsCount"></p>
+    </div>
+    <div class="products-layout">
+      <aside class="filter-sidebar" id="filterSidebar">
+        <div class="filter-sidebar-header">
+          <span class="filter-sidebar-title">FILTROS</span>
+          <button class="filter-sidebar-clear" onclick="clearAllFilters()">Limpar</button>
+        </div>
+        <div id="sidebarFiltersContent"></div>
+      </aside>
+      <div class="products-main">
+        <div id="filtersContainer"></div>
+        <div class="products-grid" id="productsGrid"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== DETALHE DO PRODUTO ===================== -->
+<div class="page" id="productDetailPage">
+  <div class="detail-breadcrumb" id="detailBreadcrumb">
+    <a href="#" onclick="navigateTo('home');return false;">Home</a><span>›</span>
+    <a href="#" onclick="navigateTo('products');return false;">Produtos</a><span>›</span>
+    <span id="breadcrumbProduct"></span>
+  </div>
+  <section class="section container">
+    <div id="productDetailContainer" class="product-detail-container"></div>
+  </section>
+  <section class="section container" id="reviewsSection" style="display:none;">
+    <div class="section-header" style="text-align:left;">
+      <h2 class="section-title">⭐ Avaliações</h2>
+    </div>
+    <div id="reviewsContainer"></div>
+  </section>
+  <section class="section container" id="recentlyViewedSection" style="display:none;">
+    <div class="section-header"><h2 class="section-title"> Vistos Recentemente</h2></div>
+    <div class="products-grid" id="recentlyViewedGrid"></div>
+  </section>
+  <section class="section container" id="relatedSection">
+    <div class="section-header"><h2 class="section-title">Você também pode gostar</h2></div>
+    <div class="products-grid" id="relatedProducts"></div>
+  </section>
+</div>
+
+<!-- ===================== SOBRE PAGE ===================== -->
+<div class="page" id="aboutPage">
+  <section class="section container">
+    <div id="aboutContainer"></div>
+  </section>
+</div>
+
+<!-- ===================== CARRINHO PAGE ===================== -->
+<div class="page" id="cartPage">
+  <section class="section container">
+    <h2 class="section-title">🛒 Carrinho de Compras</h2>
+    <div class="cart-container" id="cartContainer"></div>
+  </section>
+</div>
+
+<!-- ===================== FAVORITOS PAGE ===================== -->
+<div class="page" id="wishlistPage">
+  <section class="section container">
+    <h2 class="section-title">❤️ Meus Favoritos</h2>
+    <div class="cart-container" id="wishlistContainer"></div>
+  </section>
+</div>
+
+<!-- ===================== CHECKOUT PAGE ===================== -->
+<div class="page" id="checkoutPage">
+  <section class="section container">
+    <div class="checkout-wrapper">
+      <div class="checkout-top">
+        <button class="btn-back-checkout" onclick="navigateTo('cart')">← Voltar ao Carrinho</button>
+        <div class="checkout-logo">
+          <span class="logo-mark" style="width:34px;height:34px;font-size:.8rem;">UF</span>
+          <span style="font-weight:800;font-family:var(--font-head);">Urban Flow</span>
+        </div>
+        <div class="checkout-stepper" id="checkoutStepper"></div>
+      </div>
+      <div class="checkout-body">
+        <div id="checkoutMain" class="checkout-main"></div>
+        <div id="checkoutSidebar" class="checkout-sidebar"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== PROFILE PAGE ===================== -->
+<div class="page" id="profilePage">
+  <section class="section container">
+    <div id="profileContainer"></div>
+  </section>
+</div>
+
+<!-- ===================== TRACKING PAGE ===================== -->
+<div class="page" id="trackingPage">
+  <section class="section container">
+    <div id="trackingContainer"></div>
+  </section>
+</div>
+
+<!-- ===================== MODAL AUTH ===================== -->
+<div class="modal" id="authModal" role="dialog" aria-modal="true" aria-label="Login / Cadastro">
+  <div class="auth-modal-content">
+    <div class="auth-left">
+      <div class="auth-left-inner">
+        <div class="auth-brand">
+          <span class="logo-mark" style="width:52px;height:52px;font-size:1.3rem;">UF</span>
+          <span style="font-size:1.6rem;font-weight:900;color:#fff;font-family:var(--font-head);">Urban Flow</span>
+        </div>
+        <h2 class="auth-left-title" id="authLeftTitle">Bem-vindo de volta!</h2>
+        <p class="auth-left-sub" id="authLeftSub">Acesse sua conta e aproveite ofertas exclusivas.</p>
+        <div class="auth-perks">
+          <div class="auth-perk"><span>🚚</span> Frete grátis acima de R$ 299</div>
+          <div class="auth-perk"><span>💳</span> 10x sem juros no cartão</div>
+          <div class="auth-perk"><span>❤️</span> Salve seus favoritos</div>
+          <div class="auth-perk"><span>🎁</span> Ofertas exclusivas para membros</div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <button class="modal-close" id="authModalClose" aria-label="Fechar">×</button>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Entrar</button>
+        <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Criar Conta</button>
+      </div>
+      <div class="auth-form-panel active" id="panelLogin">
+        <h3 class="auth-form-title">Entre na sua conta</h3>
+        <div class="error-message" id="loginError"></div>
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="loginEmail" placeholder="seu@email.com" required autocomplete="email">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Senha</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+              <button type="button" class="toggle-pass" onclick="togglePass('loginPassword',this)" aria-label="Mostrar senha">👁️</button>
+            </div>
+          </div>
+          <button type="submit" class="btn-submit" id="btnLogin">
+            <span class="btn-text">Entrar na conta</span>
+            <span class="btn-spinner" style="display:none;">⏳</span>
+          </button>
+        </form>
+        <p class="auth-switch-text">Não tem conta? <a onclick="switchAuthTab('register')">Crie uma agora</a></p>
+      </div>
+      <div class="auth-form-panel" id="panelRegister">
+        <h3 class="auth-form-title">Crie sua conta grátis</h3>
+        <div class="error-message" id="registerError"></div>
+        <form id="registerForm" novalidate>
+          <div class="form-group">
+            <label for="registerName">Nome Completo</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">👤</span>
+              <input type="text" id="registerName" placeholder="Seu nome (somente letras)" required autocomplete="name" oninput="validateRegisterName(this)">
+            </div>
+            <small class="field-hint" id="nameHint"></small>
+          </div>
+          <div class="form-group">
+            <label for="registerEmail">Email <span style="font-size:.72rem;color:var(--accent);font-weight:700;">(@gmail.com obrigatório)</span></label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="registerEmail" placeholder="seu@gmail.com" required autocomplete="email" oninput="validateRegisterEmail(this)">
+            </div>
+            <small class="field-hint" id="emailHint"></small>
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Senha</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="registerPassword" placeholder="Mín. 6 caracteres" required autocomplete="new-password">
+              <button type="button" class="toggle-pass" onclick="togglePass('registerPassword',this)" aria-label="Mostrar senha">👁️</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="registerConfirm">Confirmar Senha</label>
+            <div class="input-icon-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="registerConfirm" placeholder="Repita a senha" required autocomplete="new-password">
+            </div>
+          </div>
+          <button type="submit" class="btn-submit" id="btnRegister">
+            <span class="btn-text">Criar minha conta</span>
+            <span class="btn-spinner" style="display:none;">⏳</span>
+          </button>
+        </form>
+        <p class="auth-switch-text">Já tem conta? <a onclick="switchAuthTab('login')">Faça login</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SIZE GUIDE MODAL ===================== -->
+<div class="modal" id="sizeModal" role="dialog" aria-label="Guia de Tamanhos">
+  <div class="generic-modal-content">
+    <button class="modal-close" onclick="closeSizeModal()">×</button>
+    <h3 style="font-family:var(--font-head);font-size:1.5rem;font-weight:800;margin-bottom:1.5rem;">📏 Guia de Tamanhos</h3>
+    <div class="sg-tabs">
+      <button class="sg-tab active" onclick="sgTab('calcados',this)">Calçados</button>
+      <button class="sg-tab" onclick="sgTab('roupas',this)">Roupas</button>
+    </div>
+    <div id="sgContent"></div>
+  </div>
+</div>
+
+<!-- ===================== SHARE MODAL ===================== -->
+<div class="modal" id="shareModal" role="dialog" aria-label="Compartilhar">
+  <div class="generic-modal-content share-mc">
+    <button class="modal-close" onclick="closeShareModal()">×</button>
+    <h3 style="font-family:var(--font-head);font-size:1.3rem;font-weight:800;margin-bottom:1.5rem;">📤 Compartilhar Produto</h3>
+    <div id="shareContent"></div>
+  </div>
+</div>
+
+<!-- OVERLAYS & FLUTUANTES -->
+<div class="nav-overlay" id="navOverlay" onclick="closeMobileMenu()"></div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo">↑</button>
+
+<a href="https://wa.me/5517992680298?text=Olá!%20Vim%20pela%20Urban%20Flow%20e%20tenho%20uma%20dúvida." target="_blank" rel="noopener" class="whatsapp-btn" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  <span class="whatsapp-tooltip">Falar no WhatsApp</span>
+</a>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-section footer-brand">
+      <div class="logo" style="margin-bottom:1rem;cursor:default;">
+        <span class="logo-mark">UF</span>
+        <span class="logo-text" style="color:#fff;">Urban Flow<small>Shop</small></span>
+      </div>
+      <p style="color:var(--gray-500);font-size:.88rem;line-height:1.75;max-width:260px;">A melhor seleção de moda urbana do Brasil. Qualidade, estilo e conforto em um só lugar.</p>
+      <div class="footer-social">
+
+      </div>
+    </div>
+    <div class="footer-section">
+      <h3>Navegação</h3>
+      <ul>
+        <li><a href="#" onclick="navigateTo('home');return false;">Home</a></li>
+        <li><a href="#" onclick="navigateTo('products');return false;">Produtos</a></li>
+        <li><a href="#" onclick="navigateTo('about');return false;">Sobre Nós</a></li>
+        <li><a href="#" onclick="navigateTo('wishlist');return false;">Favoritos</a></li>
+        <li><a href="#" onclick="navigateTo('profile');return false;">Meu Perfil</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Atendimento</h3>
+      <ul>
+        <li><a href="mailto:contato@urbanflow.com">contato@urbanflow.com</a></li>
+        <li><a href="tel:+5517992680298">(17) 99268-0298</a></li>
+        <li><a href="https://wa.me/5517992680298" target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a href="#" onclick="navigateTo('tracking');return false;">Rastrear Pedido</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Categorias</h3>
+      <ul>
+        <li><a href="#" onclick="filterByCategory('tenis');navigateTo('products');return false;">Tênis</a></li>
+        <li><a href="#" onclick="filterByCategory('camisetas');navigateTo('products');return false;">Camisetas</a></li>
+        <li><a href="#" onclick="filterByCategory('hoodies');navigateTo('products');return false;">Moletons</a></li>
+        <li><a href="#" onclick="filterByCategory('acessorios');navigateTo('products');return false;">Acessórios</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-trust">
+    <div class="trust-badge"><span>🔒</span><span>Site Seguro SSL</span></div>
+    <div class="trust-badge"><span>💳</span><span>Pagamento Protegido</span></div>
+    <div class="trust-badge"><span>✅</span><span>Loja Verificada</span></div>
+    <div class="trust-badge"><span>↩️</span><span>Troca Garantida</span></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Urban Flow Shop · CNPJ 00.000.000/0001-00 · Todos os direitos reservados.</p>
+    <div class="footer-legal">
+      <a href="#">Privacidade</a>
+      <a href="#">Termos de Uso</a>
+      <a href="#">Cookies</a>
+    </div>
+    <div class="payment-icons">
+      <span>💳 Visa</span>
+      <span>💳 Master</span>
+      <span>🏦 Pix</span>
+      <span>📱 Boleto</span>
+    </div>
+  </div>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
