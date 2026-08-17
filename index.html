@@ -112,7 +112,7 @@
     <a href="#" onclick="navigateTo('cart');closeMobileMenu();return false;">🛒 Carrinho</a>
     <a href="#" onclick="navigateTo('wishlist');closeMobileMenu();return false;">❤️ Favoritos</a>
     <a href="#" onclick="navigateTo('tracking');closeMobileMenu();return false;">📦 Rastrear Pedido</a>
-    <a href="#" onclick="navigateTo('profile');closeMobileMenu();return false;">👤 Meu Perfil</a>
+    <a href="#" onclick="closeMobileMenu();if(typeof currentUser!=='undefined'&&currentUser){navigateTo('profile');}else{openModal();}return false;">👤 Meu Perfil</a>
   </div>
 </header>
 

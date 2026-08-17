@@ -602,7 +602,7 @@
 /* ── 10. HERO MOBILE — setas embaixo, texto sem sobreposição ── */
 @media (max-width: 640px) {
 
-  .hero { height: auto !important; min-height: 480px !important; }
+  .hero { height: 520px !important; min-height: unset !important; }
 
   /* Slide — padding maior embaixo para não cortar stats */
   .hero-slide {
@@ -778,24 +778,39 @@ body.dark-mode .uf-back-bar:hover {
    FIX: HERO — fotos cobrindo 100% no mobile
 =================================================== */
 @media (max-width: 768px) {
+  /* Hero com altura fixa boa no mobile */
+  .hero {
+    height: 520px !important;
+    min-height: unset !important;
+  }
+
+  /* Remove scale e inset negativo que cortam a foto */
   .hero-bg-layer {
+    inset: 0 !important;
+    transform: none !important;
+    transition: none !important;
     background-size: cover !important;
     background-position: center center !important;
-    inset: 0 !important;
+  }
+
+  /* Slide ativo sem zoom */
+  .hero-slide.active .hero-bg-layer {
     transform: none !important;
   }
 
-  /* Garante que o slide tenha altura mínima para ver a foto */
+  /* Slide ocupa todo o espaço */
   .hero-slide {
-    min-height: 420px !important;
-    background-color: #0d1117 !important;
+    min-height: 520px !important;
   }
 
-  /* A foto de fundo deve aparecer mesmo quando o JS não carregou */
-  .hero-slide[style*="--bg"] {
-    background-image: var(--bg) !important;
-    background-size: cover !important;
-    background-position: center !important;
+  /* Gradiente mais adequado para mobile */
+  .hero-bg-layer::after {
+    background: linear-gradient(
+      180deg,
+      rgba(0,0,0,.65) 0%,
+      rgba(0,0,0,.4) 50%,
+      rgba(0,0,0,.55) 100%
+    ) !important;
   }
 }
 
