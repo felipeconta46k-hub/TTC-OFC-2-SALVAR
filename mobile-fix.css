@@ -674,3 +674,40 @@
   /* Badge lateral — some no mobile */
   .hero-side-badge { display: none !important; }
 }
+
+/* ── 11. Header mobile — remove user icon, coloca carrinho ── */
+@media (max-width: 900px) {
+  /* Remove ícone de usuário */
+  .user-menu { display: none !important; }
+
+  /* Mostra carrinho (estava escondido antes) */
+  #cartIcon { display: flex !important; }
+}
+
+/* ── 12. Página de perfil (não logado) — sobe conteúdo ── */
+@media (max-width: 900px) {
+  .profile-guest,
+  .cart-empty,
+  #profileContainer > div {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  /* Emoji/ícone do boneco menor e mais acima */
+  .profile-guest-icon,
+  .profile-empty-icon {
+    font-size: 3rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+}
+
+/* ── 13. Profile guest — conteúdo mais acima ── */
+@media (max-width: 900px) {
+  .profile-guest-box {
+    padding: 1.5rem 1.5rem 2rem !important;
+  }
+  .profile-guest-box > div:first-child {
+    font-size: 3rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+}
