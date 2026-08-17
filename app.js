@@ -374,7 +374,12 @@ function setupEventListeners() {
   }
 
   document.getElementById('userIcon').addEventListener('click', () => {
-    document.getElementById('userDropdown').classList.toggle('active');
+    if (!currentUser) {
+      // Não logado: abre modal de login direto, centralizado
+      openModal();
+    } else {
+      document.getElementById('userDropdown').classList.toggle('active');
+    }
   });
   document.addEventListener('click', e => {
     if (!e.target.closest('.user-menu')) document.getElementById('userDropdown').classList.remove('active');
@@ -962,89 +967,10 @@ function showProductDetail(id) {
   else if (relSec) relSec.style.display = 'none';
 
   navigateTo('productDetail');
-  initMobileGallerySwipe();
-  injectMobileBackBar('productDetail');
-}
-
-/* ── Mobile gallery swipe ── */
-function initMobileGallerySwipe() {
-  if (window.innerWidth > 768) return;
-  const mainImg = document.getElementById('mainProductImg');
-  const thumbs  = document.querySelectorAll('.product-thumbnail');
-  if (!mainImg || !thumbs.length) return;
-
-  // Add swipe hint if more than 1 image
-  const gallery = document.querySelector('.product-detail-gallery');
-  if (gallery && thumbs.length > 1 && !gallery.querySelector('.gallery-swipe-hint')) {
-    const hint = document.createElement('p');
-    hint.className = 'gallery-swipe-hint';
-    hint.textContent = '← deslize para ver mais fotos →';
-    gallery.appendChild(hint);
-  }
-
-  const images = Array.from(thumbs).map(t => t.querySelector('img')?.src).filter(Boolean);
-  let currentIdx = 0;
-
-  function goToImage(idx) {
-    if (idx < 0) idx = images.length - 1;
-    if (idx >= images.length) idx = 0;
-    currentIdx = idx;
-    mainImg.style.opacity = '0';
-    setTimeout(() => {
-      mainImg.src = images[currentIdx];
-      mainImg.style.opacity = '1';
-    }, 120);
-    thumbs.forEach((t, i) => t.classList.toggle('active', i === currentIdx));
-  }
-
-  // Touch swipe on main image
-  let txStart = 0, txEnd = 0;
-  const mainWrap = document.getElementById('mainImage');
-  if (mainWrap) {
-    mainWrap.addEventListener('touchstart', e => { txStart = e.touches[0].clientX; }, { passive: true });
-    mainWrap.addEventListener('touchend',   e => {
-      txEnd = e.changedTouches[0].clientX;
-      const diff = txStart - txEnd;
-      if (Math.abs(diff) > 40) goToImage(diff > 0 ? currentIdx + 1 : currentIdx - 1);
-    }, { passive: true });
-  }
-
-  // Smooth transition on main image
-  mainImg.style.transition = 'opacity .12s ease';
-}
-
-/* ── Mobile back bar injection ── */
-function injectMobileBackBar(page) {
-  if (window.innerWidth > 768) return;
-  const backBarConfig = {
-    productDetail: { label: '← Voltar aos Produtos', action: "navigateTo('products')" },
-    cart:          { label: '← Continuar Comprando', action: "navigateTo('products')" },
-    wishlist:      { label: '← Voltar',              action: "navigateTo('home')" },
-    profile:       { label: '← Voltar',              action: "navigateTo('home')" },
-    tracking:      { label: '← Voltar',              action: "navigateTo('home')" },
-    about:         { label: '← Voltar',              action: "navigateTo('home')" },
-    checkout:      { label: '← Voltar ao Carrinho',  action: "navigateTo('cart')" },
-  };
-  const cfg = backBarConfig[page];
-  if (!cfg) return;
-
-  // Find the active page element
-  const pageMap = {
-    productDetail: 'productDetailPage', cart: 'cartPage', wishlist: 'wishlistPage',
-    profile: 'profilePage', tracking: 'trackingPage', about: 'aboutPage', checkout: 'checkoutPage'
-  };
-  const pageEl = document.getElementById(pageMap[page]);
-  if (!pageEl) return;
-
-  // Remove old bar if exists
-  const old = pageEl.querySelector('.mobile-back-bar');
-  if (old) old.remove();
-
-  const bar = document.createElement('div');
-  bar.className = 'mobile-back-bar';
-  bar.setAttribute('onclick', cfg.action);
-  bar.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> ${cfg.label}`;
-  pageEl.insertBefore(bar, pageEl.firstChild);
+  setTimeout(() => {
+    injectBackBar('productDetail');
+    initMobileGallerySwipe();
+  }, 60);
 }
 
 let selectedColor = null;
@@ -2276,18 +2202,91 @@ function navigateTo(page) {
   };
   document.getElementById(map[page])?.classList.add('active');
 
-  if (page === 'cart')     { renderCart();     setTimeout(()=>injectMobileBackBar('cart'),50); }
-  else if (page === 'wishlist')  { renderWishlist(); setTimeout(()=>injectMobileBackBar('wishlist'),50); }
-  else if (page === 'about')     { renderAbout();    setTimeout(()=>injectMobileBackBar('about'),50); }
-  else if (page === 'checkout')  { renderCheckout(); setTimeout(()=>injectMobileBackBar('checkout'),50); }
-  else if (page === 'profile')   { renderProfile();  setTimeout(()=>injectMobileBackBar('profile'),50); }
-  else if (page === 'tracking')  { renderTracking(); setTimeout(()=>injectMobileBackBar('tracking'),50); }
+  if (page === 'cart')          { renderCart();     setTimeout(()=>injectBackBar('cart'), 60); }
+  else if (page === 'wishlist') { renderWishlist(); setTimeout(()=>injectBackBar('wishlist'), 60); }
+  else if (page === 'about')    { renderAbout();    setTimeout(()=>injectBackBar('about'), 60); }
+  else if (page === 'checkout') { renderCheckout(); setTimeout(()=>injectBackBar('checkout'), 60); }
+  else if (page === 'profile')  { renderProfile();  setTimeout(()=>injectBackBar('profile'), 60); }
+  else if (page === 'tracking') { renderTracking(); setTimeout(()=>injectBackBar('tracking'), 60); }
   else if (page === 'products') {
     setTimeout(() => { renderSkeletons('productsGrid', 8); setTimeout(renderFilters, 400); }, 50);
+    setTimeout(()=>injectBackBar('products'), 60);
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
   closeMobileMenu();
+}
+
+/* ── Barra de voltar universal (desktop + mobile) ── */
+function injectBackBar(page) {
+  const backBarConfig = {
+    productDetail: { label: 'Voltar aos Produtos',   action: ()=>navigateTo('products') },
+    products:      { label: 'Voltar ao Início',       action: ()=>navigateTo('home') },
+    cart:          { label: 'Continuar Comprando',    action: ()=>navigateTo('products') },
+    wishlist:      { label: 'Voltar aos Produtos',    action: ()=>navigateTo('products') },
+    profile:       { label: 'Voltar ao Início',       action: ()=>navigateTo('home') },
+    tracking:      { label: 'Voltar ao Início',       action: ()=>navigateTo('home') },
+    about:         { label: 'Voltar ao Início',       action: ()=>navigateTo('home') },
+    checkout:      { label: 'Voltar ao Carrinho',     action: ()=>navigateTo('cart') },
+  };
+  const pageMap = {
+    productDetail: 'productDetailPage', products: 'productsPage',
+    cart: 'cartPage', wishlist: 'wishlistPage', profile: 'profilePage',
+    tracking: 'trackingPage', about: 'aboutPage', checkout: 'checkoutPage'
+  };
+  const cfg = backBarConfig[page];
+  if (!cfg) return;
+  const pageEl = document.getElementById(pageMap[page]);
+  if (!pageEl) return;
+
+  // Remove barra antiga
+  pageEl.querySelector('.uf-back-bar')?.remove();
+
+  const bar = document.createElement('div');
+  bar.className = 'uf-back-bar';
+  bar.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg><span>${cfg.label}</span>`;
+  bar.addEventListener('click', cfg.action);
+  pageEl.insertBefore(bar, pageEl.firstChild);
+}
+
+/* ── Mobile gallery swipe (chamado de showProductDetail) ── */
+function initMobileGallerySwipe() {
+  const mainImg = document.getElementById('mainProductImg');
+  const thumbs  = document.querySelectorAll('.product-thumbnail');
+  if (!mainImg || !thumbs.length) return;
+
+  if (thumbs.length > 1) {
+    const gallery = document.querySelector('.product-detail-gallery');
+    if (gallery && !gallery.querySelector('.gallery-swipe-hint')) {
+      const hint = document.createElement('p');
+      hint.className = 'gallery-swipe-hint';
+      hint.textContent = '← deslize para ver mais fotos →';
+      gallery.appendChild(hint);
+    }
+  }
+
+  const images = Array.from(thumbs).map(t => t.querySelector('img')?.src).filter(Boolean);
+  let currentIdx = 0;
+
+  function goToImage(idx) {
+    if (idx < 0) idx = images.length - 1;
+    if (idx >= images.length) idx = 0;
+    currentIdx = idx;
+    mainImg.style.opacity = '0';
+    setTimeout(() => { mainImg.src = images[currentIdx]; mainImg.style.opacity = '1'; }, 120);
+    thumbs.forEach((t, i) => t.classList.toggle('active', i === currentIdx));
+  }
+
+  mainImg.style.transition = 'opacity .12s ease';
+  const mainWrap = document.getElementById('mainImage');
+  if (mainWrap) {
+    let txStart = 0;
+    mainWrap.addEventListener('touchstart', e => { txStart = e.touches[0].clientX; }, { passive: true });
+    mainWrap.addEventListener('touchend',   e => {
+      const diff = txStart - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) goToImage(diff > 0 ? currentIdx + 1 : currentIdx - 1);
+    }, { passive: true });
+  }
 }
 
 /* ═══ ABOUT ═══ */

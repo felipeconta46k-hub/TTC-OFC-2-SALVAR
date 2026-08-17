@@ -711,100 +711,212 @@
     margin-bottom: 0.75rem !important;
   }
 }
-/* ===== FIX: GALERIA DE FOTOS NO MOBILE ===== */
+/* ===================================================
+   FIX GERAL: BARRA DE VOLTAR (desktop + mobile)
+=================================================== */
+.uf-back-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: var(--gray-100, #f3f4f6);
+  border-bottom: 2px solid var(--gray-200, #e5e7eb);
+  font-weight: 700;
+  font-size: .9rem;
+  cursor: pointer;
+  color: var(--black, #111);
+  transition: background .18s, color .18s;
+  width: 100%;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+.uf-back-bar:hover {
+  background: var(--accent, #C9973A);
+  color: #fff;
+  border-bottom-color: var(--accent, #C9973A);
+}
+
+.uf-back-bar:hover svg {
+  stroke: #fff;
+}
+
+.uf-back-bar svg {
+  flex-shrink: 0;
+  stroke: currentColor;
+  transition: stroke .18s;
+}
+
+/* Dark mode */
+body.dark-mode .uf-back-bar {
+  background: rgba(255,255,255,.06);
+  border-bottom-color: rgba(255,255,255,.1);
+  color: #e5e7eb;
+}
+
+body.dark-mode .uf-back-bar:hover {
+  background: var(--accent, #C9973A);
+  color: #fff;
+  border-bottom-color: var(--accent, #C9973A);
+}
+
 @media (max-width: 768px) {
-  /* Container da galeria vira um carrossel deslizável */
+  .uf-back-bar {
+    position: sticky;
+    top: 58px; /* abaixo do header mobile */
+    z-index: 90;
+    font-size: .85rem;
+    padding: 12px 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  }
+}
+
+/* Remove a barra de voltar antiga (mobile-back-bar) se existir */
+.mobile-back-bar { display: none !important; }
+
+/* ===================================================
+   FIX: HERO — fotos cobrindo 100% no mobile
+=================================================== */
+@media (max-width: 768px) {
+  .hero-bg-layer {
+    background-size: cover !important;
+    background-position: center center !important;
+    inset: 0 !important;
+    transform: none !important;
+  }
+
+  /* Garante que o slide tenha altura mínima para ver a foto */
+  .hero-slide {
+    min-height: 420px !important;
+    background-color: #0d1117 !important;
+  }
+
+  /* A foto de fundo deve aparecer mesmo quando o JS não carregou */
+  .hero-slide[style*="--bg"] {
+    background-image: var(--bg) !important;
+    background-size: cover !important;
+    background-position: center !important;
+  }
+}
+
+/* ===================================================
+   FIX: GALERIA DO PRODUTO — mobile
+=================================================== */
+@media (max-width: 768px) {
   .product-detail-gallery {
     position: relative;
     overflow: hidden;
   }
 
-  /* A imagem principal ocupa 100% da largura no mobile */
   .product-main-image {
-    width: 100%;
-    aspect-ratio: 4/3;
-    border-radius: 12px;
+    width: 100% !important;
+    aspect-ratio: 4/3 !important;
+    border-radius: 12px !important;
     touch-action: pan-y;
     overflow: hidden;
   }
 
   .product-main-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
     pointer-events: none;
     user-select: none;
   }
 
-  /* Thumbnails ficam abaixo como bolinhas/pontos no mobile */
   .product-thumbnails {
-    display: flex;
+    display: flex !important;
     justify-content: center;
-    gap: 6px;
-    padding: 8px 0 4px;
+    gap: 6px !important;
+    padding: 10px 0 4px;
     flex-wrap: wrap;
+    grid-template-columns: unset !important;
   }
 
   .product-thumbnail {
-    width: 52px;
-    height: 52px;
-    border-radius: 8px;
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 8px !important;
     flex-shrink: 0;
-    border: 2px solid var(--gray-200, #e5e7eb);
   }
 
   .product-thumbnail.active {
-    border-color: var(--black, #111);
-    box-shadow: 0 0 0 2px rgba(0,0,0,0.15);
+    border-color: var(--black, #111) !important;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.2);
   }
 
-  /* Indicador de swipe */
   .gallery-swipe-hint {
     text-align: center;
     font-size: .72rem;
     color: var(--gray-400, #9ca3af);
-    padding-bottom: 4px;
+    padding: 2px 0 6px;
+    margin: 0;
     letter-spacing: .03em;
   }
 }
 
-/* ===== FIX: BOTÃO "VOLTAR" EM PÁGINAS VAZIAS ===== */
-/* Garante que páginas não ativas não mostrem botões flutuando */
-.page { min-height: 60vh; }
-
-/* Breadcrumb no detalhe do produto com botão voltar mobile */
-@media (max-width: 768px) {
-  .detail-breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 12px 16px;
-    flex-wrap: wrap;
-  }
-
-  /* Botão voltar flutuante nas subpáginas — fixo no rodapé mobile */
-  .mobile-back-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    position: sticky;
-    top: 60px;
-    z-index: 90;
-    background: var(--white, #fff);
-    border-bottom: 1px solid var(--gray-100, #f3f4f6);
-    padding: 10px 16px;
-    font-size: .85rem;
-    font-weight: 700;
-    cursor: pointer;
-    color: var(--black, #111);
-  }
-
-  .mobile-back-bar svg {
-    flex-shrink: 0;
-  }
+@media (min-width: 769px) {
+  .gallery-swipe-hint { display: none; }
 }
 
-@media (min-width: 769px) {
-  .mobile-back-bar { display: none; }
-  .gallery-swipe-hint { display: none; }
+/* ===================================================
+   FIX: MODAL AUTH — centralizado, aparece no meio da tela
+=================================================== */
+@media (max-width: 700px) {
+  /* Centraliza o modal (sobrescreve align-items: flex-end) */
+  #authModal.modal {
+    align-items: center !important;
+    padding: 1rem !important;
+  }
+
+  .auth-modal-content {
+    border-radius: 20px !important;
+    max-height: 92vh !important;
+    overflow-y: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: unset !important;
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: unset !important;
+    animation: authSlideUp .3s cubic-bezier(.4,0,.2,1) !important;
+  }
+
+  @keyframes authSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .auth-left { display: none !important; }
+
+  .auth-right {
+    width: 100% !important;
+    padding: 1.5rem 1.2rem 2.5rem !important;
+    max-height: unset !important;
+    overflow-y: visible !important;
+    flex: 1 !important;
+  }
+
+  /* Abas mais largas */
+  .auth-tabs {
+    display: flex !important;
+    gap: 8px !important;
+    margin-bottom: 1.5rem !important;
+  }
+  .auth-tab {
+    flex: 1 !important;
+    text-align: center !important;
+    padding: .75rem !important;
+    font-size: .9rem !important;
+  }
+
+  /* Botão fechar mais visível */
+  .modal-close {
+    top: 1rem !important;
+    right: 1rem !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1.4rem !important;
+    background: var(--gray-200, #e5e7eb) !important;
+  }
 }
