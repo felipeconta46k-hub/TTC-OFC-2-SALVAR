@@ -1,0 +1,600 @@
+/* ================================================================
+   URBAN FLOW — MOBILE FIX DEFINITIVO
+   Este arquivo é carregado DEPOIS do styles.css, garantindo prioridade
+   ================================================================ */
+
+/* ── 1. HAMBURGER — sempre visível e funcional no mobile ── */
+@media (max-width: 900px) {
+
+  /* Esconde nav desktop */
+  header nav,
+  .search-wrapper,
+  .mega-menu { display: none !important; }
+
+  /* Mostra hamburger com estilo limpo */
+  .hamburger {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .hamburger span {
+    display: block !important;
+    width: 22px !important;
+    height: 2.5px !important;
+    background: #1a2540 !important;
+    border-radius: 3px !important;
+    transition: all 0.28s ease !important;
+    transform-origin: center !important;
+    opacity: 1 !important;
+  }
+
+  body.dark-mode .hamburger span {
+    background: #e8eeff !important;
+  }
+
+  .hamburger.open span:nth-child(1) {
+    transform: translateY(7.5px) rotate(45deg) !important;
+  }
+  .hamburger.open span:nth-child(2) {
+    opacity: 0 !important;
+    transform: scaleX(0) !important;
+  }
+  .hamburger.open span:nth-child(3) {
+    transform: translateY(-7.5px) rotate(-45deg) !important;
+  }
+
+  /* Mobile nav — estilo limpo */
+  .mobile-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    background: #ffffff !important;
+    border-top: 1px solid #e4e8ef !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1) !important;
+  }
+  body.dark-mode .mobile-nav {
+    background: #1e2436 !important;
+    border-top-color: #252d40 !important;
+  }
+  .mobile-nav.open {
+    max-height: 520px !important;
+  }
+  .mobile-nav a {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.95rem 1.2rem !important;
+    color: #253044 !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    border-bottom: 1px solid #f1f3f6 !important;
+    transition: background 0.2s, color 0.2s !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body.dark-mode .mobile-nav a {
+    color: #b4c0d8 !important;
+    border-bottom-color: #252d40 !important;
+  }
+  .mobile-nav a:hover,
+  .mobile-nav a:active {
+    background: #f8f9fb !important;
+    color: #C9973A !important;
+  }
+  body.dark-mode .mobile-nav a:hover {
+    background: #252d40 !important;
+    color: #C9973A !important;
+  }
+}
+
+/* ── 2. FILTROS — linha única por grupo com scroll ── */
+@media (max-width: 900px) {
+
+  /* Remove o layout de sidebar */
+  .products-layout {
+    display: block !important;
+  }
+  .filter-sidebar {
+    display: none !important;
+  }
+  .products-main {
+    width: 100% !important;
+  }
+
+  /* Container dos filtros */
+  #filtersContainer {
+    padding: 0.5rem 0 !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  /* Cada linha de filtro — scroll horizontal */
+  .cat-filters,
+  .gen-filters {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    gap: 0.4rem !important;
+    padding: 0.3rem 0.85rem 0.5rem !important;
+    margin: 0 -0.85rem !important;
+  }
+  .cat-filters::-webkit-scrollbar,
+  .gen-filters::-webkit-scrollbar { display: none !important; }
+
+  /* Separa categorias de gênero visualmente */
+  .gen-filters {
+    padding-top: 0.4rem !important;
+    margin-top: -0.1rem !important;
+  }
+
+  /* Chip individual */
+  .cat-filters .filter-btn,
+  .gen-filters .filter-btn {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    padding: 0.48rem 1rem !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    height: 34px !important;
+    border-radius: 100px !important;
+    border: 1.5px solid #e4e8ef !important;
+    background: #f8f9fb !important;
+    color: #5a6478 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.3rem !important;
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Chip ativo — dourado */
+  .cat-filters .filter-btn.active,
+  .gen-filters .filter-btn.active {
+    background: #C9973A !important;
+    border-color: #C9973A !important;
+    color: #fff !important;
+    box-shadow: 0 3px 10px rgba(201,151,58,0.35) !important;
+    font-weight: 700 !important;
+  }
+
+  /* Contador */
+  .filter-count {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    padding: 0 4px !important;
+    border-radius: 100px !important;
+    font-size: 0.62rem !important;
+    font-weight: 800 !important;
+    background: rgba(0,0,0,0.1) !important;
+    color: inherit !important;
+    line-height: 1 !important;
+  }
+  .filter-btn.active .filter-count {
+    background: rgba(255,255,255,0.25) !important;
+  }
+
+  /* Dark mode chips */
+  body.dark-mode .cat-filters .filter-btn:not(.active),
+  body.dark-mode .gen-filters .filter-btn:not(.active) {
+    background: #1e2436 !important;
+    border-color: #252d40 !important;
+    color: #b4c0d8 !important;
+  }
+}
+
+/* ── 3. GRID DE PRODUTOS — 2 colunas sem corte ── */
+@media (max-width: 900px) {
+  .products-grid,
+  #productsGrid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.65rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .product-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    /* Desativa hover pesado no touch */
+    transform: none !important;
+  }
+
+  .product-image {
+    aspect-ratio: 1 / 1 !important;
+    overflow: hidden !important;
+    border-radius: 12px 12px 0 0 !important;
+  }
+  .product-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .product-info {
+    padding: 0.6rem 0.65rem 0.4rem !important;
+  }
+  .product-meta {
+    font-size: 0.68rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+  .product-name {
+    font-size: 0.8rem !important;
+    line-height: 1.3 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    white-space: normal !important;
+  }
+  .current-price {
+    font-size: 0.95rem !important;
+    font-weight: 800 !important;
+  }
+  .original-price { font-size: 0.7rem !important; }
+  .discount-badge {
+    font-size: 0.6rem !important;
+    padding: 0.12rem 0.3rem !important;
+  }
+  .product-rating { font-size: 0.72rem !important; }
+
+  .product-actions {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    gap: 0.35rem !important;
+    padding: 0 0.65rem 0.65rem !important;
+    align-items: center !important;
+  }
+  .btn-add-cart {
+    font-size: 0.72rem !important;
+    padding: 0.5rem 0.4rem !important;
+    border-radius: 8px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    width: 100% !important;
+  }
+  .btn-favorite {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .btn-favorite svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  /* Badge NOVO / SALE */
+  .product-badge {
+    font-size: 0.6rem !important;
+    padding: 0.2rem 0.5rem !important;
+  }
+}
+
+/* ── 4. CONTAINER geral — sem overflow lateral ── */
+@media (max-width: 900px) {
+  body { overflow-x: hidden !important; }
+
+  .section.container,
+  .container {
+    padding-left: 0.85rem !important;
+    padding-right: 0.85rem !important;
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Header container */
+  .header-container {
+    padding: 0.55rem 0.9rem !important;
+    gap: 0.5rem !important;
+  }
+  .header-left { gap: 0.75rem !important; }
+  .header-right { gap: 0.3rem !important; }
+
+  /* Logo */
+  .logo { font-size: 0.95rem !important; }
+  .logo-mark { width: 28px !important; height: 28px !important; font-size: 0.65rem !important; }
+}
+
+/* ── 5. Telas muito pequenas ── */
+@media (max-width: 380px) {
+  .products-grid,
+  #productsGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+  }
+  .btn-add-cart { font-size: 0.65rem !important; }
+}
+
+/* ── 6. CARRINHO — layout responsivo ── */
+.cart-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .cart-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.2rem !important;
+  }
+
+  /* Item do carrinho */
+  .cart-item {
+    display: grid !important;
+    grid-template-columns: 88px 1fr !important;
+    grid-template-rows: auto auto !important;
+    gap: 0 0.75rem !important;
+    padding: 0.85rem !important;
+    border-radius: 12px !important;
+    margin-bottom: 0.6rem !important;
+  }
+  .cart-item-image {
+    grid-row: 1 / 3 !important;
+    width: 88px !important;
+    height: 88px !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+  }
+  .cart-item-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+  .cart-item-info {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+  }
+  .cart-item-info h3 {
+    font-size: 0.88rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 0.2rem !important;
+  }
+  .cart-item-info p {
+    font-size: 0.78rem !important;
+    margin-bottom: 0.15rem !important;
+  }
+  .cart-item-actions {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    margin-top: 0.4rem !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+  }
+  .cart-item-price {
+    font-size: 0.95rem !important;
+    font-weight: 800 !important;
+  }
+  .quantity-controls {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.3rem !important;
+  }
+  .quantity-controls button {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+    font-size: 1rem !important;
+  }
+  .quantity-controls span {
+    font-size: 0.88rem !important;
+    min-width: 1.2rem !important;
+    text-align: center !important;
+  }
+  .btn-remove {
+    font-size: 0.72rem !important;
+    padding: 0.3rem 0.5rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* Resumo do pedido */
+  .cart-summary {
+    border-radius: 14px !important;
+    padding: 1.2rem !important;
+  }
+  .cart-summary h3 {
+    font-size: 1rem !important;
+    margin-bottom: 0.85rem !important;
+  }
+  .cart-summary-row {
+    font-size: 0.88rem !important;
+    padding: 0.55rem 0 !important;
+  }
+  .coupon-hint {
+    font-size: 0.72rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 0.5rem !important;
+  }
+  .coupon-field {
+    display: flex !important;
+    gap: 0.4rem !important;
+  }
+  .coupon-field input {
+    font-size: 0.82rem !important;
+    padding: 0.55rem 0.75rem !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  .btn-apply-coupon {
+    font-size: 0.78rem !important;
+    padding: 0.55rem 0.85rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+  .btn-checkout {
+    width: 100% !important;
+    padding: 0.95rem !important;
+    font-size: 0.9rem !important;
+    margin-top: 0.75rem !important;
+    border-radius: 10px !important;
+  }
+}
+
+/* ── 7. MODAL LOGIN/CADASTRO — mobile ── */
+@media (max-width: 700px) {
+
+  /* Overlay centralizado com scroll */
+  .modal {
+    align-items: flex-end !important; /* sobe do rodapé */
+    padding: 0 !important;
+  }
+
+  /* Container do modal — ocupa a tela toda embaixo */
+  .auth-modal-content {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: unset !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: unset !important;
+    max-height: 92vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    overflow: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Esconde painel esquerdo (decorativo) */
+  .auth-left {
+    display: none !important;
+  }
+
+  /* Painel direito ocupa tudo */
+  .auth-right {
+    width: 100% !important;
+    padding: 1.5rem 1.2rem 2rem !important;
+    max-height: unset !important;
+    overflow-y: visible !important;
+    flex: 1 !important;
+  }
+
+  /* Botão fechar */
+  .modal-close {
+    position: absolute !important;
+    top: 0.75rem !important;
+    right: 0.85rem !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1.1rem !important;
+    border-radius: 50% !important;
+    z-index: 10 !important;
+  }
+
+  /* Tabs Entrar / Criar Conta */
+  .auth-tabs {
+    margin-top: 0.25rem !important;
+    margin-bottom: 1.4rem !important;
+    border-radius: 10px !important;
+  }
+  .auth-tab {
+    font-size: 0.85rem !important;
+    padding: 0.6rem !important;
+  }
+
+  /* Título do formulário */
+  .auth-form-title {
+    font-size: 1.25rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Grupos de input */
+  .form-group {
+    margin-bottom: 0.85rem !important;
+  }
+  .form-group label {
+    font-size: 0.72rem !important;
+    margin-bottom: 0.35rem !important;
+  }
+
+  /* Campos — largura total garantida */
+  .input-icon-wrap {
+    width: 100% !important;
+  }
+  .input-icon-wrap input {
+    width: 100% !important;
+    padding: 0.8rem 1rem 0.8rem 2.6rem !important;
+    font-size: 0.88rem !important;
+    box-sizing: border-box !important;
+    border-radius: 10px !important;
+  }
+  .input-icon {
+    left: 0.75rem !important;
+    font-size: 0.9rem !important;
+  }
+  .toggle-pass {
+    right: 0.75rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  /* Botão submit */
+  .btn-submit {
+    width: 100% !important;
+    padding: 0.95rem !important;
+    font-size: 0.88rem !important;
+    border-radius: 10px !important;
+    margin-top: 0.6rem !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Link de troca */
+  .auth-switch-text {
+    text-align: center !important;
+    font-size: 0.82rem !important;
+    margin-top: 1rem !important;
+  }
+
+  /* Hint de validação */
+  .field-hint {
+    font-size: 0.72rem !important;
+  }
+}
+
+/* ── 8. Esconde sacola e coração no mobile (ficam nos 3 pontinhos) ── */
+@media (max-width: 900px) {
+  #cartIcon,
+  #wishIcon { display: none !important; }
+}
+
+/* ── 9. Lua/sol — maior e alinhada com os outros ── */
+@media (max-width: 900px) {
+  .dark-toggle-btn {
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0 !important;
+  }
+  .dark-toggle-btn .icon-sun,
+  .dark-toggle-btn .icon-moon {
+    width: 22px !important;
+    height: 22px !important;
+  }
+}

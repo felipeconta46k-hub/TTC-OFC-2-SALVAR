@@ -4433,13 +4433,820 @@ body.dark-mode .tab-btn { color: var(--gray-600); border-bottom-color: transpare
 body.dark-mode .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 body.dark-mode .auth-card { background: var(--gray-100); }
 
-/* Toast */
-body.dark-mode .toast { background: var(--gray-100); color: var(--gray-900); border-color: var(--gray-200); }
 
-/* Transição suave para tudo */
-body, header, .search-bar, .product-card, .mega-menu,
-.mobile-nav, .user-dropdown, .modal-content, .generic-modal-content,
-input, select, textarea, footer, .cart-item, .cart-summary,
-.filter-chip, .sort-select, .auth-card, .profile-section {
-  transition: background .3s, color .3s, border-color .3s;
-} 
+/* =====================================================================
+   DARK MODE — FIX COMPLETO
+   Todos os elementos que usam var(--black) como bg/border ficam
+   invisíveis em dark mode (--black vira #f0f4ff).
+   Regra geral:
+     • ações / destaque  → var(--accent) dourado
+     • estrutura escura  → #0c0f17 fixo
+     • hover neutro      → var(--gray-300)
+   ===================================================================== */
+
+/* ── Filtros de categoria (sidebar smart-filter) ── */
+body.dark-mode .sf-cat-item.active { background: var(--accent); color: #fff; }
+body.dark-mode .sf-cat-item:hover  { background: var(--gray-200); color: var(--gray-900); }
+
+/* ── Radio de ordenação ── */
+body.dark-mode .sf-radio-item.checked { color: var(--accent); font-weight: 600; }
+body.dark-mode .sf-radio-item.checked .sf-radio-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: inset 0 0 0 3px var(--gray-100);
+}
+
+/* ── Botões de tamanho (smart-filter) ── */
+body.dark-mode .sf-size-btn.active  { background: var(--accent); border-color: var(--accent); color: #fff; }
+body.dark-mode .sf-size-btn:hover   { border-color: var(--accent); }
+
+/* ── Filtros de categoria sidebar clássico ── */
+body.dark-mode .sidebar-cat-btn.active  { background: var(--accent); border-color: var(--accent); color: #fff; }
+body.dark-mode .sidebar-size-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── Swatches de cor / tamanho no detalhe do produto ── */
+body.dark-mode .color-swatch.selected,
+body.dark-mode .size-option.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+body.dark-mode .color-swatch:hover,
+body.dark-mode .size-option:hover  { border-color: var(--accent); }
+
+/* ── Filtros de categoria (chips horizontais) ── */
+body.dark-mode .filter-btn { background: var(--gray-100); color: var(--gray-700); border-color: var(--gray-200); }
+body.dark-mode .filter-btn:hover  { border-color: var(--accent); color: var(--accent); }
+body.dark-mode .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── Botão add-to-cart nos cards ── */
+body.dark-mode .btn-add-cart { background: var(--accent); color: #fff; }
+body.dark-mode .btn-add-cart:hover { background: var(--accent-hover); }
+
+/* ── Botão favorito ── */
+body.dark-mode .btn-favorite { background: var(--gray-200); border-color: var(--gray-300); }
+
+/* ── Botão submit / login / cadastro ── */
+body.dark-mode .btn-submit { background: var(--accent); color: #fff; }
+body.dark-mode .btn-submit:hover:not(:disabled) { background: var(--accent-hover); }
+
+/* ── Botão secundário ── */
+body.dark-mode .btn-secondary { background: var(--accent); color: #fff; }
+body.dark-mode .btn-secondary:hover { background: var(--accent-hover); }
+
+/* ── User dropdown ── */
+body.dark-mode .user-dropdown button { background: var(--accent); color: #fff; }
+body.dark-mode .user-dropdown button:hover { background: var(--accent-hover); }
+
+/* ── Auth tabs ── */
+body.dark-mode .auth-tab.active { background: var(--accent); color: #fff; box-shadow: 0 2px 10px rgba(201,151,58,.3); }
+
+/* ── Botão de rastrear ── */
+body.dark-mode .btn-track { background: var(--accent); color: #fff; }
+body.dark-mode .btn-track:hover { background: var(--accent-hover); }
+
+/* ── Botões de review/filtro ── */
+body.dark-mode .review-filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── Botões de checkout ── */
+body.dark-mode .btn-back-checkout:hover { border-color: var(--gray-400); color: var(--gray-700); }
+body.dark-mode .btn-prev-step:hover     { border-color: var(--gray-400); color: var(--gray-700); }
+body.dark-mode .cstep.active .cstep-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+body.dark-mode .payment-method.selected { border-color: var(--accent); background: var(--gray-200); }
+body.dark-mode .payment-method.selected .payment-method-radio { border-color: var(--accent); background: var(--accent); }
+body.dark-mode .btn-copy-boleto { background: var(--accent); color: #fff; }
+body.dark-mode .btn-copy-boleto:hover { background: var(--accent-hover); }
+
+/* ── Size guide ── */
+body.dark-mode .sg-tab.active { background: var(--accent); color: #fff; }
+body.dark-mode .size-guide-table th { background: #0c0f17; color: #fff; }
+
+/* ── Share ── */
+body.dark-mode .share-btn:hover      { border-color: var(--accent); color: var(--accent); }
+body.dark-mode .share-btn.copy:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── Back to top ── */
+body.dark-mode .back-to-top { background: var(--accent); color: #fff; }
+body.dark-mode .back-to-top:hover { background: var(--accent-hover); }
+
+/* ── Hamburger ── */
+body.dark-mode .hamburger span { background: var(--gray-900); }
+
+/* ── Tooltip WhatsApp ── */
+body.dark-mode .whatsapp-tooltip { background: #0c0f17; color: #fff; }
+
+/* ── Bento box hover ── */
+body.dark-mode .bento-box:hover { border-color: var(--gray-400); }
+
+/* ── Hype header / VIP card ── */
+body.dark-mode .hype-header { background: #0c0f17; }
+body.dark-mode .hype-action-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+body.dark-mode .hype-list-item:hover  { border-color: var(--gray-400); }
+
+/* ── Benefits bar ── */
+body.dark-mode .benefits-bar { background: #0c0f17; }
+
+/* ── Status badge ── */
+body.dark-mode .status-processando { background: var(--gray-700); color: #fff; }
+
+/* ── Tracking ── */
+body.dark-mode .tracking-order-card { background: var(--gray-100); border-color: var(--gray-200); }
+body.dark-mode .tracking-step.done .tracking-step-label { color: var(--gray-900); }
+body.dark-mode .tracking-input:focus { border-color: var(--accent); }
+
+/* ── Profile header card (fundo escuro, texto fixo branco — ok em ambos modos) ── */
+body.dark-mode .profile-header-card { background: #0c0f17; }
+
+/* ── Profile tabs ── */
+body.dark-mode .profile-tab:hover  { color: var(--accent); }
+body.dark-mode .profile-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── Profile quick cards ── */
+body.dark-mode .po-quick-card:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+body.dark-mode .po-quick-card:hover .po-qc-icon { filter: grayscale(1) invert(1); }
+
+/* ── Inputs foco ── */
+body.dark-mode .input-icon-wrap input:focus { border-color: var(--accent); background: var(--gray-100); box-shadow: 0 0 0 4px rgba(201,151,58,.12); }
+body.dark-mode .search-bar:focus-within    { border-color: var(--accent); }
+body.dark-mode .sidebar-sort-select:focus  { border-color: var(--accent); }
+body.dark-mode .results-sort-select:focus  { border-color: var(--accent); }
+body.dark-mode .sort-select:focus          { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,151,58,.15); }
+body.dark-mode .checkout-input:focus       { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,151,58,.15); }
+body.dark-mode .review-textarea:focus      { border-color: var(--accent); }
+body.dark-mode .coupon-field input:focus   { border-color: var(--accent); }
+body.dark-mode .pf-input:focus             { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,151,58,.12); }
+body.dark-mode .sf-select:focus            { border-color: var(--accent); }
+
+/* ── Produto thumbnail / variante hover ── */
+body.dark-mode .product-thumbnail:hover,
+body.dark-mode .product-thumbnail.active { border-color: var(--accent); }
+body.dark-mode .btn-size-guide:hover     { border-color: var(--accent); color: var(--accent); }
+
+/* ── sf-cat-item hover color ── */
+body.dark-mode .sf-accordion-head:hover { color: var(--accent); }
+
+/* ── User dropdown buttons (gerados via JS, sem inline style) ── */
+.ud-btn {
+  width: 100%;
+  padding: .75rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: .4rem;
+  font-family: inherit;
+  display: block;
+  text-align: center;
+}
+.ud-btn--outline {
+  background: var(--white);
+  color: var(--gray-800);
+  border: 2px solid var(--gray-200);
+}
+.ud-btn--outline:hover {
+  background: var(--gray-100);
+  border-color: var(--gray-300);
+}
+.ud-btn--primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  margin-top: .2rem;
+}
+.ud-btn--primary:hover { background: var(--accent-hover); }
+
+/* dark mode — outline vira escuro com borda visível */
+body.dark-mode .ud-btn--outline {
+  background: var(--gray-200);
+  color: var(--gray-900);
+  border-color: var(--gray-300);
+}
+body.dark-mode .ud-btn--outline:hover {
+  background: var(--gray-300);
+  border-color: var(--gray-400);
+}
+
+/* ── User icon logado ── */
+.user-icon--logged {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: .88rem;
+}
+body.dark-mode .user-icon--logged {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ===================== FAQ ===================== */
+.faq-section {
+  padding: 5rem 0 4rem;
+  background: var(--gray-50);
+  border-top: 1px solid var(--gray-200);
+}
+.faq-list {
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+.faq-item {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: box-shadow .25s, border-color .25s;
+}
+.faq-item:hover { border-color: var(--gray-300); box-shadow: var(--shadow-sm); }
+.faq-item.open  { border-color: var(--accent); box-shadow: 0 4px 20px rgba(201,151,58,.1); }
+
+.faq-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--black);
+  text-align: left;
+  transition: color .2s;
+}
+.faq-item.open .faq-head { color: var(--accent); }
+.faq-arrow { flex-shrink: 0; transition: transform .3s cubic-bezier(.4,0,.2,1); color: var(--gray-400); }
+.faq-item.open .faq-arrow { color: var(--accent); }
+
+.faq-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .35s cubic-bezier(.4,0,.2,1);
+}
+.faq-body p {
+  padding: 0 1.4rem 1.3rem;
+  font-size: .9rem;
+  color: var(--gray-600);
+  line-height: 1.75;
+  margin: 0;
+}
+.faq-body p strong { color: var(--black); }
+
+/* dark mode */
+body.dark-mode .faq-section { background: var(--gray-50); border-top-color: var(--gray-200); }
+body.dark-mode .faq-item     { background: var(--gray-100); border-color: var(--gray-200); }
+body.dark-mode .faq-item:hover { border-color: var(--gray-300); }
+body.dark-mode .faq-item.open  { border-color: var(--accent); }
+body.dark-mode .faq-head       { color: var(--gray-900); }
+body.dark-mode .faq-item.open .faq-head { color: var(--accent); }
+body.dark-mode .faq-body p     { color: var(--gray-600); }
+body.dark-mode .faq-body p strong { color: var(--gray-900); }
+
+@media(max-width: 600px) {
+  .faq-head { font-size: .88rem; padding: 1rem 1.1rem; }
+  .faq-body p { padding: 0 1.1rem 1.1rem; }
+}
+/* ============================================================
+   CORREÇÕES MOBILE — RESPONSIVIDADE COMPLETA
+   ============================================================ */
+
+/* ── Header Mobile ── */
+@media (max-width: 900px) {
+  .header-container {
+    padding: .6rem 1rem;
+    gap: .5rem;
+  }
+  .header-left { gap: 1rem; }
+  nav { display: none; }
+  .mega-menu { display: none !important; }
+  .hamburger { display: flex; }
+
+  /* Oculta busca expandida, deixa só ícones */
+  .search-wrapper { display: none; }
+  .header-right { gap: .3rem; }
+}
+
+@media (max-width: 640px) {
+  /* Promo bar menor no mobile */
+  .promo-bar { height: 36px; }
+  .promo-item { font-size: .68rem; }
+  .promo-track { gap: 1.5rem; }
+
+  /* Header compacto */
+  .header-container { padding: .55rem .85rem; }
+
+  /* Logo menor */
+  .logo { font-size: .95rem; }
+  .logo-mark { width: 28px; height: 28px; font-size: .65rem; }
+
+  /* Ícones menores */
+  .icon-btn { padding: .45rem; }
+
+  /* Mobile nav links maiores para toque */
+  .mobile-nav a { padding: .95rem 1.2rem; font-size: .9rem; }
+}
+
+/* ── Seção de produtos (page) ── */
+@media (max-width: 900px) {
+  .section { padding: 2.5rem 1rem !important; }
+}
+
+@media (max-width: 640px) {
+  .section { padding: 2rem .85rem !important; }
+  .section-title { font-size: clamp(1.5rem, 6vw, 2rem) !important; }
+  .section-subtitle { font-size: .88rem !important; }
+}
+
+/* ── Hero ── */
+@media (max-width: 640px) {
+  .hero { height: 420px; }
+  .hero-slide { padding: 0 1.2rem; }
+  .hero-content h1 { font-size: clamp(2.2rem, 9vw, 3.5rem); }
+  .hero-content p { font-size: .88rem; margin-bottom: 1.5rem; }
+  .hero-btns { gap: .6rem; margin-bottom: 1.8rem; }
+  .hero-btn-main { padding: .8rem 1.5rem; font-size: .85rem; }
+  .hero-stats { gap: 1rem; }
+  .hero-stat strong { font-size: 1.1rem; }
+  .hero-stat span { font-size: .72rem; }
+  .hero-dots { bottom: .8rem; }
+}
+
+/* ── Grid de produtos ── */
+@media (max-width: 640px) {
+  .products-grid,
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: .7rem !important;
+  }
+  .product-card { border-radius: var(--radius-md) !important; }
+  .product-image { aspect-ratio: 1/1; }
+  .product-info { padding: .7rem !important; }
+  .product-name { font-size: .82rem !important; }
+  .product-price { font-size: .9rem !important; }
+  .btn-add-cart { font-size: .75rem !important; padding: .55rem .5rem !important; }
+  /* Hover pesado demais para mobile */
+  .product-card:hover { transform: none !important; box-shadow: var(--shadow-md) !important; }
+}
+
+@media (max-width: 380px) {
+  .products-grid,
+  .product-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Filtros de produto no mobile ── */
+@media (max-width: 900px) {
+  .products-page-container { padding: 0 .85rem 2rem !important; }
+  .products-layout { grid-template-columns: 1fr; gap: 1rem; }
+  .results-count-bar { flex-wrap: wrap; }
+}
+
+/* ── Categorias (grid de category cards) ── */
+@media (max-width: 640px) {
+  .categories-grid { grid-template-columns: 1fr 1fr !important; gap: .6rem !important; }
+  .category-card { min-height: 160px !important; }
+  .category-name { font-size: 1.2rem !important; }
+  .category-overlay { padding: 1rem !important; }
+}
+
+/* ── Benefícios bar ── */
+@media (max-width: 640px) {
+  .benefits-bar { padding: 1rem !important; gap: .6rem !important; overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; }
+  .benefits-bar::-webkit-scrollbar { display: none; }
+  .benefit-item { flex-shrink: 0; flex-direction: column; text-align: center; gap: .3rem; min-width: 80px; }
+  .benefit-title { font-size: .7rem !important; }
+  .benefit-desc { font-size: .65rem !important; display: none; }
+}
+
+/* ── Countdown ── */
+@media (max-width: 480px) {
+  .countdown-block { min-width: 60px; padding: .8rem .9rem; border-radius: 16px; }
+  .countdown-num { font-size: 2rem !important; }
+  .countdown-unit { font-size: .6rem; }
+  .countdown-sep { font-size: 1.5rem; }
+  .countdown-timer { gap: .5rem; }
+  .countdown-cta .btn-primary { min-width: 100%; }
+}
+
+/* ── Mid banner ── */
+@media (max-width: 640px) {
+  .mid-banner { padding: 4rem 1.2rem !important; }
+  .mid-banner-content h2 { font-size: clamp(1.8rem, 8vw, 3rem) !important; }
+}
+
+/* ── Testimonials ── */
+@media (max-width: 640px) {
+  .testimonials-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Footer ── */
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem 1.5rem;
+    padding: 2.5rem 1.2rem;
+  }
+  .footer-brand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 480px) {
+  .footer-content {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem;
+    padding: 2rem 1rem;
+  }
+  .footer-trust {
+    flex-wrap: wrap !important;
+    gap: .6rem !important;
+    padding: 1rem !important;
+  }
+  .trust-badge { font-size: .72rem !important; }
+  .footer-bottom {
+    flex-direction: column !important;
+    gap: .8rem !important;
+    text-align: center;
+    padding: 1.2rem 1rem !important;
+    font-size: .75rem !important;
+  }
+  .footer-legal { justify-content: center; }
+  .payment-icons { justify-content: center; flex-wrap: wrap; }
+}
+
+/* ── Cart / Wishlist ── */
+@media (max-width: 640px) {
+  .cart-page, .wishlist-page { padding: 1.2rem .85rem !important; }
+  .cart-layout { grid-template-columns: 1fr !important; gap: 1.2rem; }
+  .cart-item { flex-direction: row; gap: .8rem !important; padding: .85rem !important; }
+  .cart-item-img { width: 72px !important; height: 72px !important; flex-shrink: 0; }
+  .cart-item-name { font-size: .88rem !important; }
+  .cart-item-price { font-size: .9rem !important; }
+  .qty-btn { width: 28px; height: 28px; }
+  .cart-summary { padding: 1.2rem !important; }
+  .cart-summary-title { font-size: 1rem !important; }
+}
+
+/* ── Modais ── */
+@media (max-width: 640px) {
+  .modal-content,
+  .generic-modal-content {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    margin: 1rem auto !important;
+    padding: 1.5rem 1.1rem !important;
+    border-radius: var(--radius-lg) !important;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  /* Auth modal: remove painel esquerdo */
+  .auth-left { display: none !important; }
+  .auth-right { padding: 1.5rem !important; }
+  .auth-form-panel { min-width: unset !important; width: 100%; }
+}
+
+/* ── Checkout ── */
+@media (max-width: 640px) {
+  .checkout-layout { grid-template-columns: 1fr !important; }
+  .checkout-steps { gap: .4rem !important; overflow-x: auto; padding-bottom: .5rem; }
+  .cstep-label { display: none; }
+  .checkout-section { padding: 1.2rem 1rem !important; }
+  .checkout-form { grid-template-columns: 1fr !important; }
+}
+
+/* ── Produto detalhe (quick view / página) ── */
+@media (max-width: 640px) {
+  .product-detail-grid { grid-template-columns: 1fr !important; gap: 1.2rem; }
+  .product-thumbnails { flex-direction: row !important; gap: .4rem !important; overflow-x: auto; }
+  .product-thumbnail { width: 52px !important; height: 52px !important; flex-shrink: 0; }
+  .product-detail-title { font-size: 1.3rem !important; }
+  .size-options { flex-wrap: wrap; gap: .4rem; }
+  .quick-view-modal { width: 96vw !important; padding: 1.2rem !important; }
+  .qv-grid { grid-template-columns: 1fr !important; gap: 1rem; }
+}
+
+/* ── Rastrear pedido ── */
+@media (max-width: 640px) {
+  .tracking-card { padding: 1.2rem 1rem !important; }
+  .tracking-steps { gap: .6rem !important; }
+}
+
+/* ── Página Sobre ── */
+@media (max-width: 640px) {
+  .about-hero { padding: 2rem .85rem !important; }
+  .bento-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Barra de pesquisa no mobile (dentro do menu) ── */
+@media (max-width: 900px) {
+  .mobile-nav {
+    padding-bottom: .5rem;
+  }
+  .mobile-search-bar {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--gray-100);
+    border-radius: 100px;
+    padding: .55rem 1rem;
+    margin: .6rem 1rem;
+    border: 2px solid transparent;
+    transition: var(--transition);
+  }
+  .mobile-search-bar:focus-within {
+    background: var(--white);
+    border-color: var(--black);
+  }
+  .mobile-search-bar input {
+    background: none;
+    border: none;
+    outline: none;
+    font-size: .9rem;
+    font-family: inherit;
+    color: var(--black);
+    width: 100%;
+  }
+  .mobile-search-bar input::placeholder { color: var(--gray-400); }
+}
+
+/* ── Evita overflow horizontal em tudo ── */
+*, *::before, *::after { max-width: 100%; }
+img, video, iframe { max-width: 100%; height: auto; }
+table { max-width: 100%; overflow-x: auto; display: block; }
+
+/* ── Impede que textos longos estourem ── */
+.product-name, .cart-item-name, .order-id, .activity-text strong {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* ── Remove hover com transform pesado em touch ── */
+@media (hover: none) {
+  .product-card:hover { transform: none !important; }
+  .btn-add-cart:hover { transform: none !important; }
+  .social-btn:hover { transform: none !important; }
+  .back-to-top:hover { transform: none !important; }
+}
+
+/* ── Dark mode mobile nav ── */
+body.dark-mode .mobile-search-bar { background: var(--gray-100); }
+body.dark-mode .mobile-search-bar input { color: var(--gray-900); }
+body.dark-mode .mobile-search-bar:focus-within { border-color: var(--accent); }
+
+
+/* ============================================================
+   FILTROS MOBILE — CHIPS HORIZONTAIS COM SCROLL
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+  /* Container das linhas de filtro — scroll horizontal suave */
+  .cat-filters,
+  .gen-filters {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: .45rem !important;
+    padding: .25rem .85rem .5rem !important;
+    margin: 0 -.85rem !important; /* sangra até a borda */
+    /* fade nas bordas */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 2%, #000 96%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 2%, #000 96%, transparent 100%);
+  }
+  .cat-filters::-webkit-scrollbar,
+  .gen-filters::-webkit-scrollbar { display: none; }
+
+  /* Chips individuais — tamanho confortável para toque */
+  .cat-filters .filter-btn,
+  .gen-filters .filter-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: .52rem 1rem !important;
+    font-size: .8rem !important;
+    border-radius: 100px !important;
+    min-height: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+  }
+
+  /* Chip ativo — dourado */
+  .cat-filters .filter-btn.active,
+  .gen-filters .filter-btn.active {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: #fff !important;
+    box-shadow: 0 3px 12px rgba(201,151,58,.35) !important;
+  }
+
+  /* Contador dentro do chip */
+  .cat-filters .filter-count,
+  .gen-filters .filter-count {
+    background: rgba(255,255,255,.2);
+    font-size: .65rem;
+    font-weight: 800;
+    border-radius: 100px;
+    padding: .05rem .38rem;
+    line-height: 1.4;
+  }
+  .cat-filters .filter-btn:not(.active) .filter-count {
+    background: var(--gray-200);
+    color: var(--gray-600);
+  }
+
+  /* Toolbar de filtros — empilhado e limpo */
+  .filter-toolbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: .6rem !important;
+    padding: .85rem 1rem !important;
+    margin-bottom: .75rem !important;
+    border-radius: var(--radius-md) !important;
+  }
+  .filter-toolbar::before { display: none !important; }
+
+  /* Barra de ordenar + preço lado a lado no mobile */
+  .filter-toolbar-right,
+  .filter-toolbar-left { width: 100%; }
+  .filter-toolbar-left { gap: .6rem !important; flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: none; }
+  .filter-toolbar-left::-webkit-scrollbar { display: none; }
+
+  .price-range-group {
+    flex-shrink: 0;
+    font-size: .78rem !important;
+  }
+  .price-input { width: 60px !important; font-size: .78rem !important; }
+
+  .sort-select {
+    width: 100%;
+    font-size: .82rem !important;
+  }
+
+  /* Separador visual entre categoria e gênero */
+  .gen-filters {
+    border-top: 1px solid var(--gray-100);
+    padding-top: .55rem !important;
+    margin-top: -.1rem !important;
+  }
+
+  /* Área de produtos no mobile */
+  .products-page-container {
+    padding-left: .85rem !important;
+    padding-right: .85rem !important;
+  }
+
+  /* Barra de resultados */
+  .results-count-bar {
+    padding: .5rem 0 !important;
+    margin-bottom: .75rem !important;
+  }
+  .results-count-label { font-size: .78rem !important; }
+  .results-sort-select { font-size: .78rem !important; }
+}
+
+/* Dark mode — chips */
+body.dark-mode .cat-filters .filter-btn:not(.active),
+body.dark-mode .gen-filters .filter-btn:not(.active) {
+  background: var(--gray-100);
+  border-color: var(--gray-200);
+  color: var(--gray-700);
+}
+body.dark-mode .cat-filters .filter-btn:not(.active) .filter-count,
+body.dark-mode .gen-filters .filter-btn:not(.active) .filter-count {
+  background: var(--gray-200);
+  color: var(--gray-600);
+}
+body.dark-mode .gen-filters {
+  border-top-color: var(--gray-200);
+}
+
+
+/* ============================================================
+   FIX: HAMBURGER + GRID PRODUTOS CORTADO
+   ============================================================ */
+
+/* Hamburger — visível e funcional no mobile */
+@media (max-width: 900px) {
+  .hamburger {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--gray-100) !important;
+    border: 1.5px solid var(--gray-200) !important;
+    flex-direction: column;
+    gap: 5px;
+    padding: .5rem;
+    flex-shrink: 0;
+    transition: var(--transition);
+  }
+  .hamburger:hover {
+    background: var(--gray-200) !important;
+    border-color: var(--gray-300) !important;
+  }
+  /* Linhas sempre visíveis — cor fixa independente do tema */
+  .hamburger span {
+    background: #1a2540 !important;
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    display: block;
+    transition: var(--transition);
+    transform-origin: center;
+  }
+  /* Dark mode: linhas claras */
+  body.dark-mode .hamburger {
+    background: var(--gray-200) !important;
+    border-color: var(--gray-300) !important;
+  }
+  body.dark-mode .hamburger span {
+    background: #e8eeff !important;
+  }
+  /* Animação X quando aberto */
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+}
+
+/* ── Grid de produtos — sem corte lateral ── */
+@media (max-width: 900px) {
+  /* Remove qualquer overflow/padding que corta os cards */
+  #productsPage,
+  .products-page,
+  .products-page-container {
+    padding-left: .85rem !important;
+    padding-right: .85rem !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .products-grid,
+  .product-grid,
+  #productsGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: .7rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  /* Cada card ocupa 100% do slot sem vazar */
+  .product-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  /* Imagem proporcional */
+  .product-image {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+  }
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Info do card — sem texto vazando */
+  .product-info {
+    padding: .65rem .7rem .5rem !important;
+  }
+  .product-name {
+    font-size: .8rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+  .product-meta { font-size: .7rem !important; }
+  .current-price { font-size: .95rem !important; }
+  .original-price { font-size: .72rem !important; }
+  .discount-badge { font-size: .65rem !important; padding: .15rem .35rem !important; }
+
+  /* Botões de ação do card */
+  .product-actions {
+    padding: 0 .7rem .65rem !important;
+    gap: .35rem !important;
+  }
+  .btn-add-cart {
+    font-size: .74rem !important;
+    padding: .52rem .5rem !important;
+    border-radius: var(--radius-sm) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .btn-favorite {
+    width: 34px !important;
+    height: 34px !important;
+    flex-shrink: 0;
+  }
+}

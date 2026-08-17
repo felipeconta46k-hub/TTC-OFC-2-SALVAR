@@ -1318,7 +1318,7 @@ function renderCart() {
   const pct = Math.min((sub / 299) * 100, 100);
 
   el.innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 380px;gap:2.5rem;align-items:start;" class="cart-grid">
+    <div class="cart-grid">
       <div>
         <div class="cart-items">
           ${cart.map((item, i) => `
@@ -2459,7 +2459,7 @@ function handleLogout() {
 function updateUserUI() {
   const dropdown = document.getElementById('userDropdown'), icon = document.getElementById('userIcon');
   if (currentUser) {
-    icon.innerHTML = ''; icon.style.cssText = 'background:var(--black);color:#fff;font-weight:800;font-size:.88rem;';
+    icon.innerHTML = ''; icon.style.cssText = ''; icon.className = 'user-icon user-icon--logged';
     icon.textContent = currentUser.name.charAt(0).toUpperCase();
     dropdown.innerHTML = `
       <div style="padding:.5rem 0 1rem;border-bottom:1px solid var(--gray-200);margin-bottom:.75rem;">
@@ -2467,17 +2467,17 @@ function updateUserUI() {
         <p style="font-weight:700;">${currentUser.name}</p>
         <p style="font-size:.78rem;color:var(--gray-500);">${currentUser.email}</p>
       </div>
-      <button onclick="navigateTo('profile');document.getElementById('userDropdown').classList.remove('active');" style="background:#fff;color:var(--black);border:2px solid var(--gray-200);margin-bottom:.4rem;">👤 Meu Perfil</button>
-      <button onclick="navigateTo('wishlist');document.getElementById('userDropdown').classList.remove('active');" style="background:#fff;color:var(--black);border:2px solid var(--gray-200);margin-bottom:.4rem;">❤️ Favoritos</button>
-      <button onclick="navigateTo('tracking');document.getElementById('userDropdown').classList.remove('active');" style="background:#fff;color:var(--black);border:2px solid var(--gray-200);margin-bottom:.4rem;">📦 Rastrear Pedido</button>
-      <button onclick="handleLogout()">Sair da conta</button>`;
+      <button class="ud-btn ud-btn--outline" onclick="navigateTo('profile');document.getElementById('userDropdown').classList.remove('active');">👤 Meu Perfil</button>
+      <button class="ud-btn ud-btn--outline" onclick="navigateTo('wishlist');document.getElementById('userDropdown').classList.remove('active');">❤️ Favoritos</button>
+      <button class="ud-btn ud-btn--outline" onclick="navigateTo('tracking');document.getElementById('userDropdown').classList.remove('active');">📦 Rastrear Pedido</button>
+      <button class="ud-btn ud-btn--primary" onclick="handleLogout()">Sair da conta</button>`;
   } else {
     icon.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
-    icon.style.cssText = '';
+    icon.style.cssText = ''; icon.className = 'user-icon';
     dropdown.innerHTML = `
       <p style="font-size:.82rem;color:var(--gray-600);margin-bottom:.9rem;text-align:center;">Faça login para acessar sua conta</p>
-      <button onclick="openModal();document.getElementById('userDropdown').classList.remove('active');" style="background:#fff;color:var(--black);border:2px solid var(--gray-200);margin-bottom:.4rem;">Entrar</button>
-      <button onclick="document.getElementById('userDropdown').classList.remove('active');openModalRegister();">Criar Conta Grátis</button>`;
+      <button class="ud-btn ud-btn--outline" style="text-align:center;" onclick="openModal();document.getElementById('userDropdown').classList.remove('active');">Entrar</button>
+      <button class="ud-btn ud-btn--primary" style="text-align:center;" onclick="document.getElementById('userDropdown').classList.remove('active');openModalRegister();">Criar Conta</button>`;
   }
 }
 
@@ -2518,6 +2518,28 @@ function logout() {
 }
 
 /* ═══ BOOT ═══ */
+/* ═══ FAQ TOGGLE ═══ */
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const body = item.querySelector('.faq-body');
+  const arrow = btn.querySelector('.faq-arrow');
+  const isOpen = item.classList.contains('open');
+
+  // Fecha todos
+  document.querySelectorAll('.faq-item.open').forEach(el => {
+    el.classList.remove('open');
+    el.querySelector('.faq-body').style.maxHeight = '0';
+    el.querySelector('.faq-arrow').style.transform = 'rotate(0deg)';
+  });
+
+  // Abre o clicado (se estava fechado)
+  if (!isOpen) {
+    item.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+    arrow.style.transform = 'rotate(180deg)';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', init);
 
 /* ═══ CURSOR PERSONALIZADO ═══ */
