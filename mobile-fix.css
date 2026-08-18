@@ -1445,3 +1445,43 @@ body.dark-mode .uf-back-bar:hover {
     display: none !important; /* esconde texto, mostra só número */
   }
 }
+
+/* ===================================================
+   FIX: PRODUTOS PAGE — barra "Voltar" não sobrepõe título
+=================================================== */
+@media (max-width: 900px) {
+
+  /* Quando a back-bar existe na página de produtos,
+     reduz o padding-top da section para o título não colidir */
+  #productsPage .uf-back-bar + .section,
+  #productsPage .uf-back-bar ~ .section {
+    padding-top: 1.2rem !important;
+  }
+
+  /* Remove espaço superior do section-header na página de produtos */
+  #productsPage .section-header {
+    margin-top: 0 !important;
+    margin-bottom: 1.2rem !important;
+  }
+
+  /* Garante que o título não ultrapassa a barra */
+  #productsPage .section-title {
+    font-size: clamp(1.4rem, 6vw, 2rem) !important;
+    line-height: 1.1 !important;
+  }
+}
+
+/* Correção geral: back-bar sticky no topo (abaixo do header)
+   não deixa o conteúdo da page iniciar atrás dela */
+@media (max-width: 768px) {
+  .uf-back-bar {
+    position: sticky !important;
+    top: 56px !important;
+    z-index: 90 !important;
+  }
+
+  /* Qualquer .page que tenha uma back-bar: empurra o conteúdo pra baixo */
+  .page > .uf-back-bar + * {
+    padding-top: 1rem !important;
+  }
+}
