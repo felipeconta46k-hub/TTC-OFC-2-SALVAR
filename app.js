@@ -413,42 +413,19 @@ function closeMega() {
 
 /* ═══ RENDER — HOME ═══ */
 function renderCategories() {
-  const el = document.getElementById('categoriesGrid');
-  if (!el) return;
-  el.innerHTML = categories.map(cat => `
-    <div class="meli-cat-item" onclick="filterByCategory('${cat.id}');navigateTo('products')">
-      <div class="meli-cat-thumb"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></div>
-      <span class="meli-cat-label">${cat.name}</span>
+  document.getElementById('categoriesGrid').innerHTML = categories.map(cat => `
+    <div class="category-card" onclick="filterByCategory('${cat.id}')">
+      <div class="category-image"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></div>
+      <div class="category-overlay"><h3 class="category-name">${cat.name}</h3></div>
     </div>`).join('');
 }
 function renderFeaturedProducts() {
-  const el = document.getElementById('featuredProducts');
-  if (el) el.innerHTML = products.filter(p => p.featured).slice(0,8).map(createProductCard).join('');
+  document.getElementById('featuredProducts').innerHTML = products.filter(p => p.featured).slice(0, 8).map(createProductCard).join('');
 }
 function renderNewProducts() {
   const el = document.getElementById('newProducts');
   if (el) el.innerHTML = [...products].slice(-8).reverse().map(createProductCard).join('');
 }
-
-/* ═══ SLIDER MELI ═══ */
-(function(){
-  let cur = 0, total = 3, timer;
-  function go(idx) {
-    const slides = document.querySelectorAll('.meli-slide');
-    const dots   = document.querySelectorAll('.meli-dot');
-    if (!slides.length) return;
-    slides[cur].classList.remove('active');
-    if (dots[cur]) dots[cur].classList.remove('active');
-    cur = ((idx % total) + total) % total;
-    slides[cur].classList.add('active');
-    if (dots[cur]) dots[cur].classList.add('active');
-  }
-  function shift(d) { go(cur + d); restart(); }
-  function restart() { clearInterval(timer); timer = setInterval(() => shift(1), 5000); }
-  window.meliGo    = go;
-  window.meliShift = shift;
-  document.addEventListener('DOMContentLoaded', restart);
-})();
 
 /* ═══ FILTERS + SORT + PRICE ═══ */
 function renderFilters() {

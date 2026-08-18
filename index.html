@@ -139,147 +139,142 @@
 
 <!-- ===================== HOME PAGE ===================== -->
 <div class="page active" id="homePage">
-
-  <!-- ── BANNER PRINCIPAL ── -->
-  <section class="meli-banner-wrap">
-    <div class="meli-slider" id="meliSlider">
-
-      <div class="meli-slide active" style="background:linear-gradient(135deg,#ffe600 0%,#ffed4a 50%,#fffbe0 100%)">
-        <div class="meli-slide-body">
-          <div class="meli-slide-txt">
-            <span class="meli-tag">⚡ Oferta do Dia</span>
-            <h2>Até <b>40% OFF</b><br>em Tênis</h2>
-            <p>Os melhores modelos urbanos com desconto imperdível por tempo limitado</p>
-            <button class="meli-cta-btn" onclick="filterByCategory('tenis');navigateTo('products')">Ver ofertas →</button>
+  <section class="hero" id="heroSection">
+    <div class="hero-slides">
+      <div class="hero-slide active" style="--bg:url('https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=2000&q=80')">
+        <div class="hero-bg-layer"></div>
+        <div class="hero-content">
+          <span class="hero-tag">✨ Nova Coleção 2026</span>
+          <h1>URBAN<br><span class="hero-accent">STORY</span></h1>
+          <p>Tênis e roupas para quem define tendências nas ruas.</p>
+          <div class="hero-btns">
+            <button class="btn-primary hero-btn-main" onclick="navigateTo('products')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              Comprar Agora
+            </button>
+            <button class="btn-outline" onclick="filterByCategory('tenis');navigateTo('products')">Ver Tênis</button>
           </div>
-          <div class="meli-slide-pic">
-            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=520&h=380&q=85" alt="Tênis em oferta">
+          <div class="hero-stats">
+            <div class="hero-stat"><strong>70+</strong><span>Produtos</span></div>
+            <div class="hero-stat-sep"></div>
+            <div class="hero-stat"><strong>4.8★</strong><span>Avaliação</span></div>
+            <div class="hero-stat-sep"></div>
+            <div class="hero-stat"><strong>10k+</strong><span>Clientes</span></div>
+          </div>
+        </div>
+        <div class="hero-side-badge">
+          <div class="hsb-inner">
+            <span class="hsb-label">Frete Grátis</span>
+            <span class="hsb-value">acima de R$ 299</span>
           </div>
         </div>
       </div>
-
-      <div class="meli-slide" style="background:linear-gradient(135deg,#3483fa 0%,#2968c8 60%,#1557b0 100%)">
-        <div class="meli-slide-body">
-          <div class="meli-slide-txt" style="color:#fff">
-            <span class="meli-tag" style="background:rgba(255,255,255,.18);color:#fff">✨ Nova Coleção 2026</span>
-            <h2 style="color:#fff">Urban <b style="color:#ffe600">Story</b><br>chegou</h2>
-            <p style="color:rgba(255,255,255,.85)">Moda urbana para quem define tendências nas ruas</p>
-            <button class="meli-cta-btn" style="background:#ffe600;color:#333" onclick="navigateTo('products')">Comprar agora →</button>
-          </div>
-          <div class="meli-slide-pic">
-            <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=520&h=380&q=85" alt="Nova coleção">
-          </div>
-        </div>
-      </div>
-
-      <div class="meli-slide" style="background:linear-gradient(135deg,#f0f0f0 0%,#e0e0e0 100%)">
-        <div class="meli-slide-body">
-          <div class="meli-slide-txt">
-            <span class="meli-tag" style="background:#3483fa;color:#fff">🆓 Frete Grátis</span>
-            <h2>Coleção<br><b>Feminina</b></h2>
-            <p>Do treino ao look do dia com muito estilo</p>
-            <button class="meli-cta-btn" onclick="filterByGender('feminino');navigateTo('products')">Explorar →</button>
-          </div>
-          <div class="meli-slide-pic">
-            <img src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=520&h=380&q=85" alt="Coleção Feminina">
+      <div class="hero-slide" style="--bg:url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=2000&q=80')">
+        <div class="hero-bg-layer"></div>
+        <div class="hero-content">
+          <span class="hero-tag"> Oferta Especial</span>
+          <h1>ATÉ 40%<br><span class="hero-accent">OFF</span></h1>
+          <p>Tênis selecionados com desconto imperdível por tempo limitado.</p>
+          <div class="hero-btns">
+            <button class="btn-primary hero-btn-main" onclick="filterByCategory('tenis');navigateTo('products')">
+              Ver Ofertas →
+            </button>
           </div>
         </div>
       </div>
-
+      <div class="hero-slide" style="--bg:url('https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=2000&q=80')">
+        <div class="hero-bg-layer"></div>
+        <div class="hero-content"> 
+          <span class="hero-tag">🆓 Frete Grátis</span>
+          <h1>COLEÇÃO<br><span class="hero-accent">FEMININA</span></h1>
+          <p>Moda esportiva para todas as ocasiões, do treino ao look do dia.</p> 
+          <div class="hero-btns">
+            <button class="btn-primary hero-btn-main" onclick="filterByGender('feminino');navigateTo('products')">Explorar →</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- setas -->
-    <button class="meli-arr meli-arr-l" onclick="meliShift(-1)">&#8249;</button>
-    <button class="meli-arr meli-arr-r" onclick="meliShift(1)">&#8250;</button>
-    <!-- dots -->
-    <div class="meli-dots">
-      <span class="meli-dot active" onclick="meliGo(0)"></span>
-      <span class="meli-dot" onclick="meliGo(1)"></span>
-      <span class="meli-dot" onclick="meliGo(2)"></span>
+    <button class="hero-nav hero-prev" onclick="changeSlide(-1)" aria-label="Slide anterior">&#8249;</button>
+    <button class="hero-nav hero-next" onclick="changeSlide(1)" aria-label="Próximo slide">&#8250;</button>
+    <div class="hero-dots" id="heroDots"></div>
+    <div class="hero-progress" id="heroProgress"></div>
+    <div class="hero-scroll-hint">
+      <span>Role para baixo</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+  </section>
+ 
+  <section class="benefits-bar">
+    <div class="container">
+      <div class="benefits-grid">
+        <div class="benefit-item"><span class="benefit-icon">🚚</span><div><strong>Frete Grátis</strong><small>Acima de R$ 299</small></div></div>
+        <div class="benefit-item"><span class="benefit-icon">💳</span><div><strong>10x Sem Juros</strong><small>No cartão</small></div></div>
+        <div class="benefit-item"><span class="benefit-icon">↩️</span><div><strong>30 dias</strong><small>Para devolver</small></div></div>
+        <div class="benefit-item"><span class="benefit-icon">🔒</span><div><strong>100% Seguro</strong><small>Compra protegida</small></div></div>
+      </div>
     </div>
   </section>
 
-  <!-- ── BENEFÍCIOS ── -->
-  <section class="meli-benefits">
-    <div class="meli-wrap">
-      <div class="meli-benefit"><span>🚚</span><div><b>Frete Grátis</b><small>Acima de R$ 299</small></div></div>
-      <div class="meli-bsep"></div>
-      <div class="meli-benefit"><span>💳</span><div><b>10x Sem Juros</b><small>No cartão</small></div></div>
-      <div class="meli-bsep"></div>
-      <div class="meli-benefit"><span>↩️</span><div><b>30 dias</b><small>Para devolver</small></div></div>
-      <div class="meli-bsep"></div>
-      <div class="meli-benefit"><span>🔒</span><div><b>Compra Segura</b><small>100% protegida</small></div></div>
+  <section class="section container">
+    <div class="section-header">
+      <h2 class="section-title">Categorias</h2>
+      <p class="section-sub">Encontre o estilo que combina com você</p>
     </div>
+    <div class="categories" id="categoriesGrid"></div>
   </section>
 
-  <!-- ── CATEGORIAS ── -->
-  <section class="meli-section">
-    <div class="meli-wrap">
-      <div class="meli-sec-head">
-        <h2>Categorias</h2>
-        <a href="#" onclick="navigateTo('products');return false;">Ver tudo</a>
-      </div>
-      <div class="meli-cats" id="categoriesGrid"></div>
-    </div>
-  </section>
-
-  <!-- ── OFERTA DO DIA ── -->
-  <section class="meli-oferta">
-    <div class="meli-wrap">
-      <div class="meli-oferta-head">
-        <div class="meli-oferta-label">
-          <span class="meli-oferta-badge">⚡ Oferta do Dia</span>
-          <span class="meli-oferta-clock">Encerra em: <b id="cdHours">00</b>:<b id="cdMinutes">00</b>:<b id="cdSeconds">00</b></span>
+  <section class="countdown-section">
+    <div class="container">
+      <div class="countdown-inner">
+        <div class="countdown-label">
+          <div class="countdown-badge">⚡ Oferta do Dia</div>
+          <h3>Air Force 1 Low — 22% OFF</h3>
+          <p>Promoção encerra em:</p>
         </div>
-        <a href="#" onclick="showProductDetail(11);return false;">Ver oferta →</a>
-      </div>
-      <div class="meli-oferta-card" onclick="showProductDetail(11)">
-        <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?auto=format&fit=crop&w=280&h=280&q=80" alt="Air Force 1">
-        <div class="meli-oferta-info">
-          <p class="meli-oferta-nome">Air Force 1 Low</p>
-          <div class="meli-oferta-preco-wrap">
-            <span class="meli-oferta-de">R$ 599,90</span>
-            <span class="meli-oferta-pct">22% OFF</span>
-          </div>
-          <p class="meli-oferta-por">R$ <span class="meli-oferta-num">467</span><span class="meli-oferta-cents">,00</span></p>
-          <p class="meli-oferta-frete">🚚 Frete grátis</p>
-          <button class="meli-cta-btn" style="margin-top:.75rem;width:100%">Aproveitar oferta</button>
+        <div class="countdown-timer">
+          <div class="countdown-block"><span class="countdown-num" id="cdHours">00</span><span class="countdown-unit">horas</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-block"><span class="countdown-num" id="cdMinutes">00</span><span class="countdown-unit">min</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-block"><span class="countdown-num" id="cdSeconds">00</span><span class="countdown-unit">seg</span></div>
+        </div>
+        <div class="countdown-cta">
+          <button class="btn-primary" onclick="showProductDetail(11)">Garantir Desconto →</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── MAIS VENDIDOS ── -->
-  <section class="meli-section" style="background:#f5f5f5">
-    <div class="meli-wrap">
-      <div class="meli-sec-head">
-        <h2>🔥 Mais Vendidos</h2>
-        <a href="#" onclick="navigateTo('products');return false;">Ver todos</a>
+  <section class="section" style="background:var(--gray-50);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title"> Mais Vendidos</h2>
+        <p class="section-sub">Os favoritos da nossa comunidade</p>
       </div>
-      <div class="meli-prod-row" id="featuredProducts"></div>
+      <div class="products-grid" id="featuredProducts"></div>
+      <div class="section-cta">
+        <button class="btn-secondary" onclick="navigateTo('products')">Ver Todos os Produtos →</button>
+      </div>
     </div>
   </section>
 
-  <!-- ── BANNER FRETE ── -->
-  <section class="meli-strip">
-    <div class="meli-wrap meli-strip-inner">
-      <div>
-        <strong>🚚 Frete Grátis hoje em tudo!</strong>
-        <span>Pedidos acima de R$ 199 — por tempo limitado</span>
-      </div>
-      <button class="meli-cta-btn" style="background:#ffe600;color:#333;flex-shrink:0" onclick="navigateTo('products')">Aproveitar</button>
+  <section class="mid-banner">
+    <div class="mid-banner-content">
+      <span class="hero-tag">Oferta Relâmpago ⚡</span>
+      <h2>FRETE GRÁTIS<br><span>EM TUDO</span></h2>
+      <p>Só hoje, em todos os pedidos acima de R$ 199</p>
+      <button class="btn-primary" onclick="navigateTo('products')">Aproveitar Agora</button>
     </div>
   </section>
 
-  <!-- ── NOVIDADES ── -->
-  <section class="meli-section">
-    <div class="meli-wrap">
-      <div class="meli-sec-head">
-        <h2>✨ Novidades</h2>
-        <a href="#" onclick="navigateTo('products');return false;">Ver todas</a>
-      </div>
-      <div class="meli-prod-row" id="newProducts"></div>
+  <section class="section container">
+    <div class="section-header">
+      <h2 class="section-title">Novidades</h2>
+      <p class="section-sub">Acabou de chegar na loja</p>
     </div>
+    <div class="products-grid" id="newProducts"></div>
   </section>
+
 
 </div>
 
