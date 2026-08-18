@@ -1013,3 +1013,65 @@ body.dark-mode .uf-back-bar:hover {
     height: 130px !important;
   }
 }
+
+/* ===================================================
+   FIX: COUNTDOWN + MID-BANNER — menores no mobile
+=================================================== */
+@media (max-width: 768px) {
+  /* Countdown */
+  .countdown-section {
+    padding: 1.2rem 0 !important;
+  }
+  .countdown-inner {
+    padding: 1rem 1rem !important;
+    gap: 0.8rem !important;
+    border-radius: 16px !important;
+  }
+  .countdown-badge {
+    padding: 0.4rem 0.8rem !important;
+    font-size: .68rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  .countdown-label h3 {
+    font-size: 1.1rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+  .countdown-label p {
+    font-size: .78rem !important;
+  }
+  .countdown-block {
+    padding: 0.55rem 0.8rem !important;
+    min-width: 56px !important;
+    border-radius: 12px !important;
+  }
+  .countdown-num {
+    font-size: 1.6rem !important;
+  }
+  .countdown-unit {
+    font-size: .6rem !important;
+  }
+  .countdown-sep {
+    font-size: 1.2rem !important;
+  }
+  .countdown-cta .btn-primary {
+    padding: 0.75rem 1.2rem !important;
+    font-size: .82rem !important;
+  }
+
+  /* Mid-banner */
+  .mid-banner {
+    padding: 2rem 1.2rem !important;
+  }
+  .mid-banner-content h2 {
+    font-size: 1.6rem !important;
+    margin: 0.5rem 0 !important;
+  }
+  .mid-banner-content p {
+    font-size: .82rem !important;
+    margin-bottom: 1rem !important;
+  }
+  .mid-banner-content .btn-primary {
+    padding: 0.75rem 1.5rem !important;
+    font-size: .84rem !important;
+  }
+}
