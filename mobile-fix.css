@@ -602,11 +602,11 @@
 /* ── 10. HERO MOBILE — setas embaixo, texto sem sobreposição ── */
 @media (max-width: 640px) {
 
-  .hero { height: 520px !important; min-height: unset !important; }
+  .hero { height: 340px !important; min-height: unset !important; }
 
-  /* Slide — padding maior embaixo para não cortar stats */
+  /* Slide — padding compacto */
   .hero-slide {
-    padding: 1.5rem 1.2rem 5rem !important;
+    padding: 1rem 1.2rem 3rem !important;
     align-items: flex-start !important;
   }
 
@@ -648,24 +648,12 @@
   .hero-stat strong { font-size: 1.1rem !important; }
   .hero-stat span   { font-size: 0.68rem !important; }
 
-  /* SETAS — movidas para baixo, fora do texto */
-  .hero-nav {
-    top: auto !important;
-    bottom: 3.5rem !important;
-    transform: none !important;
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 1.2rem !important;
-  }
-  .hero-nav:hover {
-    transform: scale(1.08) !important;
-  }
-  .hero-prev { left: 1rem !important; }
-  .hero-next { right: 1rem !important; }
+  /* SETAS — ocultas no mobile */
+  .hero-nav { display: none !important; }
 
-  /* Dots — acima das setas */
+  /* Dots — centralizados na base */
   .hero-dots {
-    bottom: 1rem !important;
+    bottom: 0.6rem !important;
   }
 
   /* Scroll hint — some no mobile */
@@ -780,7 +768,7 @@ body.dark-mode .uf-back-bar:hover {
 @media (max-width: 768px) {
   /* Hero com altura fixa boa no mobile */
   .hero {
-    height: 520px !important;
+    height: 340px !important;
     min-height: unset !important;
   }
 
@@ -800,7 +788,7 @@ body.dark-mode .uf-back-bar:hover {
 
   /* Slide ocupa todo o espaço */
   .hero-slide {
-    min-height: 520px !important;
+    min-height: 340px !important;
   }
 
   /* Gradiente mais adequado para mobile */
