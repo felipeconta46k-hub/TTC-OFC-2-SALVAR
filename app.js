@@ -196,6 +196,11 @@ function init() {
   initSocialToast();
   initScrollReveal();
   initParticles();
+
+  // Restaura a última página visitada e vai pro topo
+  const lastPage = localStorage.getItem('uf_current_page') || 'home';
+  navigateTo(lastPage);
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 /* ═══ SKELETON ═══ */
@@ -2194,6 +2199,10 @@ function trackOrder() {
 
 /* ═══ NAVIGATE ═══ */
 function navigateTo(page) {
+  // Salva a página atual — exceto checkout e detalhe de produto
+  const noRestore = ['checkout', 'productDetail'];
+  localStorage.setItem('uf_current_page', noRestore.includes(page) ? 'home' : page);
+
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const map = {
     home: 'homePage', products: 'productsPage', productDetail: 'productDetailPage',

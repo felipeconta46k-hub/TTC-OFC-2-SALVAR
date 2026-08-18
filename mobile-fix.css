@@ -1819,3 +1819,74 @@ body.dark-mode .uf-back-bar:hover {
     height: auto !important;
   }
 }
+
+/* ===================================================
+   FIX: BOTÕES BRANCOS NO DARK MODE → amarelo (accent)
+=================================================== */
+
+/* Qualquer botão com fundo branco/claro no dark mode vira accent */
+body.dark-mode .btn-back-checkout,
+body.dark-mode .btn-prev-step,
+body.dark-mode .btn-lookup-cep,
+body.dark-mode .btn-apply-coupon,
+body.dark-mode .quantity-controls button,
+body.dark-mode .btn-remove,
+body.dark-mode .hype-logout-btn,
+body.dark-mode .prof-logout,
+body.dark-mode [onclick*="logout"],
+body.dark-mode button[style*="background:none"],
+body.dark-mode button[style*="background: none"] {
+  background: transparent !important;
+  border-color: var(--accent, #C9973A) !important;
+  color: var(--accent, #C9973A) !important;
+}
+
+body.dark-mode .btn-back-checkout:hover,
+body.dark-mode .btn-prev-step:hover,
+body.dark-mode .btn-lookup-cep:hover,
+body.dark-mode .btn-apply-coupon:hover,
+body.dark-mode .hype-logout-btn:hover,
+body.dark-mode .prof-logout:hover {
+  background: var(--accent, #C9973A) !important;
+  color: #fff !important;
+  border-color: var(--accent, #C9973A) !important;
+}
+
+/* Botões com background branco explícito no dark mode */
+body.dark-mode .about-contact,
+body.dark-mode .about-stat,
+body.dark-mode .about-value,
+body.dark-mode .about-team-member,
+body.dark-mode .about-testimonial,
+body.dark-mode .checkout-main,
+body.dark-mode .cart-summary,
+body.dark-mode .payment-method {
+  background: var(--gray-100, #1e2436) !important;
+  border-color: var(--gray-200, #252d40) !important;
+}
+
+/* Encerrar Sessão e botões inline com style branco */
+body.dark-mode button:not(.btn-primary):not(.btn-add-cart):not(.btn-checkout):not(.btn-next-step):not(.hamburger):not(.dark-toggle-btn):not(.modal-close):not(.filter-btn):not([class*="tab"]) {
+  background: transparent !important;
+  color: var(--accent, #C9973A) !important;
+  border-color: var(--accent, #C9973A) !important;
+}
+
+/* Corrige falsos positivos — botões que devem continuar com fundo accent */
+body.dark-mode .btn-primary,
+body.dark-mode .btn-add-cart,
+body.dark-mode .btn-checkout,
+body.dark-mode .btn-next-step,
+body.dark-mode .btn-submit,
+body.dark-mode .btn-track,
+body.dark-mode .btn-whatsapp,
+body.dark-mode .btn-copy-pix,
+body.dark-mode .btn-copy-boleto,
+body.dark-mode .auth-tab.active,
+body.dark-mode .filter-btn.active,
+body.dark-mode .sf-size-btn.active,
+body.dark-mode .sidebar-cat-btn.active {
+  background: var(--accent, #C9973A) !important;
+  color: #fff !important;
+  border-color: var(--accent, #C9973A) !important;
+}
