@@ -1890,3 +1890,114 @@ body.dark-mode .sidebar-cat-btn.active {
   color: #fff !important;
   border-color: var(--accent, #C9973A) !important;
 }
+
+/* ===================================================
+   FIX: BADGE DO CARRINHO — borda escura no dark mode
+=================================================== */
+body.dark-mode .badge {
+  border-color: var(--gray-100, #1e2436) !important;
+}
+
+/* ===================================================
+   FIX: COMENTÁRIOS DOS CLIENTES (about-testimonials)
+   — muito menores e compactos
+=================================================== */
+.about-testimonials {
+  padding: 2rem 1.5rem !important;
+  margin-bottom: 2rem !important;
+}
+
+.about-testimonials h3 {
+  font-size: 1.3rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.about-testimonials-grid {
+  gap: 0.65rem !important;
+}
+
+.about-testimonial {
+  padding: 1rem 1rem !important;
+  border-radius: 10px !important;
+}
+
+.about-testimonial-stars {
+  font-size: 0.78rem !important;
+  margin-bottom: 0.35rem !important;
+  letter-spacing: 0.05em !important;
+}
+
+.about-testimonial-text {
+  font-size: 0.78rem !important;
+  line-height: 1.45 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.about-testimonial-author {
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+}
+
+@media (max-width: 768px) {
+  .about-testimonials {
+    padding: 1.2rem 0.85rem !important;
+  }
+  .about-testimonials h3 {
+    font-size: 1.1rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .about-testimonial {
+    padding: 0.85rem !important;
+  }
+}
+
+/* ===================================================
+   FIX: RESUMO DE AVALIAÇÕES (reviews-summary)
+   — muito menor e compacto
+=================================================== */
+.reviews-summary {
+  padding: 1rem 1.2rem !important;
+  gap: 1.5rem !important;
+  margin-bottom: 1.2rem !important;
+}
+
+.reviews-avg-num {
+  font-size: 2.6rem !important;
+}
+
+.reviews-avg-stars {
+  font-size: 1rem !important;
+  margin: 0.2rem 0 !important;
+}
+
+.reviews-avg-count {
+  font-size: 0.72rem !important;
+}
+
+.reviews-bar-row {
+  font-size: 0.74rem !important;
+  gap: 0.5rem !important;
+}
+
+.reviews-bar-track {
+  height: 6px !important;
+}
+
+.reviews-bar-label {
+  width: 28px !important;
+}
+
+.reviews-bar-count {
+  width: 20px !important;
+}
+
+@media (max-width: 768px) {
+  .reviews-summary {
+    flex-direction: column !important;
+    gap: 0.85rem !important;
+    padding: 0.85rem !important;
+  }
+  .reviews-avg-num {
+    font-size: 2.2rem !important;
+  }
+}
