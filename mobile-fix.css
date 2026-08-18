@@ -860,10 +860,9 @@ body.dark-mode .uf-back-bar:hover {
 }
 
 /* ===================================================
-   FIX: MODAL AUTH — centralizado, aparece no meio da tela
+   FIX: MODAL AUTH — efeito desktop preservado no mobile
 =================================================== */
 @media (max-width: 700px) {
-  /* Centraliza o modal (sobrescreve align-items: flex-end) */
   #authModal.modal {
     align-items: center !important;
     padding: 1rem !important;
@@ -887,14 +886,98 @@ body.dark-mode .uf-back-bar:hover {
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .auth-left { display: none !important; }
+  /* Painel esquerdo: vira faixa no topo com o mesmo efeito do desktop */
+  .auth-left {
+    display: flex !important;
+    width: 100% !important;
+    min-height: 110px !important;
+    max-height: 110px !important;
+    padding: 1.2rem 1.4rem !important;
+    border-radius: 20px 20px 0 0 !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-direction: row !important;
+    overflow: hidden !important;
+    background: linear-gradient(145deg, #0d1a2e 0%, #1a2e4a 50%, #0a1525 100%) !important;
+    position: relative !important;
+  }
+
+  /* Mantém os glows animados do desktop */
+  .auth-left::before {
+    width: 260px !important;
+    height: 260px !important;
+    top: -120px !important;
+    left: -60px !important;
+  }
+  .auth-left::after {
+    width: 180px !important;
+    height: 180px !important;
+    bottom: -80px !important;
+    right: -40px !important;
+  }
+
+  /* Esconde lista de perks, mostra só o título e logo */
+  .auth-left-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    z-index: 2 !important;
+    position: relative !important;
+  }
+
+  .auth-left-title {
+    font-size: 1.6rem !important;
+    margin-bottom: 0.2rem !important;
+    line-height: 1 !important;
+  }
+
+  .auth-left-sub {
+    font-size: 0.75rem !important;
+    color: rgba(255,255,255,.55) !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Esconde os perks no mobile (economiza espaço) */
+  .auth-perks {
+    display: none !important;
+  }
+
+  /* Logo UF decorativo na direita da faixa */
+  .auth-left-inner::after {
+    content: 'UF';
+    position: absolute !important;
+    right: -1.4rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-family: var(--font-head) !important;
+    font-size: 5rem !important;
+    font-weight: 900 !important;
+    color: rgba(201,151,58,.12) !important;
+    letter-spacing: -.04em !important;
+    pointer-events: none !important;
+    white-space: nowrap !important;
+  }
 
   .auth-right {
     width: 100% !important;
-    padding: 1.5rem 1.2rem 2.5rem !important;
+    padding: 1.4rem 1.2rem 2rem !important;
     max-height: unset !important;
     overflow-y: visible !important;
     flex: 1 !important;
+    border-radius: 0 0 20px 20px !important;
+  }
+
+  /* Botão fechar sobre a faixa */
+  .modal-close {
+    top: 0.7rem !important;
+    right: 0.8rem !important;
+    background: rgba(255,255,255,.12) !important;
+    color: #fff !important;
+    z-index: 10 !important;
+  }
+  .modal-close:hover {
+    background: rgba(255,255,255,.22) !important;
+    color: #fff !important;
   }
 
   /* Abas mais largas */
