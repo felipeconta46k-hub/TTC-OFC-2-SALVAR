@@ -1486,3 +1486,219 @@ body.dark-mode .uf-back-bar:hover {
     padding-top: 1rem !important;
   }
 }
+
+/* ===================================================
+   FIX: PÁGINA SOBRE — layout mobile polido
+=================================================== */
+@media (max-width: 768px) {
+
+  /* ── Wrapper ── */
+  #aboutPage .section {
+    padding-top: 1rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  /* ── Header da seção ── */
+  #aboutPage .section-header {
+    margin-bottom: 1.5rem !important;
+  }
+  #aboutPage .section-title {
+    font-size: clamp(1.6rem, 7vw, 2.2rem) !important;
+  }
+  #aboutPage .section-sub {
+    font-size: 0.88rem !important;
+  }
+
+  /* ── Hero: imagem vem primeiro, texto depois ── */
+  .about-hero {
+    grid-template-columns: 1fr !important;
+    gap: 1.4rem !important;
+    padding: 0 !important;
+    margin-bottom: 2rem !important;
+  }
+
+  /* Inverte ordem: imagem no topo */
+  .about-hero > div:first-child { order: 2 !important; }
+  .about-img                    { order: 1 !important; }
+
+  .about-img {
+    height: 220px !important;
+    border-radius: 16px !important;
+  }
+
+  .about-hero-title {
+    font-size: clamp(2rem, 9vw, 2.8rem) !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .about-hero-copy {
+    font-size: 0.88rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .about-hero .btn-primary {
+    width: 100% !important;
+    justify-content: center !important;
+    margin-top: 0.5rem !important;
+    padding: 0.85rem !important;
+    font-size: 0.88rem !important;
+  }
+
+  /* ── Missão ── */
+  .about-mission {
+    padding: 2rem 1.2rem !important;
+    border-radius: 16px !important;
+    margin-bottom: 2rem !important;
+  }
+  .about-mission h3 {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .about-mission p {
+    font-size: 0.88rem !important;
+    line-height: 1.6 !important;
+  }
+
+  /* ── Valores: 1 coluna ── */
+  .about-values {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+    margin-bottom: 2rem !important;
+  }
+  .about-value {
+    padding: 1.4rem 1.2rem !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    gap: 1rem !important;
+  }
+  .about-value-icon {
+    font-size: 1.8rem !important;
+    margin-bottom: 0 !important;
+    flex-shrink: 0 !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .about-value > div:not(.about-value-icon) {
+    flex: 1 !important;
+  }
+  .about-value h4 {
+    font-size: 0.95rem !important;
+    margin-bottom: 0.3rem !important;
+  }
+  .about-value p {
+    font-size: 0.82rem !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+  }
+
+  /* ── Stats: 2×2 compacto ── */
+  .about-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.7rem !important;
+    margin-bottom: 2rem !important;
+  }
+  .about-stat {
+    padding: 1.4rem 0.8rem !important;
+    border-radius: 14px !important;
+  }
+  .about-stat-num {
+    font-size: 2rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+  .about-stat-label {
+    font-size: 0.78rem !important;
+  }
+
+  /* ── Equipe: grid 2×2 ── */
+  .about-team {
+    margin-bottom: 2rem !important;
+  }
+  .about-team h3 {
+    font-size: 1.5rem !important;
+    margin-bottom: 1.2rem !important;
+  }
+  .about-team-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.85rem !important;
+  }
+  .about-team-member {
+    padding: 1.4rem 1rem !important;
+    border-radius: 14px !important;
+  }
+  .about-team-avatar {
+    width: 72px !important;
+    height: 72px !important;
+    font-size: 1.8rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .about-team-name {
+    font-size: 0.88rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+  .about-team-role {
+    font-size: 0.76rem !important;
+  }
+
+  /* ── Depoimentos: 1 coluna ── */
+  .about-testimonials {
+    padding: 1.8rem 1rem !important;
+    border-radius: 16px !important;
+    margin-bottom: 2rem !important;
+  }
+  .about-testimonials h3 {
+    font-size: 1.4rem !important;
+    margin-bottom: 1.2rem !important;
+  }
+  .about-testimonials-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+  .about-testimonial {
+    padding: 1.4rem 1.2rem !important;
+    border-radius: 12px !important;
+  }
+  .about-testimonial-stars {
+    font-size: 1rem !important;
+    margin-bottom: 0.6rem !important;
+  }
+  .about-testimonial-text {
+    font-size: 0.84rem !important;
+    margin-bottom: 0.8rem !important;
+    line-height: 1.55 !important;
+  }
+  .about-testimonial-author {
+    font-size: 0.82rem !important;
+  }
+
+  /* ── Contato ── */
+  .about-contact {
+    padding: 1.8rem 1.2rem !important;
+    border-radius: 16px !important;
+  }
+  .about-contact h3 {
+    font-size: 1.5rem !important;
+    margin-bottom: 1.2rem !important;
+  }
+  .about-contact p {
+    font-size: 0.9rem !important;
+    margin-bottom: 0.7rem !important;
+  }
+  .about-contact-actions {
+    flex-direction: column !important;
+    gap: 0.6rem !important;
+    margin-top: 1.2rem !important;
+  }
+  .about-contact-actions .btn-primary,
+  .about-contact-actions .btn-outline {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.85rem !important;
+    font-size: 0.88rem !important;
+  }
+}
