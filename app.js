@@ -2310,23 +2310,7 @@ function renderAbout() {
         <h3>Nossa Missão</h3>
         <p>Democratizar o acesso a produtos de moda urbana de alta qualidade, combinando inovação, sustentabilidade e preços acessíveis para todos os estilos de vida urbana.</p>
       </div>
-      <div class="about-values">
-        <div class="about-value">
-          <div class="about-value-icon">🌱</div>
-          <h4>Sustentabilidade</h4>
-          <p>Comprometidos com práticas ecológicas, utilizando materiais reciclados e embalagens sustentáveis em toda nossa cadeia de produção.</p>
-        </div>
-        <div class="about-value">
-          <div class="about-value-icon">💎</div>
-          <h4>Qualidade Premium</h4>
-          <p>Cada produto passa por rigorosos controles de qualidade, garantindo durabilidade e conforto excepcional para nossos clientes.</p>
-        </div>
-        <div class="about-value">
-          <div class="about-value-icon">🚀</div>
-          <h4>Inovação</h4>
-          <p>Buscamos constantemente as últimas tendências e tecnologias para oferecer produtos que unem estilo, funcionalidade e performance.</p>
-        </div>
-      </div>
+
       <div class="about-stats">
         ${[['100+','Clientes satisfeitos'],['15+','Produtos premium'],['4.8★','Avaliação média'],['98%','Satisfação']].map(([n,l])=>`<div class="about-stat"><div class="about-stat-num">${n}</div><p class="about-stat-label">${l}</p></div>`).join('')}
       </div>
