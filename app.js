@@ -226,7 +226,7 @@ function initCountdown() {
 
 /* ═══ SOCIAL TOAST ═══ */
 let socialToastEnabled = JSON.parse(localStorage.getItem('uf_toast_enabled') ?? 'true');
-function initSocialToast() { if (socialToastEnabled) setTimeout(showSocialToast, 8000); }
+function initSocialToast() { /* social toast disabled */ }
 function showSocialToast() {
   if (!socialToastEnabled) return;
   const p = products[Math.floor(Math.random() * products.length)];
@@ -2356,7 +2356,25 @@ function renderAbout() {
         </div>
       </div>
       <div class="about-testimonials">
-
+        <h3>O que nossos clientes dizem</h3>
+        <div class="about-testimonials-grid">
+          <div class="about-testimonial">
+            <div class="about-testimonial-stars">★★★★★</div>
+            <p class="about-testimonial-text">"A Urban Flow transformou minha experiência de compras online. Produtos de qualidade, entrega rápida e atendimento excepcional!"</p>
+            <div class="about-testimonial-author">Marcos R., São Paulo</div>
+          </div>
+          <div class="about-testimonial">
+            <div class="about-testimonial-stars">★★★★★</div>
+            <p class="about-testimonial-text">"Finalmente encontrei uma loja que entende moda urbana. Cada peça é pensada para o dia a dia da cidade."</p>
+            <div class="about-testimonial-author">Camila F., Curitiba</div>
+          </div>
+          <div class="about-testimonial">
+            <div class="about-testimonial-stars">★★★★★</div>
+            <p class="about-testimonial-text">"Qualidade premium a preços justos. Recomendo para todos os amantes de streetwear!"</p>
+            <div class="about-testimonial-author">Lucas A., Rio de Janeiro</div>
+          </div>
+        </div>
+      </div>
       <div class="about-contact">
         <h3>Fale Conosco</h3>
         <p>📧 <a href="mailto:contato@urbanflow.com">contato@urbanflow.com</a></p>
