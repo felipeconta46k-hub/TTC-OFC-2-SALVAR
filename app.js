@@ -413,10 +413,11 @@ function closeMega() {
 
 /* ═══ RENDER — HOME ═══ */
 function renderCategories() {
+  const icons = { camisetas:'👕', shorts:'🩳', tenis:'👟', hoodies:'🧥', calcas:'👖', acessorios:'🧢' };
   document.getElementById('categoriesGrid').innerHTML = categories.map(cat => `
-    <div class="category-card" onclick="filterByCategory('${cat.id}')">
-      <div class="category-image"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></div>
-      <div class="category-overlay"><h3 class="category-name">${cat.name}</h3></div>
+    <div class="ml-cat-chip" onclick="filterByCategory('${cat.id}');navigateTo('products')">
+      <div class="ml-cat-chip-img"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></div>
+      <span class="ml-cat-chip-name">${cat.name}</span>
     </div>`).join('');
 }
 function renderFeaturedProducts() {
@@ -2669,3 +2670,40 @@ function initParticles() {
     bg.appendChild(p);
   }
 }
+/* ═══════════════════════════════════════════
+   CARROSSEL ESTILO MERCADO LIVRE — Urban Flow
+   ═══════════════════════════════════════════ */
+(function() {
+  let mlCurrent = 0;
+  const total = 3;
+  let mlTimer;
+
+  function mlGoTo(idx) {
+    const slides = document.querySelectorAll('.ml-slide');
+    const dots   = document.querySelectorAll('.ml-dot');
+    if (!slides.length) return;
+    slides[mlCurrent].classList.remove('active');
+    dots[mlCurrent] && dots[mlCurrent].classList.remove('active');
+    mlCurrent = (idx + total) % total;
+    slides[mlCurrent].classList.add('active');
+    dots[mlCurrent] && dots[mlCurrent].classList.add('active');
+  }
+
+  function mlShift(dir) {
+    mlGoTo(mlCurrent + dir);
+    restartTimer();
+  }
+
+  function restartTimer() {
+    clearInterval(mlTimer);
+    mlTimer = setInterval(() => mlShift(1), 5000);
+  }
+
+  // Expõe globalmente para os onclick inline
+  window.mlGoTo  = mlGoTo;
+  window.mlShift = mlShift;
+
+  document.addEventListener('DOMContentLoaded', function() {
+    restartTimer();
+  });
+})();

@@ -5233,3 +5233,443 @@ body.dark-mode .gen-filters {
     flex-shrink: 0;
   }
 }
+/* ═══════════════════════════════════════════
+   LAYOUT ESTILO MERCADO LIVRE — Urban Flow
+   ═══════════════════════════════════════════ */
+
+/* ── Wrapper geral ── */
+.ml-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* ══ HERO ══ */
+.ml-hero {
+  display: flex;
+  gap: 0;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.ml-hero-inner {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+}
+
+/* Slides */
+.ml-slides { width: 100%; height: 100%; }
+.ml-slide {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.5rem 2.5rem 2.5rem 3rem;
+  min-height: 320px;
+  gap: 1.5rem;
+}
+.ml-slide.active { display: flex; }
+
+.ml-slide-text { flex: 1; }
+.ml-slide-tag {
+  display: inline-block;
+  background: rgba(0,0,0,.12);
+  color: #333;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: .25rem .75rem;
+  border-radius: 20px;
+  margin-bottom: .75rem;
+}
+.ml-slide-text h2 {
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  line-height: 1.15;
+  color: #333;
+  margin-bottom: .5rem;
+}
+.ml-slide-text p {
+  font-size: .95rem;
+  color: #555;
+  margin-bottom: 1.25rem;
+}
+
+.ml-slide-img {
+  flex: 0 0 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ml-slide-img img {
+  width: 100%;
+  max-width: 260px;
+  max-height: 240px;
+  object-fit: contain;
+  border-radius: 12px;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,.15));
+}
+
+/* Botão CTA padrão ML */
+.ml-btn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: #3483fa;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: .65rem 1.5rem;
+  font-size: .92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.ml-btn-cta:hover { background: #2968c8; transform: translateY(-1px); }
+
+/* Dots */
+.ml-dots {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 5;
+}
+.ml-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,.2);
+  cursor: pointer;
+  padding: 0;
+  transition: background .2s, transform .2s;
+}
+.ml-dot.active { background: #3483fa; transform: scale(1.3); }
+
+/* Arrows */
+.ml-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,.92);
+  border: 1px solid #e0e0e0;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  z-index: 5;
+  transition: background .2s;
+}
+.ml-arrow:hover { background: #fff; }
+.ml-arrow-l { left: 10px; }
+.ml-arrow-r { right: 10px; }
+
+/* ── Sidebar de categorias rápidas ── */
+.ml-hero-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: #fff;
+  border-left: 1px solid #e8e8e8;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+}
+.ml-qs-title {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #888;
+  padding: .25rem 1.25rem .5rem;
+}
+.ml-qs-item {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .5rem 1.25rem;
+  font-size: .88rem;
+  color: #333;
+  text-decoration: none;
+  transition: background .15s;
+}
+.ml-qs-item:hover { background: #f5f5f5; color: #3483fa; }
+.ml-qs-icon { font-size: 1.1rem; }
+.ml-qs-item--all {
+  margin-top: auto;
+  color: #3483fa;
+  font-weight: 600;
+  font-size: .85rem;
+  border-top: 1px solid #eee;
+  padding-top: .75rem;
+}
+
+/* ══ BENEFÍCIOS ══ */
+.ml-benefits {
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  border-top: 1px solid #e8e8e8;
+}
+.ml-benefits-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: .9rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.ml-benefit {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .4rem 2rem;
+  font-size: .85rem;
+}
+.ml-benefit span:first-child { font-size: 1.3rem; }
+.ml-benefit strong { display: block; font-weight: 700; color: #333; font-size: .88rem; }
+.ml-benefit small { color: #888; font-size: .77rem; }
+.ml-benefit-sep {
+  width: 1px;
+  height: 32px;
+  background: #e8e8e8;
+}
+
+/* ══ SEÇÕES GENÉRICAS ══ */
+.ml-section {
+  padding: 1.75rem 0;
+  background: #fff;
+}
+.ml-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+}
+.ml-section-head h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333;
+}
+.ml-section-head a {
+  font-size: .85rem;
+  color: #3483fa;
+  text-decoration: none;
+  font-weight: 500;
+}
+.ml-section-head a:hover { text-decoration: underline; }
+
+/* ── Categorias em chips/ícones ── */
+.ml-cats-row {
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+/* Override das categorias existentes para o novo estilo */
+.ml-cats-row .category-card {
+  flex: 0 0 auto;
+  min-width: 90px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  padding: .75rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+  border: 1px solid #e8e8e8;
+}
+.ml-cats-row .category-card:hover {
+  background: #eaf0ff;
+  border-color: #3483fa;
+  transform: translateY(-2px);
+}
+
+/* ══ OFERTA DO DIA ══ */
+.ml-oferta-section {
+  padding: 1.5rem 0;
+  background: #fff;
+  border-top: 4px solid #ffe600;
+}
+.ml-oferta-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.ml-oferta-title {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.ml-oferta-badge {
+  background: #ffe600;
+  color: #333;
+  font-weight: 800;
+  font-size: .9rem;
+  padding: .3rem .85rem;
+  border-radius: 6px;
+  letter-spacing: .03em;
+}
+.ml-oferta-timer {
+  font-size: .88rem;
+  color: #555;
+}
+.ml-oferta-timer strong {
+  background: #333;
+  color: #fff;
+  padding: .1rem .4rem;
+  border-radius: 4px;
+  font-size: .9rem;
+  margin: 0 1px;
+}
+.ml-oferta-link {
+  font-size: .85rem;
+  color: #3483fa;
+  text-decoration: none;
+  font-weight: 500;
+}
+.ml-oferta-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: #f9f9f9;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  transition: box-shadow .2s;
+  max-width: 480px;
+}
+.ml-oferta-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.1); }
+.ml-oferta-img img {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.ml-oferta-name { font-weight: 600; color: #333; margin-bottom: .25rem; }
+.ml-oferta-old { font-size: .8rem; color: #999; text-decoration: line-through; }
+.ml-oferta-price { font-size: 1.5rem; font-weight: 800; color: #00a650; margin: .15rem 0; }
+.ml-oferta-pct {
+  display: inline-block;
+  background: #00a650;
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: .15rem .5rem;
+  border-radius: 4px;
+  margin-bottom: .35rem;
+}
+.ml-oferta-frete { font-size: .82rem; color: #00a650; font-weight: 600; }
+
+/* ══ PRODUTOS EM SCROLL HORIZONTAL ══ */
+.ml-products-scroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: .75rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.ml-products-scroll::-webkit-scrollbar { height: 4px; }
+.ml-products-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+
+/* Override dos cards de produto para ficarem em linha */
+.ml-products-scroll .product-card {
+  flex: 0 0 200px;
+  scroll-snap-align: start;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  background: #fff;
+  transition: box-shadow .2s, transform .2s;
+  overflow: hidden;
+}
+.ml-products-scroll .product-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,.1);
+  transform: translateY(-2px);
+}
+
+/* ══ BANNER STRIP ══ */
+.ml-banner-strip {
+  padding: 1rem 0;
+  background: #3483fa;
+}
+.ml-banner-strip-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.ml-banner-strip-text {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  color: #fff;
+}
+.ml-banner-strip-text strong { font-size: 1rem; font-weight: 700; }
+.ml-banner-strip-text span { font-size: .85rem; opacity: .9; }
+.ml-banner-strip .ml-btn-cta {
+  background: #ffe600;
+  color: #333;
+  flex-shrink: 0;
+}
+.ml-banner-strip .ml-btn-cta:hover { background: #ffd900; }
+
+/* ══ RESPONSIVO ══ */
+@media (max-width: 900px) {
+  .ml-hero { flex-direction: column; }
+  .ml-hero-sidebar { display: none; }
+  .ml-slide { padding: 1.5rem 1.25rem; min-height: 240px; }
+  .ml-slide-img { flex: 0 0 130px; }
+  .ml-slide-img img { max-width: 130px; max-height: 130px; }
+  .ml-slide-text h2 { font-size: 1.5rem; }
+}
+@media (max-width: 600px) {
+  .ml-benefit-sep { display: none; }
+  .ml-benefit { padding: .4rem 1rem; }
+  .ml-benefits-inner { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: .5rem; }
+  .ml-slide-img { display: none; }
+  .ml-oferta-card { max-width: 100%; }
+  .ml-products-scroll .product-card { flex: 0 0 160px; }
+  .ml-banner-strip-inner { flex-direction: column; text-align: center; }
+}
+
+/* ── Chips de categoria estilo ML ── */
+.ml-cat-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  cursor: pointer;
+  width: 100px;
+  text-align: center;
+  transition: transform .2s;
+}
+.ml-cat-chip:hover { transform: translateY(-3px); }
+.ml-cat-chip-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #e8e8e8;
+  background: #f5f5f5;
+  transition: border-color .2s;
+}
+.ml-cat-chip:hover .ml-cat-chip-img { border-color: #3483fa; }
+.ml-cat-chip-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ml-cat-chip-name {
+  font-size: .82rem;
+  font-weight: 600;
+  color: #333;
+}
