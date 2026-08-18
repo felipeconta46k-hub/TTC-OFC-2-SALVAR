@@ -326,26 +326,11 @@ nav a:hover::after { width: 100%; }
 .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* MOBILE NAV */
-.mobile-nav {
-  display: none; flex-direction: column;
-  background: var(--white);
-  border-top: 1px solid var(--gray-200);
-  max-height: 0; overflow: hidden;
-  transition: max-height .35s cubic-bezier(.4,0,.2,1);
-}
-.mobile-nav.open { max-height: 480px; }
-.mobile-nav a {
-  display: block; padding: 1rem 2rem;
-  color: var(--black); text-decoration: none;
-  font-weight: 600; font-size: .95rem;
-  border-bottom: 1px solid var(--gray-100);
-  transition: var(--transition);
-}
-.mobile-nav a:hover { background: var(--gray-50); color: var(--accent); padding-left: 2.4rem; }
+/* MOBILE NAV — base reset; real styles live in mobile-fix.css drawer section */
+.mobile-nav { display: flex; }
 .nav-overlay {
   display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,.3); z-index: 900;
+  background: rgba(0,0,0,.55); z-index: 1400;
   backdrop-filter: blur(2px);
 }
 .nav-overlay.show { display: block; }
@@ -4355,9 +4340,7 @@ body.dark-mode .mega-link { color: var(--gray-700); }
 body.dark-mode .mega-link:hover { color: var(--accent); background: var(--gray-200); }
 
 /* Mobile nav */
-body.dark-mode .mobile-nav { background: var(--gray-100); }
-body.dark-mode .mobile-nav a { color: var(--gray-700); border-bottom-color: var(--gray-200); }
-body.dark-mode .mobile-nav a:hover { background: var(--gray-200); color: var(--accent); }
+/* mobile-nav dark-mode — handled in mobile-fix.css drawer section */
 
 /* User dropdown */
 body.dark-mode .user-dropdown { background: var(--gray-100); border-color: var(--gray-200); }

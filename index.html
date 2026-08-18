@@ -75,46 +75,67 @@
         </div>
       </div>
     </div>
-    <div class="header-right">
-      <div class="search-wrapper">
-        <div class="search-bar">
-          <svg class="search-icon-left" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" placeholder="Buscar produtos..." id="searchInput" autocomplete="off">
-          <button type="button" class="search-clear" id="searchClear" style="display:none">✕</button>
+      <div class="header-right">
+        <button class="icon-btn dark-toggle-btn" id="darkToggle" onclick="toggleDarkMode()" aria-label="Alternar modo escuro" title="Modo escuro">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="icon-btn" id="cartIcon" onclick="navigateTo('cart')" aria-label="Carrinho">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="badge" style="display:none;">0</span>
+        </button>
+        <button class="icon-btn" id="wishIcon" onclick="navigateTo('wishlist')" aria-label="Favoritos">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="badge" style="display:none;">0</span>
+        </button>
+        <div class="user-menu">
+          <div class="user-icon" id="userIcon" tabindex="0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="user-dropdown" id="userDropdown"></div>
         </div>
-        <div class="search-dropdown" id="searchDropdown"></div>
+        <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
       </div>
-      <button class="icon-btn dark-toggle-btn" id="darkToggle" onclick="toggleDarkMode()" aria-label="Alternar modo escuro" title="Modo escuro">
-        <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
-      <button class="icon-btn" id="cartIcon" onclick="navigateTo('cart')" aria-label="Carrinho">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        <span class="badge" style="display:none;">0</span>
-      </button>
-      <button class="icon-btn" id="wishIcon" onclick="navigateTo('wishlist')" aria-label="Favoritos">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        <span class="badge" style="display:none;">0</span>
-      </button>
-      <div class="user-menu">
-        <div class="user-icon" id="userIcon" tabindex="0">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </div>
-        <div class="user-dropdown" id="userDropdown"></div>
-      </div>
-      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </div>
-  <div class="mobile-nav" id="mobileNav">
-    <a href="#" onclick="navigateTo('home');closeMobileMenu();return false;">🏠 Home</a>
-    <a href="#" onclick="navigateTo('products');closeMobileMenu();return false;">👟 Produtos</a>
-    <a href="#" onclick="navigateTo('about');closeMobileMenu();return false;">ℹ️ Sobre</a>
-    <a href="#" onclick="navigateTo('cart');closeMobileMenu();return false;">🛒 Carrinho</a>
-    <a href="#" onclick="navigateTo('wishlist');closeMobileMenu();return false;">❤️ Favoritos</a>
-    <a href="#" onclick="navigateTo('tracking');closeMobileMenu();return false;">📦 Rastrear Pedido</a>
-    <a href="#" onclick="closeMobileMenu();if(typeof currentUser!=='undefined'&&currentUser){navigateTo('profile');}else{openModal();}return false;">👤 Meu Perfil</a>
+  <!-- Barra de busca: fora do header-container, só aparece no mobile -->
+  <div class="mobile-search-row">
+    <div class="search-wrapper">
+      <div class="search-bar">
+        <svg class="search-icon-left" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Buscar tênis, moletons..." id="searchInput" autocomplete="off">
+        <button type="button" class="search-clear" id="searchClear" style="display:none">✕</button>
+      </div>
+      <div class="search-dropdown" id="searchDropdown"></div>
+    </div>
   </div>
 </header>
+
+<!-- ══════════════ MOBILE DRAWER ══════════════ -->
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-header">
+    <span class="mobile-nav-title">MENU</span>
+    <button class="mobile-nav-close" onclick="closeMobileMenu()" aria-label="Fechar menu">✕</button>
+  </div>
+  <div class="mobile-nav-links">
+    <a href="#" onclick="navigateTo('home');closeMobileMenu();return false;">Home</a>
+    <a href="#" onclick="navigateTo('products');closeMobileMenu();return false;">Produtos</a>
+    <a href="#" onclick="navigateTo('about');closeMobileMenu();return false;">Sobre</a>
+    <a href="#" onclick="navigateTo('tracking');closeMobileMenu();return false;">Rastrear pedido</a>
+    <a href="#" onclick="navigateTo('tracking');closeMobileMenu();return false;">Ajuda</a>
+  </div>
+  <div class="mobile-nav-categories">
+    <span class="mobile-nav-cat-label">CATEGORIAS</span>
+    <div class="mobile-nav-chips">
+      <button onclick="filterByCategory('tenis');navigateTo('products');closeMobileMenu()">Tênis</button>
+      <button onclick="filterByCategory('camisetas');navigateTo('products');closeMobileMenu()">Camisetas</button>
+      <button onclick="filterByCategory('hoodies');navigateTo('products');closeMobileMenu()">Moletons</button>
+      <button onclick="filterByCategory('calcas');navigateTo('products');closeMobileMenu()">Calças</button>
+      <button onclick="filterByCategory('shorts');navigateTo('products');closeMobileMenu()">Shorts</button>
+      <button onclick="filterByCategory('acessorios');navigateTo('products');closeMobileMenu()">Acessórios</button>
+    </div>
+  </div>
+</div>
 
 <!-- ===================== HOME PAGE ===================== -->
 <div class="page active" id="homePage">
@@ -557,5 +578,91 @@
   </div>
 </footer>
 <script src="app.js"></script>
+
+<!-- ══════════════ BOTTOM NAV ══════════════ -->
+<nav class="bottom-nav" id="bottomNav" aria-label="Navegação">
+
+  <button class="bn-item" id="bn-home" onclick="navigateTo('home');bnActive('bn-home')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/>
+      <path d="M9 21V12h6v9"/>
+    </svg>
+    <span>Início</span>
+  </button>
+
+  <button class="bn-item" id="bn-cats" onclick="navigateTo('products');bnActive('bn-cats')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1"/>
+      <rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/>
+      <rect x="14" y="14" width="7" height="7" rx="1"/>
+    </svg>
+    <span>Categorias</span>
+  </button>
+
+  <button class="bn-item" id="bn-cart" onclick="navigateTo('cart');bnActive('bn-cart')">
+    <span class="bn-badge" id="bnCartBadge" style="display:none">0</span>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 0 1-8 0"/>
+    </svg>
+    <span>Sacola</span>
+  </button>
+
+  <button class="bn-item" id="bn-wish" onclick="navigateTo('wishlist');bnActive('bn-wish')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+    <span>Favoritos</span>
+  </button>
+
+  <button class="bn-item" id="bn-conta" onclick="(typeof currentUser!=='undefined'&&currentUser)?navigateTo('profile'):openModal();bnActive('bn-conta')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    <span>Conta</span>
+  </button>
+
+</nav>
+
+<script>
+/* ── Bottom nav: marca item ativo ── */
+function bnActive(id) {
+  document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('bn-active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('bn-active');
+}
+
+/* ── Sincroniza badge da Sacola com o carrinho ── */
+function syncBnBadge() {
+  const badge = document.getElementById('bnCartBadge');
+  if (!badge) return;
+  const n = (typeof cart !== 'undefined') ? cart.reduce((s,i)=>s+i.quantity,0) : 0;
+  badge.textContent = n;
+  badge.style.display = n > 0 ? 'flex' : 'none';
+}
+
+/* Observa o badge original do header e espelha */
+document.addEventListener('DOMContentLoaded', function() {
+  /* Marca home como ativo ao carregar */
+  bnActive('bn-home');
+
+  /* MutationObserver no badge do header */
+  const headerBadge = document.querySelector('#cartIcon .badge');
+  if (headerBadge) {
+    new MutationObserver(syncBnBadge).observe(headerBadge, { childList:true, characterData:true, subtree:true, attributes:true });
+  }
+  syncBnBadge();
+
+  /* Patch em updateCartBadge para também atualizar bottom nav */
+  const _orig = window.updateCartBadge;
+  window.updateCartBadge = function() {
+    _orig && _orig();
+    syncBnBadge();
+  };
+});
+</script>
 </body>
 </html>
