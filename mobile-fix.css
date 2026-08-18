@@ -923,3 +923,79 @@ body.dark-mode .uf-back-bar:hover {
     background: var(--gray-200, #e5e7eb) !important;
   }
 }
+
+/* ===================================================
+   FIX: BENEFITS BAR — linha fina horizontal no mobile
+=================================================== */
+@media (max-width: 768px) {
+  /* Vira uma linha compacta horizontal com scroll */
+  .benefits-bar {
+    padding: 0.5rem 0 !important;
+  }
+
+  .benefits-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    gap: 0 !important;
+    grid-template-columns: unset !important;
+  }
+
+  .benefits-grid::-webkit-scrollbar { display: none; }
+
+  .benefit-item {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    padding: 0.45rem 0.9rem !important;
+    border-right: 1px solid rgba(255,255,255,.1) !important;
+    border-bottom: none !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  .benefit-item:last-child { border-right: none !important; }
+
+  .benefit-icon {
+    font-size: 1rem !important;
+  }
+
+  .benefit-item strong {
+    font-size: .72rem !important;
+    white-space: nowrap !important;
+  }
+
+  .benefit-item small {
+    display: none !important;
+  }
+}
+
+/* ===================================================
+   FIX: HERO FOTO — maior e sem espaço vazio
+=================================================== */
+@media (max-width: 768px) {
+  .hero {
+    height: 460px !important;
+  }
+
+  .hero-slide {
+    min-height: 460px !important;
+    padding: 1.2rem 1.2rem 2.5rem !important;
+    align-items: center !important;
+  }
+
+  /* Foto de fundo — ocupa tudo, sem corte */
+  .hero-bg-layer {
+    inset: 0 !important;
+    transform: none !important;
+    transition: none !important;
+    background-size: cover !important;
+    background-position: center top !important;
+  }
+
+  .hero-slide.active .hero-bg-layer {
+    transform: none !important;
+  }
+}
