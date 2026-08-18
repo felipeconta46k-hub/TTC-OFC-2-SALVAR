@@ -1218,3 +1218,230 @@ body.dark-mode .uf-back-bar:hover {
     font-size: .68rem !important;
   }
 }
+/* ===================================================
+   FIX: CHECKOUT — layout responsivo completo no mobile
+=================================================== */
+@media (max-width: 768px) {
+
+  /* Wrapper sem padding lateral extra */
+  .checkout-wrapper {
+    max-width: 100% !important;
+  }
+
+  /* ── Topo do checkout: empilha em 2 linhas ── */
+  .checkout-top {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+    margin-bottom: 1.2rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  /* Linha 1: botão voltar + logo lado a lado */
+  .btn-back-checkout {
+    font-size: 0.8rem !important;
+    padding: 0.45rem 1rem !important;
+    order: 1 !important;
+  }
+
+  .checkout-logo {
+    order: 2 !important;
+    position: absolute !important;
+    right: 0.9rem !important;
+    top: 0.6rem !important;
+  }
+
+  /* Linha 2: stepper ocupa largura toda */
+  .checkout-stepper {
+    order: 3 !important;
+    width: 100% !important;
+    justify-content: center !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 2px !important;
+  }
+  .checkout-stepper::-webkit-scrollbar { display: none !important; }
+
+  /* Steps menores */
+  .cstep {
+    font-size: 0.72rem !important;
+    gap: 0.3rem !important;
+    white-space: nowrap !important;
+  }
+  .cstep-num {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 0.68rem !important;
+  }
+  .cstep-line {
+    width: 28px !important;
+    margin: 0 0.15rem !important;
+  }
+
+  /* ── Body: 1 coluna, sidebar vem depois ── */
+  .checkout-body {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .checkout-sidebar {
+    position: static !important;
+    top: auto !important;
+    order: 2 !important;
+    padding: 1rem !important;
+    border-radius: 12px !important;
+  }
+
+  /* ── Painel principal: menos padding ── */
+  .checkout-main {
+    padding: 1.2rem 1rem !important;
+    border-radius: 12px !important;
+    order: 1 !important;
+  }
+
+  .checkout-section-title {
+    font-size: 1.05rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* ── Grid do formulário: 1 coluna ── */
+  .checkout-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  /* CPF e Telefone voltam a ficar lado a lado (2 col) */
+  .checkout-form-group:nth-child(2),
+  .checkout-form-group:nth-child(3) {
+    /* mantém 1 col; explícito abaixo para os 2 juntos */
+  }
+
+  /* Número e Complemento: 2 colunas */
+  .checkout-form-grid {
+    /* CPF + Telefone em linha */
+  }
+
+  /* Inputs — tamanho confortável no touch */
+  .checkout-input {
+    padding: 0.82rem 0.85rem !important;
+    font-size: 1rem !important; /* evita zoom no iOS */
+    border-radius: 10px !important;
+  }
+
+  /* ── Linha do CEP ── */
+  .cep-row {
+    flex-direction: row !important;
+    gap: 0.5rem !important;
+  }
+  .cep-row .checkout-input {
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  .btn-lookup-cep {
+    padding: 0.82rem 0.9rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 10px !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* ── Botões de navegação (Anterior / Próximo) ── */
+  .checkout-nav-btns {
+    flex-direction: column-reverse !important;
+    gap: 0.6rem !important;
+    margin-top: 1.2rem !important;
+    padding-top: 1rem !important;
+  }
+  .btn-next-step {
+    width: 100% !important;
+    padding: 0.95rem !important;
+    font-size: 0.92rem !important;
+    border-radius: 10px !important;
+    text-align: center !important;
+  }
+  .btn-prev-step {
+    width: 100% !important;
+    padding: 0.75rem !important;
+    font-size: 0.85rem !important;
+    border-radius: 10px !important;
+    text-align: center !important;
+  }
+
+  /* ── Sidebar: resumo do pedido compacto ── */
+  .checkout-order-title {
+    font-size: 0.92rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .checkout-order-items {
+    max-height: 160px !important;
+    gap: 0.5rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .checkout-order-img {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 8px !important;
+  }
+  .checkout-order-item-name {
+    font-size: 0.76rem !important;
+  }
+  .checkout-order-item-price {
+    font-size: 0.8rem !important;
+  }
+  .checkout-order-row {
+    font-size: 0.82rem !important;
+    margin-bottom: 0.35rem !important;
+  }
+  .checkout-order-total {
+    font-size: 1rem !important;
+  }
+
+  /* ── Métodos de pagamento ── */
+  .payment-method {
+    padding: 0.85rem 1rem !important;
+    gap: 0.75rem !important;
+    border-radius: 10px !important;
+  }
+  .payment-method-label strong {
+    font-size: 0.85rem !important;
+  }
+  .payment-method-label small {
+    font-size: 0.72rem !important;
+  }
+  .payment-method-icon {
+    font-size: 1.2rem !important;
+  }
+
+  /* ── Confirmação ── */
+  .checkout-confirmation {
+    padding: 1.5rem 0.5rem !important;
+  }
+}
+
+/* ── CPF + Telefone na mesma linha no mobile ── */
+@media (max-width: 768px) {
+  /* Agrupa CPF e Telefone em 2 colunas usando CSS grid do pai */
+  #checkoutMain .checkout-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Forçar CEP row a funcionar bem */
+  .cep-row {
+    display: flex !important;
+    align-items: stretch !important;
+  }
+}
+
+/* ── Telas muito pequenas (< 380px) ── */
+@media (max-width: 380px) {
+  .checkout-main {
+    padding: 1rem 0.75rem !important;
+  }
+  .cstep-line {
+    width: 18px !important;
+  }
+  .cstep span:not(.cstep-num) {
+    display: none !important; /* esconde texto, mostra só número */
+  }
+}
