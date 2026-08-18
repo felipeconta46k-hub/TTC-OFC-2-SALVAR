@@ -1702,3 +1702,120 @@ body.dark-mode .uf-back-bar:hover {
     font-size: 0.88rem !important;
   }
 }
+
+/* ===================================================
+   FIX CRÍTICO: ZOOM E INTERAÇÃO MOBILE (iOS + Android)
+=================================================== */
+
+/* ── 1. Todos os inputs/selects: font-size mínimo 16px no mobile
+        iOS dispara zoom automático em qualquer campo < 16px ── */
+@media (max-width: 900px) {
+  input,
+  select,
+  textarea,
+  .search-bar input,
+  .mobile-search-bar input,
+  .checkout-input,
+  .input-icon-wrap input,
+  .coupon-field input,
+  .review-input,
+  .review-textarea,
+  [type="text"],
+  [type="email"],
+  [type="tel"],
+  [type="number"],
+  [type="password"],
+  [type="search"] {
+    font-size: 16px !important; /* previne zoom automático do iOS */
+  }
+
+  /* Selects também */
+  select,
+  .results-sort-select,
+  .price-input {
+    font-size: 16px !important;
+  }
+}
+
+/* ── 2. Nenhum elemento extrapola a tela (overflow kill) ── */
+@media (max-width: 900px) {
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    position: relative !important;
+  }
+
+  /* Qualquer filho que tente ser mais largo que a tela */
+  * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Exceções necessárias para não quebrar layouts internos */
+  .hero-slides,
+  .hero-slide,
+  .modal,
+  .mega-menu,
+  .mobile-nav,
+  svg,
+  canvas {
+    max-width: unset !important;
+  }
+}
+
+/* ── 3. Touch-action: garante que botões e links respondem ao toque ── */
+@media (max-width: 900px) {
+  button,
+  a,
+  [role="button"],
+  .btn-primary,
+  .btn-outline,
+  .product-card,
+  .filter-btn,
+  .category-card,
+  .faq-head,
+  .auth-tab,
+  .payment-method,
+  .quantity-controls button,
+  .btn-add-cart,
+  .btn-favorite,
+  .btn-checkout,
+  .btn-next-step,
+  .btn-prev-step,
+  .hamburger,
+  .dark-toggle-btn,
+  .uf-back-bar,
+  .mobile-nav a,
+  .cart-item,
+  .about-team-member,
+  .about-testimonial {
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    cursor: pointer !important;
+  }
+}
+
+/* ── 4. Remove min-width fixos que causam overflow lateral ── */
+@media (max-width: 900px) {
+  .checkout-stepper,
+  .cstep,
+  .cart-summary,
+  .coupon-field,
+  .payment-methods,
+  .checkout-form-grid,
+  .about-team-grid,
+  .about-testimonials-grid,
+  .about-stats,
+  .about-values {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* ── 5. Imagens e mídias nunca excedem o container ── */
+@media (max-width: 900px) {
+  img, video, iframe, embed, object {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
