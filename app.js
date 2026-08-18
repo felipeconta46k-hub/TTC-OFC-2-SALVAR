@@ -413,20 +413,42 @@ function closeMega() {
 
 /* ═══ RENDER — HOME ═══ */
 function renderCategories() {
-  const icons = { camisetas:'👕', shorts:'🩳', tenis:'👟', hoodies:'🧥', calcas:'👖', acessorios:'🧢' };
-  document.getElementById('categoriesGrid').innerHTML = categories.map(cat => `
-    <div class="ml-cat-chip" onclick="filterByCategory('${cat.id}');navigateTo('products')">
-      <div class="ml-cat-chip-img"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></div>
-      <span class="ml-cat-chip-name">${cat.name}</span>
+  const el = document.getElementById('categoriesGrid');
+  if (!el) return;
+  el.innerHTML = categories.map(cat => `
+    <div class="meli-cat-item" onclick="filterByCategory('${cat.id}');navigateTo('products')">
+      <div class="meli-cat-thumb"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></div>
+      <span class="meli-cat-label">${cat.name}</span>
     </div>`).join('');
 }
 function renderFeaturedProducts() {
-  document.getElementById('featuredProducts').innerHTML = products.filter(p => p.featured).slice(0, 8).map(createProductCard).join('');
+  const el = document.getElementById('featuredProducts');
+  if (el) el.innerHTML = products.filter(p => p.featured).slice(0,8).map(createProductCard).join('');
 }
 function renderNewProducts() {
   const el = document.getElementById('newProducts');
   if (el) el.innerHTML = [...products].slice(-8).reverse().map(createProductCard).join('');
 }
+
+/* ═══ SLIDER MELI ═══ */
+(function(){
+  let cur = 0, total = 3, timer;
+  function go(idx) {
+    const slides = document.querySelectorAll('.meli-slide');
+    const dots   = document.querySelectorAll('.meli-dot');
+    if (!slides.length) return;
+    slides[cur].classList.remove('active');
+    if (dots[cur]) dots[cur].classList.remove('active');
+    cur = ((idx % total) + total) % total;
+    slides[cur].classList.add('active');
+    if (dots[cur]) dots[cur].classList.add('active');
+  }
+  function shift(d) { go(cur + d); restart(); }
+  function restart() { clearInterval(timer); timer = setInterval(() => shift(1), 5000); }
+  window.meliGo    = go;
+  window.meliShift = shift;
+  document.addEventListener('DOMContentLoaded', restart);
+})();
 
 /* ═══ FILTERS + SORT + PRICE ═══ */
 function renderFilters() {
@@ -2670,40 +2692,3 @@ function initParticles() {
     bg.appendChild(p);
   }
 }
-/* ═══════════════════════════════════════════
-   CARROSSEL ESTILO MERCADO LIVRE — Urban Flow
-   ═══════════════════════════════════════════ */
-(function() {
-  let mlCurrent = 0;
-  const total = 3;
-  let mlTimer;
-
-  function mlGoTo(idx) {
-    const slides = document.querySelectorAll('.ml-slide');
-    const dots   = document.querySelectorAll('.ml-dot');
-    if (!slides.length) return;
-    slides[mlCurrent].classList.remove('active');
-    dots[mlCurrent] && dots[mlCurrent].classList.remove('active');
-    mlCurrent = (idx + total) % total;
-    slides[mlCurrent].classList.add('active');
-    dots[mlCurrent] && dots[mlCurrent].classList.add('active');
-  }
-
-  function mlShift(dir) {
-    mlGoTo(mlCurrent + dir);
-    restartTimer();
-  }
-
-  function restartTimer() {
-    clearInterval(mlTimer);
-    mlTimer = setInterval(() => mlShift(1), 5000);
-  }
-
-  // Expõe globalmente para os onclick inline
-  window.mlGoTo  = mlGoTo;
-  window.mlShift = mlShift;
-
-  document.addEventListener('DOMContentLoaded', function() {
-    restartTimer();
-  });
-})();

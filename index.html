@@ -140,167 +140,144 @@
 <!-- ===================== HOME PAGE ===================== -->
 <div class="page active" id="homePage">
 
-  <!-- ── ML HERO BANNER ── -->
-  <section class="ml-hero">
-    <div class="ml-hero-inner">
-      <!-- Slides -->
-      <div class="ml-slides" id="mlSlides">
-        <div class="ml-slide active" style="background:linear-gradient(110deg,#ffe600 0%,#ffed4a 60%,#fff8b0 100%)">
-          <div class="ml-slide-text">
-            <span class="ml-slide-tag">⚡ Oferta do Dia</span>
-            <h2>Até <strong>40% OFF</strong><br>em Tênis</h2>
-            <p>Os melhores modelos urbanos com desconto imperdível</p>
-            <button class="ml-btn-cta" onclick="filterByCategory('tenis');navigateTo('products')">Ver ofertas</button>
-          </div>
-          <div class="ml-slide-img">
-            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80" alt="Tênis em oferta">
-          </div>
-        </div>
-        <div class="ml-slide" style="background:linear-gradient(110deg,#3483fa 0%,#2968c8 60%,#1a4fa0 100%)">
-          <div class="ml-slide-text" style="color:#fff">
-            <span class="ml-slide-tag" style="background:rgba(255,255,255,.2);color:#fff">✨ Nova Coleção</span>
-            <h2>Urban <strong>Story</strong><br>2026</h2>
-            <p style="color:rgba(255,255,255,.85)">Moda urbana para quem define tendências</p>
-            <button class="ml-btn-cta" style="background:#ffe600;color:#333" onclick="navigateTo('products')">Comprar agora</button>
-          </div>
-          <div class="ml-slide-img">
-            <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=500&q=80" alt="Coleção Urban">
-          </div>
-        </div>
-        <div class="ml-slide" style="background:linear-gradient(110deg,#f5f5f5 0%,#ececec 100%)">
-          <div class="ml-slide-text">
-            <span class="ml-slide-tag" style="background:#3483fa;color:#fff">🆓 Frete Grátis</span>
-            <h2>Coleção<br><strong>Feminina</strong></h2>
-            <p>Do treino ao look do dia, com estilo</p>
-            <button class="ml-btn-cta" onclick="filterByGender('feminino');navigateTo('products')">Explorar</button>
-          </div>
-          <div class="ml-slide-img">
-            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=500&q=80" alt="Coleção Feminina">
-          </div>
-        </div>
-      </div>
-      <!-- Dots -->
-      <div class="ml-dots" id="mlDots">
-        <button class="ml-dot active" onclick="mlGoTo(0)"></button>
-        <button class="ml-dot" onclick="mlGoTo(1)"></button>
-        <button class="ml-dot" onclick="mlGoTo(2)"></button>
-      </div>
-      <!-- Navs -->
-      <button class="ml-arrow ml-arrow-l" onclick="mlShift(-1)">&#8249;</button>
-      <button class="ml-arrow ml-arrow-r" onclick="mlShift(1)">&#8250;</button>
-    </div>
+  <!-- ── BANNER PRINCIPAL ── -->
+  <section class="meli-banner-wrap">
+    <div class="meli-slider" id="meliSlider">
 
-    <!-- Sidebar de categorias rápidas -->
-    <div class="ml-hero-sidebar">
-      <div class="ml-qs-title">Categorias</div>
-      <a class="ml-qs-item" href="#" onclick="filterByCategory('tenis');navigateTo('products');return false;">
-        <span class="ml-qs-icon">👟</span> Tênis
-      </a>
-      <a class="ml-qs-item" href="#" onclick="filterByCategory('camisetas');navigateTo('products');return false;">
-        <span class="ml-qs-icon">👕</span> Camisetas
-      </a>
-      <a class="ml-qs-item" href="#" onclick="filterByCategory('hoodies');navigateTo('products');return false;">
-        <span class="ml-qs-icon">🧥</span> Moletons
-      </a>
-      <a class="ml-qs-item" href="#" onclick="filterByCategory('calcas');navigateTo('products');return false;">
-        <span class="ml-qs-icon">👖</span> Calças
-      </a>
-      <a class="ml-qs-item" href="#" onclick="filterByCategory('shorts');navigateTo('products');return false;">
-        <span class="ml-qs-icon">🩳</span> Shorts
-      </a>
-      <a class="ml-qs-item" href="#" onclick="filterByCategory('acessorios');navigateTo('products');return false;">
-        <span class="ml-qs-icon">🧢</span> Acessórios
-      </a>
-      <a class="ml-qs-item ml-qs-item--all" href="#" onclick="navigateTo('products');return false;">
-        Ver tudo →
-      </a>
+      <div class="meli-slide active" style="background:linear-gradient(135deg,#ffe600 0%,#ffed4a 50%,#fffbe0 100%)">
+        <div class="meli-slide-body">
+          <div class="meli-slide-txt">
+            <span class="meli-tag">⚡ Oferta do Dia</span>
+            <h2>Até <b>40% OFF</b><br>em Tênis</h2>
+            <p>Os melhores modelos urbanos com desconto imperdível por tempo limitado</p>
+            <button class="meli-cta-btn" onclick="filterByCategory('tenis');navigateTo('products')">Ver ofertas →</button>
+          </div>
+          <div class="meli-slide-pic">
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=520&h=380&q=85" alt="Tênis em oferta">
+          </div>
+        </div>
+      </div>
+
+      <div class="meli-slide" style="background:linear-gradient(135deg,#3483fa 0%,#2968c8 60%,#1557b0 100%)">
+        <div class="meli-slide-body">
+          <div class="meli-slide-txt" style="color:#fff">
+            <span class="meli-tag" style="background:rgba(255,255,255,.18);color:#fff">✨ Nova Coleção 2026</span>
+            <h2 style="color:#fff">Urban <b style="color:#ffe600">Story</b><br>chegou</h2>
+            <p style="color:rgba(255,255,255,.85)">Moda urbana para quem define tendências nas ruas</p>
+            <button class="meli-cta-btn" style="background:#ffe600;color:#333" onclick="navigateTo('products')">Comprar agora →</button>
+          </div>
+          <div class="meli-slide-pic">
+            <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=520&h=380&q=85" alt="Nova coleção">
+          </div>
+        </div>
+      </div>
+
+      <div class="meli-slide" style="background:linear-gradient(135deg,#f0f0f0 0%,#e0e0e0 100%)">
+        <div class="meli-slide-body">
+          <div class="meli-slide-txt">
+            <span class="meli-tag" style="background:#3483fa;color:#fff">🆓 Frete Grátis</span>
+            <h2>Coleção<br><b>Feminina</b></h2>
+            <p>Do treino ao look do dia com muito estilo</p>
+            <button class="meli-cta-btn" onclick="filterByGender('feminino');navigateTo('products')">Explorar →</button>
+          </div>
+          <div class="meli-slide-pic">
+            <img src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=520&h=380&q=85" alt="Coleção Feminina">
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- setas -->
+    <button class="meli-arr meli-arr-l" onclick="meliShift(-1)">&#8249;</button>
+    <button class="meli-arr meli-arr-r" onclick="meliShift(1)">&#8250;</button>
+    <!-- dots -->
+    <div class="meli-dots">
+      <span class="meli-dot active" onclick="meliGo(0)"></span>
+      <span class="meli-dot" onclick="meliGo(1)"></span>
+      <span class="meli-dot" onclick="meliGo(2)"></span>
     </div>
   </section>
 
   <!-- ── BENEFÍCIOS ── -->
-  <section class="ml-benefits">
-    <div class="ml-benefits-inner">
-      <div class="ml-benefit"><span>🚚</span><div><strong>Frete Grátis</strong><small>Acima de R$ 299</small></div></div>
-      <div class="ml-benefit-sep"></div>
-      <div class="ml-benefit"><span>💳</span><div><strong>10x Sem Juros</strong><small>No cartão</small></div></div>
-      <div class="ml-benefit-sep"></div>
-      <div class="ml-benefit"><span>↩️</span><div><strong>30 dias</strong><small>Para devolver</small></div></div>
-      <div class="ml-benefit-sep"></div>
-      <div class="ml-benefit"><span>🔒</span><div><strong>100% Seguro</strong><small>Compra protegida</small></div></div>
+  <section class="meli-benefits">
+    <div class="meli-wrap">
+      <div class="meli-benefit"><span>🚚</span><div><b>Frete Grátis</b><small>Acima de R$ 299</small></div></div>
+      <div class="meli-bsep"></div>
+      <div class="meli-benefit"><span>💳</span><div><b>10x Sem Juros</b><small>No cartão</small></div></div>
+      <div class="meli-bsep"></div>
+      <div class="meli-benefit"><span>↩️</span><div><b>30 dias</b><small>Para devolver</small></div></div>
+      <div class="meli-bsep"></div>
+      <div class="meli-benefit"><span>🔒</span><div><b>Compra Segura</b><small>100% protegida</small></div></div>
     </div>
   </section>
 
-  <!-- ── CATEGORIAS EM ÍCONES ── -->
-  <section class="ml-section">
-    <div class="ml-container">
-      <div class="ml-section-head">
+  <!-- ── CATEGORIAS ── -->
+  <section class="meli-section">
+    <div class="meli-wrap">
+      <div class="meli-sec-head">
         <h2>Categorias</h2>
         <a href="#" onclick="navigateTo('products');return false;">Ver tudo</a>
       </div>
-      <div class="ml-cats-row" id="categoriesGrid"></div>
+      <div class="meli-cats" id="categoriesGrid"></div>
     </div>
   </section>
 
   <!-- ── OFERTA DO DIA ── -->
-  <section class="ml-oferta-section">
-    <div class="ml-container">
-      <div class="ml-oferta-head">
-        <div class="ml-oferta-title">
-          <span class="ml-oferta-badge">⚡ Oferta do Dia</span>
-          <div class="ml-oferta-timer">
-            Encerra em: <strong id="cdHours">00</strong>:<strong id="cdMinutes">00</strong>:<strong id="cdSeconds">00</strong>
-          </div>
+  <section class="meli-oferta">
+    <div class="meli-wrap">
+      <div class="meli-oferta-head">
+        <div class="meli-oferta-label">
+          <span class="meli-oferta-badge">⚡ Oferta do Dia</span>
+          <span class="meli-oferta-clock">Encerra em: <b id="cdHours">00</b>:<b id="cdMinutes">00</b>:<b id="cdSeconds">00</b></span>
         </div>
-        <a href="#" onclick="showProductDetail(11);return false;" class="ml-oferta-link">Ver oferta completa →</a>
+        <a href="#" onclick="showProductDetail(11);return false;">Ver oferta →</a>
       </div>
-      <div class="ml-oferta-card" onclick="showProductDetail(11)">
-        <div class="ml-oferta-img">
-          <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?auto=format&fit=crop&w=400&q=80" alt="Oferta do Dia">
-        </div>
-        <div class="ml-oferta-info">
-          <p class="ml-oferta-name">Air Force 1 Low</p>
-          <p class="ml-oferta-old">De R$ 599,90</p>
-          <p class="ml-oferta-price">R$ 467,00</p>
-          <span class="ml-oferta-pct">22% OFF</span>
-          <p class="ml-oferta-frete">🚚 Frete grátis</p>
-          <button class="ml-btn-cta" style="margin-top:1rem">Aproveitar</button>
+      <div class="meli-oferta-card" onclick="showProductDetail(11)">
+        <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?auto=format&fit=crop&w=280&h=280&q=80" alt="Air Force 1">
+        <div class="meli-oferta-info">
+          <p class="meli-oferta-nome">Air Force 1 Low</p>
+          <div class="meli-oferta-preco-wrap">
+            <span class="meli-oferta-de">R$ 599,90</span>
+            <span class="meli-oferta-pct">22% OFF</span>
+          </div>
+          <p class="meli-oferta-por">R$ <span class="meli-oferta-num">467</span><span class="meli-oferta-cents">,00</span></p>
+          <p class="meli-oferta-frete">🚚 Frete grátis</p>
+          <button class="meli-cta-btn" style="margin-top:.75rem;width:100%">Aproveitar oferta</button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ── MAIS VENDIDOS ── -->
-  <section class="ml-section" style="background:#f5f5f5;">
-    <div class="ml-container">
-      <div class="ml-section-head">
+  <section class="meli-section" style="background:#f5f5f5">
+    <div class="meli-wrap">
+      <div class="meli-sec-head">
         <h2>🔥 Mais Vendidos</h2>
         <a href="#" onclick="navigateTo('products');return false;">Ver todos</a>
       </div>
-      <div class="ml-products-scroll" id="featuredProducts"></div>
+      <div class="meli-prod-row" id="featuredProducts"></div>
     </div>
   </section>
 
-  <!-- ── BANNER FRETE GRÁTIS ── -->
-  <section class="ml-banner-strip">
-    <div class="ml-container">
-      <div class="ml-banner-strip-inner">
-        <div class="ml-banner-strip-text">
-          <strong>🚚 Frete Grátis hoje em tudo!</strong>
-          <span>Em pedidos acima de R$ 199 — só por tempo limitado</span>
-        </div>
-        <button class="ml-btn-cta" onclick="navigateTo('products')">Aproveitar</button>
+  <!-- ── BANNER FRETE ── -->
+  <section class="meli-strip">
+    <div class="meli-wrap meli-strip-inner">
+      <div>
+        <strong>🚚 Frete Grátis hoje em tudo!</strong>
+        <span>Pedidos acima de R$ 199 — por tempo limitado</span>
       </div>
+      <button class="meli-cta-btn" style="background:#ffe600;color:#333;flex-shrink:0" onclick="navigateTo('products')">Aproveitar</button>
     </div>
   </section>
 
   <!-- ── NOVIDADES ── -->
-  <section class="ml-section">
-    <div class="ml-container">
-      <div class="ml-section-head">
+  <section class="meli-section">
+    <div class="meli-wrap">
+      <div class="meli-sec-head">
         <h2>✨ Novidades</h2>
         <a href="#" onclick="navigateTo('products');return false;">Ver todas</a>
       </div>
-      <div class="ml-products-scroll" id="newProducts"></div>
+      <div class="meli-prod-row" id="newProducts"></div>
     </div>
   </section>
 
