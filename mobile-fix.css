@@ -1075,3 +1075,66 @@ body.dark-mode .uf-back-bar:hover {
     font-size: .84rem !important;
   }
 }
+
+/* ===================================================
+   FIX: MID-BANNER — mesmo visual do Countdown (dark glass)
+=================================================== */
+@media (max-width: 768px) {
+  .mid-banner {
+    background: linear-gradient(135deg, #0d1a2e 0%, #162440 50%, #0a1525 100%) !important;
+    padding: 2rem 1.2rem !important;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Círculo de luz dourada no fundo (igual ao countdown) */
+  .mid-banner::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,151,58,.15) 0%, transparent 70%);
+    top: -100px; right: -80px;
+    pointer-events: none;
+  }
+
+  /* Card glass centralizado */
+  .mid-banner-content {
+    position: relative;
+    z-index: 2;
+    background: rgba(255,255,255,.06) !important;
+    border: 1px solid rgba(201,151,58,.25) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 20px !important;
+    padding: 1.4rem 1.2rem !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Linha dourada no topo do card */
+  .mid-banner-content::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 20px 20px 0 0;
+    background: linear-gradient(90deg, transparent, var(--accent, #C9973A), transparent);
+  }
+
+  .mid-banner-content h2 {
+    font-size: 1.7rem !important;
+    margin: 0.5rem 0 !important;
+    line-height: 1.1 !important;
+  }
+
+  .mid-banner-content p {
+    font-size: .82rem !important;
+    margin-bottom: 1rem !important;
+    color: rgba(255,255,255,.75) !important;
+  }
+
+  .mid-banner-content .btn-primary {
+    padding: 0.8rem 1.5rem !important;
+    font-size: .84rem !important;
+    width: 100% !important;
+  }
+}
