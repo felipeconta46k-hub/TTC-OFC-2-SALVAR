@@ -320,6 +320,12 @@ function initScrollEffects() {
 }
 
 /* ═══ MOBILE MENU ═══ */
+function openMobileMenu() {
+  document.getElementById('mobileNav').classList.add('open');
+  document.getElementById('hamburger').classList.add('open');
+  document.getElementById('navOverlay').classList.add('show');
+}
+
 function closeMobileMenu() {
   document.getElementById('mobileNav').classList.remove('open');
   document.getElementById('hamburger').classList.remove('open');
