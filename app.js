@@ -181,6 +181,7 @@ function initDarkMode() {
 function init() {
   initDarkMode();
   renderCategories();
+  renderMarketplaceCategories();
   renderSkeletons('featuredProducts', 8);
   renderSkeletons('newProducts', 8);
   setTimeout(() => { renderFeaturedProducts(); renderNewProducts(); }, 700);
@@ -420,11 +421,49 @@ function closeMega() {
 /* ═══ RENDER — HOME ═══ */
 function renderCategories() {
   document.getElementById('categoriesGrid').innerHTML = categories.map(cat => `
-    <div class="category-card" onclick="filterByCategory('${cat.id}')">
+    <div class="category-card" onclick="selectMarketplaceCategory('${cat.id}', this)">
       <div class="category-image"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></div>
       <div class="category-overlay"><h3 class="category-name">${cat.name}</h3></div>
     </div>`).join('');
 }
+
+function renderMarketplaceCategories() {
+  const grid = document.getElementById('marketCategoryGrid');
+  if (!grid) return;
+  grid.innerHTML = categories.map(cat => `
+    <button class="market-category-item" onclick="selectMarketplaceCategory('${cat.id}', this)">
+      <span class="market-category-image"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></span>
+      <span>${cat.name}</span>
+    </button>`).join('');
+}
+
+function selectMarketplaceCategory(category, button) {
+  currentFilter = category === 'ofertas' ? 'todos' : category;
+  currentGender = 'todos';
+  document.getElementById('productsPage')?.classList.add('category-results-mode');
+  document.querySelectorAll('.market-department-tabs button, .market-category-sidebar button, .market-category-item')
+    .forEach(item => item.classList.remove('active'));
+  if (button) button.classList.add('active');
+  navigateTo('products');
+  setTimeout(renderFilters, 80);
+}
+
+function renderMarketplaceCategoryProducts(category) {
+  const grid = document.getElementById('marketCategoryProducts');
+  const title = document.getElementById('marketCategoryTitle');
+  const count = document.getElementById('marketCategoryCount');
+  if (!grid) return;
+  const filtered = category === 'ofertas'
+    ? products.filter(p => p.originalPrice && p.originalPrice > p.price)
+    : category === 'todos'
+      ? products
+      : products.filter(p => p.category === category);
+  const categoryName = categories.find(c => c.id === category)?.name;
+  if (title) title.textContent = categoryName || (category === 'ofertas' ? 'Ofertas' : 'Todos os produtos');
+  if (count) count.textContent = `${filtered.length} produtos`;
+  grid.innerHTML = filtered.map(createProductCard).join('');
+}
+
 function renderFeaturedProducts() {
   document.getElementById('featuredProducts').innerHTML = products.filter(p => p.featured).slice(0, 8).map(createProductCard).join('');
 }
@@ -437,6 +476,9 @@ function renderNewProducts() {
 function renderFilters() {
   const filtered = getFilteredProducts();
   const countEl = document.getElementById('productsCount');
+  const titleEl = document.getElementById('productsTitle');
+  const categoryName = categories.find(c => c.id === currentFilter)?.name;
+  if (titleEl) titleEl.textContent = categoryName || (currentFilter === 'todos' ? 'Produtos' : 'Ofertas');
   if (countEl) countEl.textContent = `${filtered.length} produto${filtered.length !== 1 ? 's' : ''} encontrado${filtered.length !== 1 ? 's' : ''}`;
 
   function catCount(catId) {
@@ -2210,8 +2252,9 @@ function navigateTo(page) {
   localStorage.setItem('uf_current_page', noRestore.includes(page) ? 'home' : page);
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('productsPage')?.classList.toggle('category-results-mode', page === 'products' && currentFilter !== 'todos');
   const map = {
-    home: 'homePage', products: 'productsPage', productDetail: 'productDetailPage',
+    home: 'homePage', categories: 'categoriesPage', products: 'productsPage', productDetail: 'productDetailPage',
     about: 'aboutPage', cart: 'cartPage', wishlist: 'wishlistPage',
     checkout: 'checkoutPage', profile: 'profilePage', tracking: 'trackingPage'
   };
@@ -2223,6 +2266,7 @@ function navigateTo(page) {
   else if (page === 'checkout') { renderCheckout(); setTimeout(()=>injectBackBar('checkout'), 60); }
   else if (page === 'profile')  { renderProfile();  setTimeout(()=>injectBackBar('profile'), 60); }
   else if (page === 'tracking') { renderTracking(); setTimeout(()=>injectBackBar('tracking'), 60); }
+  else if (page === 'categories') { renderMarketplaceCategoryProducts(currentFilter); }
   else if (page === 'products') {
     setTimeout(() => { renderSkeletons('productsGrid', 8); setTimeout(renderFilters, 400); }, 50);
     setTimeout(()=>injectBackBar('products'), 60);
@@ -2235,7 +2279,7 @@ function navigateTo(page) {
 /* ── Barra de voltar universal (desktop + mobile) ── */
 function injectBackBar(page) {
   const backBarConfig = {
-    productDetail: { label: 'Voltar aos Produtos',   action: ()=>navigateTo('products') },
+    productDetail: { label: 'Voltar ao Início',      action: ()=>navigateTo('home') },
     products:      { label: 'Voltar ao Início',       action: ()=>navigateTo('home') },
     cart:          { label: 'Continuar Comprando',    action: ()=>navigateTo('products') },
     wishlist:      { label: 'Voltar aos Produtos',    action: ()=>navigateTo('products') },

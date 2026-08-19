@@ -109,6 +109,11 @@
       <div class="search-dropdown" id="searchDropdown"></div>
     </div>
   </div>
+  <button class="mobile-location-row" type="button" aria-label="Escolher local de entrega">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+    <span>Enviar para <strong>seu endereço</strong></span>
+    <span class="location-chevron">›</span>
+  </button>
 </header>
 
 <!-- ══════════════ MOBILE DRAWER ══════════════ -->
@@ -139,6 +144,10 @@
 
 <!-- ===================== HOME PAGE ===================== -->
 <div class="page active" id="homePage">
+  <nav class="mobile-home-departments" aria-label="Departamentos da home">
+    <button class="active">Tudo</button><button>Primeira compra</button><button>Moda</button><button>Beleza</button><button>Celulares</button><button>Veículos</button>
+  </nav>
+  <div class="mobile-security-strip"><strong>Pagamento seguro,</strong> protegemos seu dinheiro <span>›</span></div>
   <section class="hero" id="heroSection">
     <div class="hero-slides">
       <div class="hero-slide active" style="--bg:url('https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=2000&q=80')">
@@ -215,7 +224,7 @@
     </div>
   </section>
 
-  <section class="section container">
+  <section class="section container home-category-section">
     <div class="section-header">
       <h2 class="section-title">Categorias</h2>
       <p class="section-sub">Encontre o estilo que combina com você</p>
@@ -245,7 +254,7 @@
     </div>
   </section>
 
-  <section class="section" style="background:var(--gray-50);">
+  <section class="section home-featured-section" style="background:var(--gray-50);">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title"> Mais Vendidos</h2>
@@ -267,7 +276,7 @@
     </div>
   </section>
 
-  <section class="section container">
+  <section class="section container home-new-section">
     <div class="section-header">
       <h2 class="section-title">Novidades</h2>
       <p class="section-sub">Acabou de chegar na loja</p>
@@ -278,11 +287,41 @@
 
 </div>
 
+<!-- ===================== CATEGORIES PAGE ===================== -->
+<div class="page" id="categoriesPage">
+  <section class="market-categories-page">
+    <div class="market-category-topline">
+      <span>Enviar para <strong>seu endereço</strong></span><span>›</span>
+    </div>
+    <nav class="market-department-tabs" aria-label="Departamentos">
+      <button class="active" onclick="selectMarketplaceCategory('todos', this)">Tudo</button><button onclick="selectMarketplaceCategory('camisetas', this)">Moda</button><button onclick="selectMarketplaceCategory('tenis', this)">Esportes</button><button onclick="selectMarketplaceCategory('acessorios', this)">Acessórios</button><button onclick="selectMarketplaceCategory('ofertas', this)">Ofertas</button>
+    </nav>
+    <div class="market-category-layout">
+      <aside class="market-category-sidebar">
+        <button class="active" onclick="selectMarketplaceCategory('todos', this)">Moda e acessórios</button>
+        <button onclick="selectMarketplaceCategory('tenis', this)">Esportes e fitness</button>
+        <button onclick="selectMarketplaceCategory('tenis', this)">Calçados</button>
+        <button onclick="selectMarketplaceCategory('camisetas', this)">Roupas</button>
+        <button onclick="selectMarketplaceCategory('calcas', this)">Beleza e saúde</button>
+        <button onclick="selectMarketplaceCategory('todos', this)">Mais categorias</button>
+      </aside>
+      <div class="market-category-grid" id="marketCategoryGrid"></div>
+    </div>
+    <section class="market-category-results">
+      <div class="market-category-results-head">
+        <h2 id="marketCategoryTitle">Todos os produtos</h2>
+        <span id="marketCategoryCount"></span>
+      </div>
+      <div class="products-grid" id="marketCategoryProducts"></div>
+    </section>
+  </section>
+</div>
+
 <!-- ===================== PRODUTOS PAGE ===================== -->
 <div class="page" id="productsPage">
   <section class="section container">
     <div class="section-header">
-      <h2 class="section-title">Nossa Coleção</h2>
+      <h2 class="section-title" id="productsTitle">Produtos</h2>
       <p class="section-sub" id="productsCount"></p>
     </div>
     <div class="products-layout">
@@ -590,14 +629,12 @@
     <span>Início</span>
   </button>
 
-  <button class="bn-item" id="bn-cats" onclick="openMobileMenu();bnActive('bn-cats')">
+  <button class="bn-item" id="bn-videos" onclick="navigateTo('products');bnActive('bn-videos')">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="7" height="7" rx="1"/>
-      <rect x="14" y="3" width="7" height="7" rx="1"/>
-      <rect x="3" y="14" width="7" height="7" rx="1"/>
-      <rect x="14" y="14" width="7" height="7" rx="1"/>
+      <rect x="3" y="5" width="18" height="14" rx="2"/>
+      <path d="m10 9 5 3-5 3z"/>
     </svg>
-    <span>Categorias</span>
+    <span>Vídeos</span>
   </button>
 
   <button class="bn-item" id="bn-cart" onclick="navigateTo('cart');bnActive('bn-cart')">
@@ -607,22 +644,23 @@
       <line x1="3" y1="6" x2="21" y2="6"/>
       <path d="M16 10a4 4 0 0 1-8 0"/>
     </svg>
-    <span>Sacola</span>
+    <span>Carrinho</span>
   </button>
 
-  <button class="bn-item" id="bn-wish" onclick="navigateTo('wishlist');bnActive('bn-wish')">
+  <button class="bn-item" id="bn-meli" onclick="(typeof currentUser!=='undefined'&&currentUser)?navigateTo('profile'):openModal();bnActive('bn-meli')">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      <path d="M12 2.5 14.1 9l6.4 2.1-6.4 2.1L12 19.5l-2.1-6.3-6.4-2.1L9.9 9 12 2.5Z"/>
+      <path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z"/>
     </svg>
-    <span>Favoritos</span>
+    <span>Meli</span>
   </button>
 
-  <button class="bn-item" id="bn-conta" onclick="(typeof currentUser!=='undefined'&&currentUser)?navigateTo('profile'):openModal();bnActive('bn-conta')">
+  <button class="bn-item" id="bn-more" onclick="openMobileMenu();bnActive('bn-more')">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-      <circle cx="12" cy="7" r="4"/>
+      <path d="M4 6h16M4 12h16M4 18h10"/>
+      <path d="M18 16v6M15 19h6"/>
     </svg>
-    <span>Conta</span>
+    <span>Mais</span>
   </button>
 
 </nav>
