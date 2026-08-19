@@ -808,7 +808,15 @@ function renderProducts(custom = null) {
   }, 400);
 }
 
-/* ═══ PRODUCT CARD ═══ */
+/* ═══ PRODUCT CARD (estilo Mercado Livre) ═══ */
+function getBadgeClass(badge) {
+  if (!badge) return '';
+  const b = badge.toUpperCase();
+  if (b.includes('OFF') || b.includes('%') || b.includes('PROMO')) return 'badge-off';
+  if (b.includes('NOVO') || b.includes('LANÇ') || b.includes('TEND') || b.includes('EXCLUS')) return 'badge-new';
+  return 'badge-best'; /* MAIS VENDIDO, PREMIUM, KIT, TOP SELLER etc. */
+}
+
 function createProductCard(p) {
   const inWish = wishlist.some(w => w.id === p.id);
   const disc   = p.originalPrice ? Math.round((1 - p.price / p.originalPrice) * 100) : 0;
@@ -817,6 +825,7 @@ function createProductCard(p) {
   const totalRevs = pRevs.length + (p.reviews || 0);
   const cardImgId = `cimg_${p.id}`;
   const hasColorImgs = p.colorImages && Object.keys(p.colorImages).length > 0;
+  const installments = (p.price / 10).toFixed(2);
 
   // Color swatches with names mapped to CSS-friendly colors
   const colorMap = {
@@ -845,10 +854,13 @@ function createProductCard(p) {
   }).join('') : '';
 
   return `
-    <div class="product-card" onclick="showProductDetail(${p.id})">
+    <div class="product-card ml-card" onclick="showProductDetail(${p.id})">
       <div class="product-image">
         <img id="${cardImgId}" src="${p.image}" alt="${p.name}" loading="lazy">
-        ${p.badge ? `<span class="product-badge ${p.bestseller ? 'badge-bestseller':''}">${p.badge}</span>` : ''}
+        ${p.badge ? `<span class="product-badge ${getBadgeClass(p.badge)}">${p.badge}</span>` : ''}
+        <button class="btn-favorite ${inWish?'active':''}" data-id="${p.id}" onclick="toggleWishlist(${p.id},event)" aria-label="Favorito">
+          ${inWish ? HEART_ACTIVE : HEART_EMPTY}
+        </button>
       </div>
       <div class="product-info">
         <div class="product-category">${getCatName(p.category)}</div>
@@ -856,19 +868,23 @@ function createProductCard(p) {
         ${colorSwatches ? `<div class="card-color-swatches" onclick="event.stopPropagation()">${colorSwatches}</div>` : ''}
         <div class="product-rating">
           <span class="stars">${renderStars(parseFloat(avgRating))}</span>
-          <span style="color:var(--gray-500);font-size:.75rem;">${avgRating} (${totalRevs})</span>
+          <span class="rating-count">${avgRating} (${totalRevs})</span>
         </div>
         <div class="product-price">
-          <span class="current-price">R$ ${p.price.toFixed(2)}</span>
           ${p.originalPrice ? `<span class="original-price">R$ ${p.originalPrice.toFixed(2)}</span>` : ''}
-          ${disc ? `<span style="font-size:.72rem;font-weight:700;color:var(--success);margin-left:auto;">-${disc}%</span>` : ''}
+          <div class="price-row">
+            <span class="current-price">R$ ${p.price.toFixed(2)}</span>
+            ${disc ? `<span class="discount-pill">-${disc}%</span>` : ''}
+          </div>
+          <span class="installment">em 10x R$ ${installments} sem juros</span>
+        </div>
+        <div class="shipping-free">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7.5" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg>
+          Frete grátis
         </div>
       </div>
       <div class="product-actions" onclick="event.stopPropagation()">
         <button class="btn-add-cart" onclick="showProductDetail(${p.id}); event.stopPropagation();">Ver Produto</button>
-        <button class="btn-favorite ${inWish?'active':''}" data-id="${p.id}" onclick="toggleWishlist(${p.id},event)" aria-label="Favorito">
-          ${inWish ? HEART_ACTIVE : HEART_EMPTY}
-        </button>
       </div>
     </div>`;
 }

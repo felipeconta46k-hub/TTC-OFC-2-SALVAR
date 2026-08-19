@@ -3001,11 +3001,14 @@ body:not(.dark-mode) .mobile-nav {
     top: .45rem !important;
     left: .45rem !important;
     border-radius: 4px !important;
-    background: #00a650 !important;
     font-size: .62rem !important;
     font-weight: 700 !important;
     padding: .25rem .4rem !important;
   }
+  #homePage .product-badge.badge-off  { background: #e6194b !important; }
+  #homePage .product-badge.badge-new  { background: #00a650 !important; }
+  #homePage .product-badge.badge-best,
+  #homePage .product-badge.badge-bestseller { background: #1A4480 !important; }
 
   #homePage .product-info {
     padding: .6rem .65rem .45rem !important;
@@ -3048,10 +3051,6 @@ body:not(.dark-mode) .mobile-nav {
     color: #222 !important;
     font-size: 1.08rem !important;
     font-weight: 700 !important;
-  }
-
-  #homePage .original-price {
-    display: none !important;
   }
 
   #homePage .product-actions {
@@ -3107,19 +3106,10 @@ body:not(.dark-mode) .mobile-nav {
     transform: scale(1.025) !important;
   }
 
-  #homePage .product-info::after {
-    content: 'Frete grátis' !important;
-    display: block !important;
-    margin-top: .25rem !important;
-    color: #00a650 !important;
-    font-size: .66rem !important;
-    font-weight: 600 !important;
-  }
-
   #homePage .product-actions {
     background: #fff !important;
     display: grid !important;
-    grid-template-columns: 1fr 36px !important;
+    grid-template-columns: 1fr !important;
     gap: .4rem !important;
     padding: .1rem .65rem .65rem !important;
   }
@@ -3130,14 +3120,6 @@ body:not(.dark-mode) .mobile-nav {
     min-height: 34px !important;
     border-radius: 6px !important;
     font-size: .76rem !important;
-  }
-
-  #homePage .btn-favorite {
-    width: 36px !important;
-    min-width: 36px !important;
-    height: 34px !important;
-    min-height: 34px !important;
-    border-radius: 6px !important;
   }
 
   #homePage .section-cta {
@@ -3656,11 +3638,11 @@ body:not(.dark-mode) .mobile-nav {
   }
 
   body {
-    padding-bottom: 88px !important;
+    padding-bottom: 64px !important;
   }
 
   .bottom-nav {
-    height: 88px !important;
+    height: 64px !important;
     padding: 0 !important;
     background: #fff !important;
     border-top: 1px solid #d9d9d9 !important;
@@ -3668,19 +3650,19 @@ body:not(.dark-mode) .mobile-nav {
   }
 
   .bn-item {
-    gap: 5px !important;
-    padding: .45rem 0 .35rem !important;
+    gap: 3px !important;
+    padding: .3rem 0 .3rem !important;
   }
 
   .bn-item svg {
-    width: 29px !important;
-    height: 29px !important;
+    width: 22px !important;
+    height: 22px !important;
     color: #666 !important;
   }
 
   .bn-item span:not(.bn-badge) {
     color: #666 !important;
-    font-size: .82rem !important;
+    font-size: .65rem !important;
     font-weight: 600 !important;
     line-height: 1 !important;
   }
@@ -3695,8 +3677,8 @@ body:not(.dark-mode) .mobile-nav {
   }
 
   .bn-badge {
-    top: 3px !important;
-    left: calc(50% + 5px) !important;
+    top: 0 !important;
+    left: calc(50% + 4px) !important;
     border-color: #fff !important;
   }
 }
@@ -3767,6 +3749,11 @@ body:not(.dark-mode) .mobile-nav {
   #homePage .home-category-section .section-title {
     font-size: .95rem !important;
     font-weight: 700 !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: #000 !important;
+    color: #000 !important;
   }
 
   #homePage .home-category-section .categories {
@@ -3843,5 +3830,334 @@ body:not(.dark-mode) .mobile-nav {
     border: 1px solid #e1e1e1 !important;
     border-radius: 8px !important;
     box-shadow: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   AJUSTE FINAL — header mobile igual ao app do Mercado Livre
+   (avatar + busca + câmera + sino / localização e abas em preto)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+
+  .mobile-search-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: .55rem !important;
+    padding-top: .85rem !important;
+  }
+
+  .mobile-search-row .search-wrapper {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  /* Avatar redondo antes da busca */
+  .mobile-search-row .ml-avatar-btn.ml-avatar-btn.ml-avatar-btn {
+    flex: 0 0 34px !important;
+    box-sizing: border-box !important;
+    width: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+    aspect-ratio: 1 / 1 !important;
+    border-radius: 999px !important;
+    border: 1.5px solid #000 !important;
+    background: #fff !important;
+    color: #000 !important;
+    font: 700 .66rem 'DM Sans', Arial, sans-serif !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    margin: 6px 0 0 0 !important;
+    line-height: 1 !important;
+    align-self: flex-start !important;
+  }
+  .mobile-search-row .ml-avatar-btn.ml-avatar-btn.ml-avatar-btn span {
+    color: #000 !important;
+  }
+
+  /* Ícone de câmera dentro da busca */
+  .search-camera-btn.search-camera-btn.search-camera-btn {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: none !important;
+    border: none !important;
+    color: #000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+  }
+  .search-camera-btn.search-camera-btn.search-camera-btn svg {
+    stroke: #000 !important;
+    color: #000 !important;
+  }
+
+  /* Sino de notificações depois da busca */
+  .ml-bell-btn.ml-bell-btn.ml-bell-btn {
+    flex: 0 0 auto !important;
+    width: 34px !important;
+    height: 34px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: none !important;
+    border: none !important;
+    color: #000 !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+  }
+  .ml-bell-btn.ml-bell-btn.ml-bell-btn svg {
+    stroke: #000 !important;
+    color: #000 !important;
+  }
+
+  /* Linha de localização: texto e ícone em preto (sem opacidade) */
+  header .mobile-location-row.mobile-location-row,
+  header .mobile-location-row.mobile-location-row span,
+  header .mobile-location-row.mobile-location-row strong,
+  header .mobile-location-row.mobile-location-row .location-chevron {
+    color: #000 !important;
+    opacity: 1 !important;
+  }
+  header .mobile-location-row.mobile-location-row svg {
+    stroke: #000 !important;
+    opacity: 1 !important;
+  }
+
+  /* Abas de categoria: texto preto, sem sublinhado, só a ativa em negrito */
+  #homePage .mobile-home-departments.mobile-home-departments button {
+    color: #000 !important;
+    opacity: 1 !important;
+    border-bottom: none !important;
+  }
+  #homePage .mobile-home-departments.mobile-home-departments button.active {
+    color: #000 !important;
+    font-weight: 700 !important;
+    border-bottom: none !important;
+  }
+  /* Títulos de seção no mobile: sem gradiente desbotado, texto preto sólido */
+  .section-title.section-title {
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: #000 !important;
+    color: #000 !important;
+  }
+
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Remove a barra preta (logo + hamburger + sacola) no mobile —
+   redundante: sacola e menu já existem na bottom nav.
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .header-container {
+    display: none !important;
+  }
+}
+/* ═══════════════════════════════════════════════════════════════════
+   CARD DE PRODUTO — ESTILO MERCADO LIVRE
+   Bloco único e definitivo (substitui/serializa por cima de qualquer
+   regra anterior de .product-card, para não haver mais conflito de
+   contraste, cores duplicadas ou preço "sumindo" no dark mode).
+   ═══════════════════════════════════════════════════════════════════ */
+
+.product-card.ml-card.ml-card {
+  background: var(--white) !important;
+  border: 1px solid var(--gray-200) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transition: box-shadow .25s ease, transform .25s ease !important;
+  position: relative !important;
+}
+.product-card.ml-card.ml-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,.10) !important;
+  transform: translateY(-3px) !important;
+  border-color: var(--gray-200) !important;
+}
+/* O Mercado Livre não tem modo escuro: o card de produto continua
+   sempre claro, mesmo com o dark mode do site ativado. */
+body.dark-mode .product-card.ml-card.ml-card {
+  background: #fff !important;
+  border-color: #e4e4e4 !important;
+}
+body.dark-mode .product-card.ml-card.ml-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,.12) !important;
+}
+
+/* ── Imagem ── */
+.product-card.ml-card .product-image {
+  position: relative !important;
+  width: 100% !important;
+  aspect-ratio: 1/1 !important;
+  background: var(--gray-50, #f6f7f9) !important;
+  overflow: hidden !important;
+}
+body.dark-mode .product-card.ml-card .product-image { background: #f6f7f9 !important; }
+.product-card.ml-card .product-image img {
+  width: 100% !important; height: 100% !important;
+  object-fit: cover !important;
+  transition: transform .5s ease !important;
+}
+.product-card.ml-card:hover .product-image img { transform: scale(1.05) !important; }
+
+/* ── Tag / badge (canto superior esquerdo) ── */
+.product-card.ml-card .product-badge {
+  position: absolute !important; top: 10px !important; left: 10px !important;
+  padding: .3rem .65rem !important;
+  border-radius: 5px !important;
+  font-size: .66rem !important; font-weight: 800 !important;
+  text-transform: uppercase !important; letter-spacing: .02em !important;
+  color: #fff !important; box-shadow: 0 2px 6px rgba(0,0,0,.25) !important;
+  line-height: 1 !important;
+}
+.product-card.ml-card .product-badge.badge-off  { background: #e6194b !important; }
+.product-card.ml-card .product-badge.badge-new  { background: #00a650 !important; }
+.product-card.ml-card .product-badge.badge-best,
+.product-card.ml-card .product-badge.badge-bestseller { background: var(--accent-2, #1A4480) !important; }
+
+/* ── Coração de favorito (canto superior direito da imagem) ── */
+.product-card.ml-card .product-image .btn-favorite {
+  position: absolute !important; top: 8px !important; right: 8px !important;
+  width: 32px !important; height: 32px !important; padding: 0 !important;
+  border-radius: 50% !important;
+  background: rgba(255,255,255,.92) !important;
+  border: none !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  box-shadow: 0 1px 6px rgba(0,0,0,.25) !important;
+  color: #8a8a8a !important;
+  transition: transform .2s ease !important;
+}
+.product-card.ml-card .product-image .btn-favorite svg { width: 16px !important; height: 16px !important; }
+.product-card.ml-card .product-image .btn-favorite:hover { transform: scale(1.1) !important; }
+.product-card.ml-card .product-image .btn-favorite.active { color: #ff4d6d !important; }
+
+/* ── Corpo / informações ── */
+.product-card.ml-card .product-info {
+  padding: .85rem .9rem .3rem !important;
+  display: flex !important; flex-direction: column !important; gap: .3rem !important;
+  background: transparent !important;
+}
+.product-card.ml-card .product-category { display: none !important; }
+.product-card.ml-card .product-name {
+  font-size: .84rem !important; font-weight: 400 !important;
+  color: var(--gray-800) !important;
+  line-height: 1.35 !important; letter-spacing: 0 !important;
+  display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+body.dark-mode .product-card.ml-card .product-name { color: #444 !important; }
+
+.product-card.ml-card .product-rating { gap: .3rem !important; font-size: .74rem !important; }
+.product-card.ml-card .stars { color: #f5a623 !important; font-size: .78rem !important; }
+.product-card.ml-card .rating-count { color: var(--gray-500) !important; font-size: .72rem !important; }
+
+/* ── Preço ── */
+.product-card.ml-card .product-price {
+  display: flex !important; flex-direction: column !important;
+  margin-top: .15rem !important; padding-top: 0 !important; gap: 0 !important;
+}
+.product-card.ml-card .original-price {
+  font-size: .74rem !important; color: var(--gray-500) !important;
+  text-decoration: line-through !important; order: 1 !important;
+}
+.product-card.ml-card .price-row {
+  display: flex !important; align-items: baseline !important; gap: .45rem !important;
+  order: 2 !important;
+}
+.product-card.ml-card .current-price {
+  font-size: 1.2rem !important; font-weight: 700 !important;
+  color: var(--black) !important; letter-spacing: -.01em !important;
+}
+body.dark-mode .product-card.ml-card .current-price { color: #222 !important; }
+.product-card.ml-card .discount-pill {
+  font-size: .78rem !important; font-weight: 700 !important; color: #00a650 !important;
+}
+.product-card.ml-card .installment {
+  order: 3 !important; font-size: .68rem !important; color: var(--gray-500) !important; margin-top: 1px !important;
+}
+
+/* ── Frete grátis ── */
+.product-card.ml-card .shipping-free {
+  display: flex !important; align-items: center !important; gap: .3rem !important;
+  color: #00a650 !important; font-size: .72rem !important; font-weight: 700 !important;
+  margin-top: .35rem !important;
+}
+.product-card.ml-card .shipping-free svg { flex-shrink: 0 !important; }
+
+/* ── Ações ── */
+.product-card.ml-card .product-actions {
+  padding: .7rem .9rem .9rem !important; gap: 0 !important;
+}
+.product-card.ml-card .btn-add-cart {
+  width: 100% !important; padding: .6rem !important;
+  background: #3483fa !important; color: #fff !important;
+  border: none !important; border-radius: 6px !important;
+  font-weight: 700 !important; font-size: .78rem !important;
+  text-transform: none !important; letter-spacing: 0 !important;
+}
+.product-card.ml-card .btn-add-cart::before { display: none !important; }
+.product-card.ml-card .btn-add-cart:hover { background: #2968c8 !important; transform: none !important; }
+
+/* ── Ajustes finos no mobile ── */
+@media (max-width: 900px) {
+  .product-card.ml-card .product-info { padding: .65rem .65rem .2rem !important; }
+  .product-card.ml-card .product-name { font-size: .78rem !important; }
+  .product-card.ml-card .current-price { font-size: 1rem !important; }
+  .product-card.ml-card .product-actions { padding: .55rem .65rem .65rem !important; }
+  .product-card.ml-card .btn-add-cart { font-size: .72rem !important; padding: .52rem !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FUNDO CLARO NAS SEÇÕES DE PRODUTO — estilo Mercado Livre
+   O Mercado Livre não tem modo escuro: a vitrine de produtos fica
+   sempre em fundo claro, mesmo com o dark mode do site ligado.
+   Regra sem @media (vale em qualquer largura de tela) e com
+   especificidade reforçada para não perder de nenhuma outra regra.
+   ═══════════════════════════════════════════════════════════════════ */
+#homePage .home-featured-section.home-featured-section,
+#homePage .home-new-section.home-new-section,
+body.dark-mode #homePage .home-featured-section.home-featured-section,
+body.dark-mode #homePage .home-new-section.home-new-section {
+  background: #ffffff !important;
+  background-image: none !important;
+}
+#homePage .home-featured-section .section-title,
+#homePage .home-new-section .section-title,
+body.dark-mode #homePage .home-featured-section .section-title,
+body.dark-mode #homePage .home-new-section .section-title {
+  color: #1a1a1a !important;
+  -webkit-text-fill-color: #1a1a1a !important;
+  background: none !important;
+}
+#homePage .home-featured-section .section-sub,
+#homePage .home-new-section .section-sub,
+body.dark-mode #homePage .home-featured-section .section-sub,
+body.dark-mode #homePage .home-new-section .section-sub {
+  color: #666 !important;
+}
+body.dark-mode #productsPage,
+body.dark-mode #wishlistPage {
+  background: #f2f2f2 !important;
+}
+/* Fundo do body inteiro quando a Home está ativa (evita faixas escuras nas bordas) */
+body:has(#homePage.active) {
+  background: #f2f2f2 !important;
+}
+body.dark-mode:has(#homePage.active) {
+  background: #f2f2f2 !important;
+}
+@media (max-width: 900px) {
+  body.dark-mode #homePage {
+    background: #f2f2f2 !important;
   }
 }
