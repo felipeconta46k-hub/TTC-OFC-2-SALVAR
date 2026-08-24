@@ -2674,7 +2674,7 @@ body:not(.dark-mode) .mobile-nav {
 /* ── HOME MOBILE — linguagem visual de marketplace ── */
 @media (max-width: 768px) {
   :root {
-    --market-yellow: #ffe600;
+    --market-yellow: #00B8A9;
     --market-blue: #3483fa;
     --market-text: #333333;
   }
