@@ -2261,8 +2261,138 @@ function trackOrder() {
     </div>`;
 }
 
+/* ═══════════════════════════ VÍDEOS (feed estilo Reels/Shorts) ═══════════════════════════ */
+let videosFeedBuilt = false;
+
+/* Vídeos reais de produtos (banco de vídeos livres de direitos autorais — Mixkit License,
+   uso comercial liberado, sem necessidade de atribuição). Mapeados por id do produto. */
+const PRODUCT_VIDEOS = {
+  1:  'https://assets.mixkit.co/videos/15059/15059-360.mp4', // Air Max 90 — amarrando tênis antes de correr
+  2:  'https://assets.mixkit.co/videos/4893/4893-360.mp4',   // Nike Zoom Pegasus — passos caminhando na rua
+  4:  'https://assets.mixkit.co/videos/744/744-360.mp4',     // Short Training Elite — jogador de basquete
+  5:  'https://assets.mixkit.co/videos/1240/1240-360.mp4',   // Moletom Essentials — dançando sob luzes
+  6:  'https://assets.mixkit.co/videos/32812/32812-360.mp4', // Legging Sculpt Pro — pernas correndo na pista
+  7:  'https://assets.mixkit.co/videos/14766/14766-360.mp4', // Tênis Revolution 7 Fem — amarrando o tênis
+  8:  'https://assets.mixkit.co/videos/1236/1236-360.mp4',   // Boné Futura Washed — pose urbana com boné
+  19: 'https://assets.mixkit.co/videos/47879/47879-360.mp4', // Top Esportivo — correndo na esteira
+  20: 'https://assets.mixkit.co/videos/35987/35987-360.mp4', // Tênis Chunky Platform — pés descendo escada
+  21: 'https://assets.mixkit.co/videos/39874/39874-360.mp4', // Moletom Zip-Up — moda conceito
+  24: 'https://assets.mixkit.co/videos/407/407-360.mp4',     // Tênis Running Ultra — tênis branco urbano
+  28: 'https://assets.mixkit.co/videos/345/345-360.mp4',     // Tênis Skate Pro — equilibrando no trilho
+};
+
+function renderVideosFeed() {
+  const el = document.getElementById('videosFeedContainer');
+  if (!el || videosFeedBuilt) { syncVideoLikeStates(); return; }
+  videosFeedBuilt = true;
+
+  // Só entram no feed os produtos que têm vídeo real associado
+  const feed = products.filter(p => PRODUCT_VIDEOS[p.id]);
+
+  el.innerHTML = feed.map((p, i) => {
+    const discount = p.originalPrice ? Math.round(100 - (p.price / p.originalPrice) * 100) : 0;
+    return `
+    <section class="video-slide" data-id="${p.id}" data-index="${i}">
+      <video class="video-slide-media" src="${PRODUCT_VIDEOS[p.id]}" poster="${p.image}" muted loop playsinline preload="metadata"></video>
+      <div class="video-slide-gradient"></div>
+      <button class="video-mute-btn" onclick="toggleVideoMute(this)" aria-label="Som">
+        <svg class="icon-vol-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        <svg class="icon-vol-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      </button>
+      <div class="video-slide-top">
+        <span class="video-live-tag">● AO VIVO</span>
+      </div>
+      <div class="video-slide-actions">
+        <button class="video-action-btn btn-favorite" data-id="${p.id}" onclick="toggleWishlist(${p.id}, event)" aria-label="Favoritar">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span>Salvar</span>
+        </button>
+        <button class="video-action-btn" onclick="addToCart(${p.id})" aria-label="Adicionar ao carrinho">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Comprar</span>
+        </button>
+        <button class="video-action-btn" onclick="shareProduct(${p.id})" aria-label="Compartilhar">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <span>Enviar</span>
+        </button>
+      </div>
+      <div class="video-slide-info">
+        <div class="video-slide-brand"><span class="logo-mark" style="width:26px;height:26px;font-size:.65rem;">UF</span> Urban Flow</div>
+        <h3 class="video-slide-name">${p.name}</h3>
+        <div class="video-slide-price-row">
+          <span class="video-slide-price">R$ ${p.price.toFixed(2)}</span>
+          ${p.originalPrice ? `<span class="video-slide-old-price">R$ ${p.originalPrice.toFixed(2)}</span>` : ''}
+          ${discount > 0 ? `<span class="video-slide-badge">-${discount}%</span>` : ''}
+        </div>
+        <button class="btn-primary video-slide-cta" onclick="showProductDetail(${p.id})">Ver produto →</button>
+      </div>
+    </section>`;
+  }).join('');
+
+  syncVideoLikeStates();
+  initVideosFeedNav();
+}
+
+function syncVideoLikeStates() {
+  document.querySelectorAll('#videosFeedContainer .btn-favorite').forEach(btn => {
+    const id = Number(btn.dataset.id);
+    const inWish = (typeof wishlist !== 'undefined') && wishlist.some(w => w.id === id);
+    btn.classList.toggle('active', inWish);
+  });
+}
+
+function toggleVideoMute(btn) {
+  const slide = btn.closest('.video-slide');
+  const video = slide?.querySelector('video');
+  if (!video) return;
+  video.muted = !video.muted;
+  const on = btn.querySelector('.icon-vol-on');
+  const off = btn.querySelector('.icon-vol-off');
+  on.style.display = video.muted ? 'none' : 'block';
+  off.style.display = video.muted ? 'block' : 'none';
+}
+
+function initVideosFeedNav() {
+  const container = document.getElementById('videosFeedContainer');
+  if (!container || container.dataset.navReady) return;
+  container.dataset.navReady = '1';
+
+  // Toca o vídeo do slide visível e pausa os demais (economiza dados e CPU)
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const video = entry.target.querySelector('video');
+      const isActive = entry.isIntersecting && entry.intersectionRatio > 0.6;
+      entry.target.classList.toggle('video-slide-active', isActive);
+      if (!video) return;
+      if (isActive) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+  }, { root: container, threshold: [0, 0.6, 1] });
+  container.querySelectorAll('.video-slide').forEach(s => io.observe(s));
+
+  // Setas para desktop (scroll por roda/teclado já funciona nativamente via scroll-snap)
+  container.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); scrollVideosBy(1); }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); scrollVideosBy(-1); }
+  });
+}
+
+function scrollVideosBy(dir) {
+  const container = document.getElementById('videosFeedContainer');
+  if (!container) return;
+  const h = container.clientHeight;
+  container.scrollBy({ top: dir * h, behavior: 'smooth' });
+}
+
 /* ═══ NAVIGATE ═══ */
 function navigateTo(page) {
+  // Fecha o chat de IA (widget independente) se estiver aberto
+  closeAIChat();
+
   // Salva a página atual — exceto checkout e detalhe de produto
   const noRestore = ['checkout', 'productDetail'];
   localStorage.setItem('uf_current_page', noRestore.includes(page) ? 'home' : page);
@@ -2271,11 +2401,13 @@ function navigateTo(page) {
   document.getElementById('productsPage')?.classList.toggle('category-results-mode', page === 'products' && currentFilter !== 'todos');
   const map = {
     home: 'homePage', categories: 'categoriesPage', products: 'productsPage', productDetail: 'productDetailPage',
-    about: 'aboutPage', cart: 'cartPage', wishlist: 'wishlistPage',
+    about: 'aboutPage', cart: 'cartPage', wishlist: 'wishlistPage', videos: 'videosPage',
     checkout: 'checkoutPage', profile: 'profilePage', tracking: 'trackingPage'
   };
   document.getElementById(map[page])?.classList.add('active');
 
+  if (page === 'videos')        { renderVideosFeed(); }
+  else { document.querySelectorAll('#videosFeedContainer video').forEach(v => v.pause()); }
   if (page === 'cart')          { renderCart();     setTimeout(()=>injectBackBar('cart'), 60); }
   else if (page === 'wishlist') { renderWishlist(); setTimeout(()=>injectBackBar('wishlist'), 60); }
   else if (page === 'about')    { renderAbout();    setTimeout(()=>injectBackBar('about'), 60); }
@@ -2647,7 +2779,235 @@ function showSettings() {
 }
 
 function showSupport() {
-  showNotification('Suporte em desenvolvimento - Entre em contato: contato@urbanflow.com', 'warn');
+  openAIChat();
+}
+
+/* ═══════════════════════════ AI CHAT (Assistente Urban Flow) ═══════════════════════════ */
+let aiChatStarted = false;
+let aiChatTyping  = false;
+
+const AI_CHAT_QUICK_REPLIES = [
+  '🚚 Prazo de entrega',
+  '↩️ Como trocar/devolver',
+  '📏 Guia de tamanhos',
+  '💳 Formas de pagamento',
+  '📦 Rastrear meu pedido',
+  '🙋 Falar com humano'
+];
+
+/* Base de respostas por palavras-chave — cada entrada tem um "keywords" array e uma "reply" */
+const AI_CHAT_RULES = [
+  {
+    keywords: ['frete', 'entrega', 'prazo', 'demora', 'quanto tempo', 'chega'],
+    reply: 'O frete é <strong>grátis para compras acima de R$ 299</strong> 🚚. O prazo médio de entrega é de 3 a 10 dias úteis, dependendo da sua região. Assim que o pedido é despachado, você recebe o código de rastreio por e-mail.'
+  },
+  {
+    keywords: ['troca', 'devolu', 'devolver', 'cancelar pedido', 'arrepend'],
+    reply: 'Você tem até <strong>30 dias corridos</strong> após o recebimento para solicitar troca ou devolução, sem custo adicional ↩️. É só acessar <em>Meu Perfil → Meus Pedidos</em> e escolher o pedido, ou me chamar aqui que eu te ajudo a iniciar o processo.'
+  },
+  {
+    keywords: ['tamanho', 'numeração', 'numeracao', 'numero', 'número', 'tabela de medidas', 'guia de tamanho'],
+    reply: 'Temos um <strong>Guia de Tamanhos</strong> completo com medidas de pé, busto, cintura e quadril para te ajudar a escolher o tamanho ideal 📏. Você encontra esse guia na página de cada produto, no botão "Guia de Tamanhos".'
+  },
+  {
+    keywords: ['pagamento', 'pagar', 'parcel', 'pix', 'boleto', 'cartão', 'cartao', 'juros'],
+    reply: 'Aceitamos <strong>cartão de crédito (em até 10x sem juros)</strong>, <strong>Pix</strong> (aprovação na hora) e <strong>boleto bancário</strong> 💳. Você escolhe a forma de pagamento na etapa de finalização da compra.'
+  },
+  {
+    keywords: ['rastre', 'meu pedido', 'status do pedido', 'onde esta', 'onde está', 'cade meu', 'cadê meu'],
+    reply: 'Para rastrear seu pedido, acesse a aba <strong>"Rastrear Pedido"</strong> no menu e informe o número do pedido — ele está no e-mail de confirmação da compra 📦. Quer que eu te leve até lá?',
+    action: { label: 'Ir para Rastrear Pedido', fn: "navigateTo('tracking')" }
+  },
+  {
+    keywords: ['humano', 'atendente', 'pessoa', 'whatsapp', 'falar com alguem', 'falar com alguém'],
+    reply: 'Sem problemas! Você pode falar diretamente com nosso time pelo WhatsApp ou e-mail 🙋 — é só usar o botão verde de WhatsApp no canto da tela ou escrever para <strong>contato@urbanflow.com</strong>.'
+  },
+  {
+    keywords: ['segur', 'confia', 'golpe', 'site seguro'],
+    reply: 'Pode comprar tranquilo! A Urban Flow usa <strong>certificado SSL</strong>, pagamento protegido e somos uma <strong>loja verificada</strong> 🔒. Seus dados e pagamentos estão sempre seguros por aqui.'
+  },
+  {
+    keywords: ['cupom', 'desconto', 'promo', 'oferta'],
+    reply: 'De olho nas nossas ofertas! ⚡ Você confere os produtos com desconto direto na home, na seção "Oferta do Dia", e também nas categorias em destaque. Fique atento também às novidades toda semana.'
+  },
+  {
+    keywords: ['oi', 'olá', 'ola', 'bom dia', 'boa tarde', 'boa noite', 'oii', 'eae', 'e aí'],
+    reply: 'Oi! 👋 Que bom te ver por aqui. Sou o assistente virtual da Urban Flow e posso te ajudar com frete, trocas, tamanhos, pagamento e rastreio de pedidos. No que posso ajudar?'
+  },
+  {
+    keywords: ['obrigad', 'valeu', 'brigad', 'ok', 'entendi', 'blz', 'beleza'],
+    reply: 'Por nada! 😊 Se precisar de mais alguma coisa, é só chamar. Estou por aqui!'
+  }
+];
+
+/* Abre o widget de chat — é um overlay independente (não faz parte do
+   sistema de "páginas" do site), sempre fixo e centralizado na tela,
+   então não importa a posição de rolagem da página por trás. */
+function openAIChat() {
+  const overlay = document.getElementById('aiChatPage');
+  if (!overlay) return;
+  if (overlay.classList.contains('ai-chat-open')) return;
+
+  // Trava o scroll do site por trás enquanto o chat está aberto
+  document.documentElement.classList.add('ai-chat-lock');
+  document.body.classList.add('ai-chat-lock');
+
+  overlay.classList.add('ai-chat-open');
+  bnActive && bnActive('bn-meli');
+
+  // Registra um estado no histórico do navegador: assim o botão/gesto de
+  // "voltar" do celular fecha o chat em vez de sair da página.
+  history.pushState({ uf_ai_chat: true }, '');
+
+  const box = document.getElementById('aiChatMessages');
+  if (box && !aiChatStarted) {
+    aiChatStarted = true;
+    box.innerHTML = '';
+    aiChatAppendBot('Olá! 👋 Sou o assistente virtual da <strong>Urban Flow</strong>. Posso te ajudar com dúvidas sobre frete, trocas, tamanhos, pagamento e rastreio de pedidos. Como posso ajudar hoje?');
+    renderAIChatSuggestions();
+  }
+  aiChatScrollToBottom();
+  // Sem foco automático no input: em mobile isso força o navegador a
+  // rolar a tela pra revelar o teclado, o que causava o "pulo" pra baixo.
+  // O usuário toca no campo quando quiser digitar.
+}
+
+function closeAIChat(fromPopState) {
+  const overlay = document.getElementById('aiChatPage');
+  if (!overlay || !overlay.classList.contains('ai-chat-open')) return;
+  overlay.classList.remove('ai-chat-open');
+  document.documentElement.classList.remove('ai-chat-lock');
+  document.body.classList.remove('ai-chat-lock');
+  document.getElementById('aiChatInput')?.blur();
+
+  // Volta o destaque da bottom nav pra aba que realmente está ativa
+  const current = localStorage.getItem('uf_current_page') || 'home';
+  const activeMap = { home: 'bn-home', videos: 'bn-videos', cart: 'bn-cart' };
+  bnActive && bnActive(activeMap[current] || 'bn-home');
+
+  // Se fechou pelo X/voltar/clique-fora (não pelo botão físico de voltar),
+  // desfaz o estado extra que criamos no histórico ao abrir o chat.
+  if (!fromPopState && history.state && history.state.uf_ai_chat) {
+    history.back();
+  }
+}
+
+/* Botão/gesto físico de "voltar" do navegador ou do celular fecha o chat,
+   em vez de sair da página, enquanto o chat estiver aberto. */
+window.addEventListener('popstate', function () {
+  closeAIChat(true);
+});
+
+/* Tecla ESC também fecha (desktop) */
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') closeAIChat();
+});
+
+/* Bind extra via JS (além do onclick inline no HTML) — garante que os
+   botões de voltar/fechar funcionem mesmo se o atributo onclick por
+   algum motivo não disparar no ambiente onde o site for hospedado. */
+document.addEventListener('DOMContentLoaded', function () {
+  const overlay = document.getElementById('aiChatPage');
+  if (!overlay) return;
+  overlay.querySelector('.ai-chat-back')?.addEventListener('click', function (e) { e.preventDefault(); closeAIChat(); });
+  overlay.querySelector('.ai-chat-close')?.addEventListener('click', function (e) { e.preventDefault(); closeAIChat(); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeAIChat(); });
+});
+
+function renderAIChatSuggestions() {
+  const wrap = document.getElementById('aiChatSuggestions');
+  if (!wrap) return;
+  wrap.innerHTML = AI_CHAT_QUICK_REPLIES.map(q =>
+    `<button type="button" class="ai-chip" onclick="aiChatQuickSend('${q.replace(/'/g, "\\'")}')">${q}</button>`
+  ).join('');
+}
+
+function aiChatQuickSend(text) {
+  // remove emoji dos atalhos antes de mandar como "mensagem do usuário"
+  const clean = text.replace(/^[^\wÀ-ÿ]+\s*/, '');
+  aiChatSend(clean);
+}
+
+function handleAIChatSubmit(e) {
+  e.preventDefault();
+  const input = document.getElementById('aiChatInput');
+  const text = input.value.trim();
+  if (!text) return false;
+  input.value = '';
+  aiChatSend(text);
+  return false;
+}
+
+function aiChatSend(text) {
+  if (aiChatTyping) return;
+  aiChatAppendUser(text);
+  aiChatTyping = true;
+  const typingEl = aiChatShowTyping();
+
+  const delay = 550 + Math.random() * 500;
+  setTimeout(() => {
+    typingEl.remove();
+    const match = aiChatFindReply(text);
+    aiChatAppendBot(match.reply, match.action);
+    aiChatTyping = false;
+    aiChatScrollToBottom();
+  }, delay);
+}
+
+function aiChatFindReply(text) {
+  const q = text.toLowerCase();
+  for (const rule of AI_CHAT_RULES) {
+    if (rule.keywords.some(k => q.includes(k))) return rule;
+  }
+  return {
+    reply: 'Ainda estou aprendendo sobre esse assunto 🤔. Posso te ajudar com <strong>frete, trocas/devoluções, tamanhos, formas de pagamento</strong> ou <strong>rastreio de pedido</strong>. Se preferir, fale com um atendente humano pelo WhatsApp.'
+  };
+}
+
+function aiChatAppendUser(text) {
+  const box = document.getElementById('aiChatMessages');
+  if (!box) return;
+  const div = document.createElement('div');
+  div.className = 'ai-msg ai-msg-user';
+  div.innerHTML = `<div class="ai-bubble">${escapeAIHtml(text)}</div>`;
+  box.appendChild(div);
+  aiChatScrollToBottom();
+}
+
+function aiChatAppendBot(html, action) {
+  const box = document.getElementById('aiChatMessages');
+  if (!box) return;
+  const div = document.createElement('div');
+  div.className = 'ai-msg ai-msg-bot';
+  div.innerHTML = `
+    <span class="ai-msg-avatar">✦</span>
+    <div class="ai-bubble">
+      ${html}
+      ${action ? `<button type="button" class="ai-bubble-action" onclick="${action.fn}">${action.label}</button>` : ''}
+    </div>`;
+  box.appendChild(div);
+  aiChatScrollToBottom();
+}
+
+function aiChatShowTyping() {
+  const box = document.getElementById('aiChatMessages');
+  const div = document.createElement('div');
+  div.className = 'ai-msg ai-msg-bot ai-msg-typing';
+  div.innerHTML = `<span class="ai-msg-avatar">✦</span><div class="ai-bubble ai-typing-bubble"><span></span><span></span><span></span></div>`;
+  box.appendChild(div);
+  aiChatScrollToBottom();
+  return div;
+}
+
+function aiChatScrollToBottom() {
+  const box = document.getElementById('aiChatMessages');
+  if (box) box.scrollTop = box.scrollHeight;
+}
+
+function escapeAIHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
 }
 
 function logout() {
