@@ -719,11 +719,11 @@ function renderMarketplaceCategoryProducts(category) {
 }
 
 function renderFeaturedProducts() {
-  document.getElementById('featuredProducts').innerHTML = products.filter(p => p.featured).slice(0, 8).map(createProductCard).join('');
+  document.getElementById('featuredProducts').innerHTML = products.filter(p => p.featured).slice(0, 4).map(createProductCard).join('');
 }
 function renderNewProducts() {
   const el = document.getElementById('newProducts');
-  if (el) el.innerHTML = [...products].slice(-8).reverse().map(createProductCard).join('');
+  if (el) el.innerHTML = [...products].slice(-4).reverse().map(createProductCard).join('');
 }
 
 /* ═══ FILTERS + SORT + PRICE ═══ */
@@ -759,8 +759,8 @@ function renderFilters() {
   const genBtns = genItems.map(g => `<button class="filter-btn ${currentGender === g.id ? 'active' : ''}" onclick="filterByGender('${g.id}')">${g.label} <span class="filter-count">${genCount(g.id)}</span></button>`);
 
   document.getElementById('filtersContainer').innerHTML =
-    `<div class="filters cat-filters">${catBtns.join('')}</div>
-     <div class="filters gen-filters">${genBtns.join('')}</div>`;
+    `<div class="filters cat-filters"><span class="filter-group-label">Categoria</span><div class="filter-chips">${catBtns.join('')}</div></div>
+     <div class="filters gen-filters"><span class="filter-group-label">Público</span><div class="filter-chips">${genBtns.join('')}</div></div>`;
 
   renderSidebarFilters();
   renderProducts();
