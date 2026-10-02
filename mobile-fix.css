@@ -2504,9 +2504,13 @@ body:not(.dark-mode) .mobile-nav {
   .mobile-search-row .search-clear { color: rgba(255,255,255,0.4) !important; }
 }
 
-/* mobile-search-row oculto no desktop */
+/* elementos mobile ocultos no desktop */
 @media (min-width: 901px) {
-  .mobile-search-row { display: none !important; }
+  .mobile-search-row,
+  .mobile-location-row,
+  .mobile-home-departments,
+  .mobile-security-strip,
+  .bottom-nav { display: none !important; }
 }
 
 /* Header fixo no topo ao rolar — mobile */
@@ -2674,9 +2678,9 @@ body:not(.dark-mode) .mobile-nav {
 /* ── HOME MOBILE — linguagem visual de marketplace ── */
 @media (max-width: 768px) {
   :root {
-    --market-yellow: #00B8A9;
-    --market-blue: #3483fa;
-    --market-text: #333333;
+    --market-yellow: #1A4480;
+    --market-blue: #C9973A;
+    --market-text: #ffffff;
   }
 
   .promo-bar { display: none !important; }
@@ -2721,7 +2725,7 @@ body:not(.dark-mode) .mobile-nav {
     height: 28px !important;
     border: 0 !important;
     border-radius: 4px !important;
-    background: #333 !important;
+    background: #1A4480 !important;
     color: var(--market-yellow) !important;
     box-shadow: none !important;
   }
@@ -2732,7 +2736,7 @@ body:not(.dark-mode) .mobile-nav {
   }
 
   .logo-text small {
-    color: #5f5f5f !important;
+    color: #C9973A !important;
   }
 
   .hamburger span {
@@ -2810,8 +2814,8 @@ body:not(.dark-mode) .mobile-nav {
   #homePage .btn-primary:active,
   #homePage .btn-secondary:active,
   #homePage .btn-add-cart:active {
-    background: #2968c8 !important;
-    border-color: #2968c8 !important;
+    background: #b5832e !important;
+    border-color: #b5832e !important;
   }
 
   .bottom-nav {
@@ -3048,7 +3052,7 @@ body:not(.dark-mode) .mobile-nav {
   }
 
   #homePage .current-price {
-    color: #222 !important;
+    color: rgba(255,255,255,.85) !important;
     font-size: 1.08rem !important;
     font-weight: 700 !important;
   }
@@ -3128,7 +3132,7 @@ body:not(.dark-mode) .mobile-nav {
 
   #homePage .section-cta .btn-secondary {
     background: #eaf2ff !important;
-    color: #3483fa !important;
+    color: #C9973A !important;
     border: 0 !important;
     font-weight: 600 !important;
   }
@@ -3302,7 +3306,7 @@ body:not(.dark-mode) .mobile-nav {
   }
 
   #productDetailPage .product-detail-price .current-price {
-    color: #222 !important;
+    color: rgba(255,255,255,.85) !important;
     font-size: 1.8rem !important;
     font-weight: 400 !important;
   }
@@ -3368,9 +3372,9 @@ body:not(.dark-mode) .mobile-nav {
 
   #productDetailPage .color-swatch.selected,
   #productDetailPage .size-option.selected {
-    border: 2px solid #3483fa !important;
+    border: 2px solid #C9973A !important;
     background: #eaf2ff !important;
-    color: #3483fa !important;
+    color: #C9973A !important;
   }
 
   #productDetailPage .product-detail-actions {
@@ -3391,7 +3395,7 @@ body:not(.dark-mode) .mobile-nav {
     padding: .8rem !important;
     border: 0 !important;
     border-radius: 6px !important;
-    background: #3483fa !important;
+    background: #C9973A !important;
     color: #fff !important;
     font-size: .82rem !important;
     font-weight: 700 !important;
@@ -3523,9 +3527,9 @@ body:not(.dark-mode) .mobile-nav {
   }
 
   .market-category-sidebar button.active {
-    border-left: 3px solid #3483fa !important;
+    border-left: 3px solid #C9973A !important;
     background: #fff !important;
-    color: #3483fa !important;
+    color: #C9973A !important;
     font-weight: 700 !important;
   }
 
@@ -3553,7 +3557,7 @@ body:not(.dark-mode) .mobile-nav {
   }
 
   .market-category-item.active .market-category-image {
-    border: 3px solid #3483fa !important;
+    border: 3px solid #C9973A !important;
   }
 
   .market-category-image {
@@ -3669,7 +3673,7 @@ body:not(.dark-mode) .mobile-nav {
 
   .bn-item.bn-active svg,
   .bn-item.bn-active span:not(.bn-badge) {
-    color: #3483fa !important;
+    color: #C9973A !important;
   }
 
   .bn-item.bn-active::before {
@@ -3713,13 +3717,13 @@ body:not(.dark-mode) .mobile-nav {
     border: 0 !important;
     border-bottom: 3px solid transparent !important;
     background: transparent !important;
-    color: #222 !important;
+    color: rgba(255,255,255,.85) !important;
     font: 500 .88rem 'DM Sans', Arial, sans-serif !important;
     white-space: nowrap !important;
   }
 
   .mobile-home-departments button.active {
-    border-bottom-color: #222 !important;
+    border-bottom-color: #C9973A !important;
     font-weight: 700 !important;
   }
 
@@ -4078,7 +4082,7 @@ body.dark-mode .product-card.ml-card .product-name { color: #444 !important; }
   font-size: 1.2rem !important; font-weight: 700 !important;
   color: var(--black) !important; letter-spacing: -.01em !important;
 }
-body.dark-mode .product-card.ml-card .current-price { color: #222 !important; }
+body.dark-mode .product-card.ml-card .current-price { color: rgba(255,255,255,.85) !important; }
 .product-card.ml-card .discount-pill {
   font-size: .78rem !important; font-weight: 700 !important; color: #00a650 !important;
 }
@@ -4100,13 +4104,13 @@ body.dark-mode .product-card.ml-card .current-price { color: #222 !important; }
 }
 .product-card.ml-card .btn-add-cart {
   width: 100% !important; padding: .6rem !important;
-  background: #3483fa !important; color: #fff !important;
+  background: #C9973A !important; color: #fff !important;
   border: none !important; border-radius: 6px !important;
   font-weight: 700 !important; font-size: .78rem !important;
   text-transform: none !important; letter-spacing: 0 !important;
 }
 .product-card.ml-card .btn-add-cart::before { display: none !important; }
-.product-card.ml-card .btn-add-cart:hover { background: #2968c8 !important; transform: none !important; }
+.product-card.ml-card .btn-add-cart:hover { background: #b5832e !important; transform: none !important; }
 
 /* ── Ajustes finos no mobile ── */
 @media (max-width: 900px) {
