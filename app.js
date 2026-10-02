@@ -1,213 +1,93 @@
 /* ===== URBAN FLOW — app.js v2.0 ===== */
 
 /* ─────────────────────────── DADOS ─────────────────────────── */
+const U = (id, w = 800) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+
 const products = [
-  // ── TÊNIS ──────────────────────────────────────────────────────────────────
-  { id:1,  name:'Tênis Nike Gamma Force',   category:'tenis',     gender:'masculino', price:599.99, originalPrice:799.99,
-    description:'Tênis clássico icônico com amortecimento de alta responsividade. Cabedal em couro premium, solado em borracha resistente e lingueta acolchoada para conforto total.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/982718QWA2.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/982718QWA2.jpg','https://imgcentauro-a.akamaihd.net/660x660/982718QWA1.jpg','https://imgcentauro-a.akamaihd.net/660x660/982718QWA9.jpg'],
-   },
-
-  { id:2,  name:'Nike Zoom Pegasus 40',      category:'tenis',     gender:'masculino', price:549.99, originalPrice:749.99,
-    description:'Amortecimento Zoom Air responsivo, ideal para corridas de longa distância. Cabedal em mesh respirável e solado com entressola React.',
-    image:'https://imgcentauro-a.akamaihd.net/1500x1500/99525219A3.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1500x1500/99525219A3.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/99525219A5.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/99525219A2.jpg'],
-},
-
-  { id:11, name:'Tênis Nike Gamma Force - Feminino',      category:'tenis',     gender:'Feminino',   price:699.99, originalPrice:899.99,
-    description:'O clássico que nunca sai de moda. Cabedal em couro legítimo, solado Air e palmilha de espuma para conforto o dia todo.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/98271801A3.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/98271801A3.jpg','https://imgcentauro-a.akamaihd.net/1024x1024/98271801A5.jpg','https://imgcentauro-a.akamaihd.net/660x660/98271801A2.jpg'],
-},
-
-  { id:13, name:'New Balance 574 Urban',     category:'tenis',     gender:'unissex',   price:319.99, originalPrice:459.99,
-    description:'Estilo retrô com conforto superior. Solado EVA ultra-leve, palmilha anatômica ENCAP e cabedal em camurça e mesh premium.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/M17S7625A2.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/M17S7625A2.jpg','https://imgcentauro-a.akamaihd.net/1024x1024/M17S7625A3.jpg','https://imgcentauro-a.akamaihd.net/660x660/M17S7625A1.jpg'],
-},
-
-  { id:17, name:'Tênis adidas Cloud Foam Flex Laces Masculino',          category:'tenis',     gender:'Masculino',   price:459.99, originalPrice:599.99,
-    description:'Ícone do streetwear dos anos 80 repaginado. Cabedal em couro premium, palmilha EVA com amortecimento e sistema de velcro decorativo no cano.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/M1944031A2.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/M1944031A2.jpg','https://imgcentauro-a.akamaihd.net/660x660/M1944031A1.jpg','https://imgcentauro-a.akamaihd.net/1024x1024/M1944031A3.jpg'],
-    },
-
-  { id:7,  name:'Tênis Nike Revolution 7 Gs.',    category:'tenis',     gender:'Masculino',  price:279.99, originalPrice:399.99,
-    description:'Tênis leve e confortável para uso diário. Cabedal em mesh respirável, palmilha removível e solado antiderrapante de borracha.',
-    image:'https://imgcentauro-a.akamaihd.net/1500x1500/9858272RA14.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1500x1500/9858272RA14.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/9858272RA13.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/9858272RA12.jpg'],
-},
-
-  { id:20, name:'Tênis Masculino Nike Vomero Premium.',category:'tenis',     gender:'Masculino',  price:389.99, originalPrice:519.99,
-    description:'Solado tratorado de 5cm com visual bold e moderno. Cabedal em couro sintético premium, forro acolchoado e cadarço duplo.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/9972IH42A11.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/9972IH42A11.jpg','https://imgcentauro-a.akamaihd.net/1024x1024/9972IH42A13.jpg','https://imgcentauro-a.akamaihd.net/660x660/9972IH42A10.jpg'],
-    },
-
-  { id:24, name:'Adidas Ultraboost 23',      category:'tenis',     gender:'masculino', price:649.99, originalPrice:849.99,
-    description:'Entressola BOOST de última geração, cabedal Primeknit+ respirável e placa Torsion para máximo retorno de energia em corridas.',
-    image:'https://imgcentauro-a.akamaihd.net/1024x1024/99673776A3.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1024x1024/99673776A3.jpg','https://imgcentauro-a.akamaihd.net/660x660/99673776A4.jpg','https://imgcentauro-a.akamaihd.net/660x660/99673776A2.jpg'],
-    rating:4.9, reviews:88, badge:'PREMIUM', featured:true, bestseller:false, stock:6, sizes:['39','40','41','42','43','44'], colors:['Preto/Laranja','Branco/Azul'],
-    colorImages:{'Preto/Laranja':'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&q=80','Branco/Azul':'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&q=80'} },
-
-  { id:28, name:'Vans Old Skool Pro',        category:'tenis',     gender:'unissex',   price:249.99, originalPrice:349.99,
-    description:'Solado vulcanizado reforçado, palmilha Ultracush HD para absorção de impacto e cabedal em camurça premium com a icônica Sidestripe.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/M18SSV31A1.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/M18SSV31A1.jpg','https://imgcentauro-a.akamaihd.net/660x660/M18SSV31A2.jpg','https://imgcentauro-a.akamaihd.net/660x660/M18SSV31A4.jpg'],
-    rating:4.7, reviews:345, badge:null, featured:true, bestseller:true, stock:30, sizes:['37','38','39','40','41','42','43'], colors:['Preto/Branco','Navy/Branco','Cinza'],
-    colorImages:{'Preto/Branco':'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80','Navy/Branco':'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80','Cinza':'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80'} },
-
-  { id:34, name:'Tenis Puma Wired Run Slip On Ps Bdp Inf',   category:'tenis',     gender:'unissex',   price:179.99, originalPrice:249.99,
-    description:'Slip-on em canvas lavável, elástico lateral para fácil calce, palmilha removível Memory Foam e solado de borracha antiderrapante.',
-    image:'https://imgcentauro-a.akamaihd.net/1024x1024/97070731A2.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1024x1024/97070731A2.jpg','https://imgcentauro-a.akamaihd.net/660x660/97070731A1.jpg','https://imgcentauro-a.akamaihd.net/660x660/97070731A9.jpg'],
-    rating:4.4, reviews:302, badge:'MAIS VENDIDO', featured:false, bestseller:true, stock:38, sizes:['36','37','38','39','40','41','42'], colors:['Preto','Branco','Navy'],
-    colorImages:{'Preto':'https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=600&q=80','Branco':'https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=600&q=80','Navy':'https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=600&q=80'} },
-
-  { id:39, name:'Tênis Trail Running GTX',   category:'tenis',     gender:'masculino', price:729.99, originalPrice:949.99,
-    description:'Gore-Tex waterproof, solado Vibram com travas multiangulares, proteção na ponta e tornozelo reforçado para trilhas desafiadoras.',
-    image:'https://imgcentauro-a.akamaihd.net/1024x1024/M199Z7UWA2.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1024x1024/M199Z7UWA2.jpg','https://imgcentauro-a.akamaihd.net/1024x1024/M199Z7UWA4.jpg','https://imgcentauro-a.akamaihd.net/660x660/M199Z7UWA1.jpg'],
-    rating:4.9, reviews:67, badge:'PREMIUM', featured:true, bestseller:false, stock:5, sizes:['39','40','41','42','43'], colors:['Laranja/Preto','Verde/Cinza'],
-    colorImages:{'Laranja/Preto':'https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=600&q=80','Verde/Cinza':'https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=600&q=80'} },
-
-  // ── CAMISETAS ──────────────────────────────────────────────────────────────
-  { id:3,  name:'Camiseta Dri-FIT Pro',      category:'camisetas', gender:'masculino', price:149.99, originalPrice:199.99,
-    description:'Tecnologia Dri-FIT para máxima respirabilidade durante o treino. Tecido ultra-leve, costura plana e proteção UV 50+.',
-    image:'https://imgcentauro-a.akamaihd.net/1500x1500/M16TRQ31A1.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1500x1500/M16TRQ31A1.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/M16TRQ31A4.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/M16TRQ31A2.jpg'],
-    rating:4.6, reviews:156, badge:null, featured:true, bestseller:false, stock:25, sizes:['P','M','G','GG'], colors:['Preto','Branco','Azul'],
-    colorImages:{'Preto':'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80','Branco':'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80','Azul':'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80'} },
-
-  { id:14, name:'Camiseta Oversized Graphic',category:'camisetas', gender:'unissex',   price:129.99, originalPrice:179.99,
-    description:'Camiseta oversized com estampa gráfica exclusiva em serigrafia, tecido 100% algodão penteado com caimento solto na moda.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/M195NW49A1.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/M195NW49A1.jpg','https://imgcentauro-a.akamaihd.net/660x660/M195NW49A2.jpg','https://imgcentauro-a.akamaihd.net/660x660/M195NW49A3.jpg'],
-    rating:4.6, reviews:312, badge:'NOVO', featured:true, bestseller:false, stock:28, sizes:['P','M','G','GG','3G'], colors:['Preto','Branco','Cinza'],
-    colorImages:{'Preto':'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=80','Branco':'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=80','Cinza':'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=80'} },
-
-  { id:23, name:'Camiseta Básica Premium',   category:'camisetas', gender:'masculino', price:79.99,  originalPrice:119.99,
-    description:'Camiseta 100% algodão penteado 30/1 com tingimento reativo, gola careca dupla e costura lateral. O básico que nunca decepciona.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/M19E1H02A1.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/M19E1H02A1.jpg','https://imgcentauro-a.akamaihd.net/660x660/M19E1H02A2.jpg','https://imgcentauro-a.akamaihd.net/1024x1024/M19E1H02A3.jpg'],
-    rating:4.4, reviews:521, badge:'33% OFF', featured:false, bestseller:true, stock:60, sizes:['P','M','G','GG','3G'], colors:['Branco','Preto','Cinza','Azul Marinho'],
-    colorImages:{'Branco':'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&q=80','Preto':'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&q=80','Cinza':'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&q=80','Azul Marinho':'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&q=80'} },
-
-  { id:10, name:'Camisa Polo ASICS Racket - Feminina',   category:'camisetas', gender:'feminino',  price:89.99,  originalPrice:129.99,
-    description:'Camiseta com corte feminino, recortes laterais e tecido micro-perfurado para máxima ventilação durante os treinos.',
-    image:'https://imgcentauro-a.akamaihd.net/1500x1500/98507801A11.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1500x1500/98507801A11.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/98507801A12.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/98507801A13.jpg'],
-    rating:4.5, reviews:203, badge:null, featured:false, bestseller:false, stock:30, sizes:['PP','P','M','G'], colors:['Rosa','Branco','Azul'],
-    colorImages:{'Rosa':'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80','Branco':'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80','Azul':'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80'} },
-
-  { id:19, name:'Top Esportivo Strappy',     category:'camisetas', gender:'feminino',  price:119.99, originalPrice:169.99,
-    description:'Top nadador com alças cruzadas nas costas, sustentação média, tecido compressivo e proteção UV 50+. Ideal para treinos e yoga.',
-    image:'https://imgcentauro-a.akamaihd.net/1500x1500/M18H7I15A1.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1500x1500/M18H7I15A1.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/M18H7I15A2.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/M18H7I15A3.jpg'],
-    rating:4.5, reviews:231, badge:'MAIS VENDIDO', featured:false, bestseller:true, stock:33, sizes:['PP','P','M','G'], colors:['Preto','Rosa Neon','Azul Petróleo'],
-    colorImages:{'Preto':'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80','Rosa Neon':'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80','Azul Petróleo':'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80'} },
-
-  { id:29, name:'Camiseta Cropped Starter Tie Dye - Feminina',    category:'camisetas', gender:'Feminina',   price:109.99, originalPrice:159.99,
-    description:' Tecido 100% algodão ringspun, cores com fixação a frio resistentes à lavagem e caimento levemente oversized.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/M0ZNOR05A5.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/M0ZNOR05A5.jpg','https://imgcentauro-a.akamaihd.net/1024x1024/M0ZNOR05A2.jpg','https://imgcentauro-a.akamaihd.net/1024x1024/M0ZNOR05A3.jpg'],
-    rating:4.4, reviews:267, badge:'EXCLUSIVO', featured:false, bestseller:false, stock:15, sizes:['P','M','G','GG'], colors:['Azul/Verde','Rosa/Roxo','Amarelo/Laranja'],
-    colorImages:{'Azul/Verde':'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=600&q=80','Rosa/Roxo':'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=600&q=80','Amarelo/Laranja':'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=600&q=80'} },
-
-  { id:35, name:'Polo Dry-Fit Premium',      category:'camisetas', gender:'masculino', price:159.99, originalPrice:219.99,
-    description:'Polo em piquet dry-fit com proteção UV 40+, três botões contrastantes, gola e punhos em ribana e corte regular de alta costura.',
-    image:'https://imgcentauro-a.akamaihd.net/1500x1500/97735505A9.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1500x1500/97735505A9.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/97735505A11.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/97735505A10.jpg'],
-    rating:4.5, reviews:178, badge:null, featured:false, bestseller:false, stock:24, sizes:['P','M','G','GG'], colors:['Branco','Preto','Azul Marinho','Verde'],
-    colorImages:{'Branco':'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=600&q=80','Preto':'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=600&q=80','Azul Marinho':'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=600&q=80','Verde':'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=600&q=80'} },
-
-  // ── MOLETONS / HOODIES ────────────────────────────────────────────────────
-  { id:5,  name:'Blusa de Moletom Masculina adidas Essentials 3 Listras',   category:'hoodies',   gender:'masculino', price:299.99, originalPrice:399.99,
-    description:'Moletom de algodão 400g com capuz, bolso canguru e ribana dupla nas mangas. Caimento oversized e acabamento premium.',
-    image:'https://imgcentauro-a.akamaihd.net/1024x1024/99386451A6.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1024x1024/99386451A6.jpg','https://imgcentauro-a.akamaihd.net/660x660/99386451A5.jpg','https://imgcentauro-a.akamaihd.net/660x660/99386451A4.jpg'],
-    rating:4.7, reviews:267, badge:null, featured:true, bestseller:false, stock:15, sizes:['P','M','G','GG'], colors:['Preto','Cinza Mescla','Off-White'],
-    colorImages:{'Preto':'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80','Cinza Mescla':'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80','Off-White':'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80'} },
-
-  { id:21, name:'Blusão Oxer Moletom Canguru -Masculino',  category:'hoodies',   gender:'Masculino',   price:349.99, originalPrice:479.99,
-    description:'Moletom aberto com zíper YKK, capuz com cordão, dois bolsos laterais e tecido fleece pesado 380g. Caimento oversized perfeito para layering.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/99103705A6.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/99103705A6.jpg','https://imgcentauro-a.akamaihd.net/660x660/99103705A7.jpg','https://imgcentauro-a.akamaihd.net/660x660/99103705A9.jpg'],
-    rating:4.7, reviews:189, badge:null, featured:true, bestseller:false, stock:22, sizes:['P','M','G','GG','3G'], colors:['Cinza Mescla','Preto','Off-White'],
-    colorImages:{'Cinza Mescla':'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=600&q=80','Preto':'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=600&q=80','Off-White':'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=600&q=80'} },
-
-  { id:25, name:'Jaqueta Corta Vendo Barcelona - Masculino',  category:'hoodies',   gender:'masculino', price:399.99, originalPrice:549.99,
-    description:'Jaqueta leve impermeável com capuz dobrável no colarinho, zíper YKK, bolsos com zíper e logo refletivo. Ideal para corrida e ciclismo urbano.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/9972NR02A2.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/9972NR02A2.jpg','https://imgcentauro-a.akamaihd.net/660x660/9972NR02A3.jpg','https://imgcentauro-a.akamaihd.net/660x660/9972NR02A5.jpg'],
-    rating:4.7, reviews:134, badge:'NOVO', featured:false, bestseller:false, stock:18, sizes:['P','M','G','GG'], colors:['Preto','Azul Royal','Verde Lima'],
-    colorImages:{'Preto':'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80','Azul Royal':'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80','Verde Lima':'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80'} },
-
-  { id:37, name:'Jaqueta ASICS Recortes Masculina',   category:'hoodies',   gender:'Masculina',   price:329.99, originalPrice:469.99,
-    description:'Jaqueta jeans com efeito destroyed e puídos artesanais, lavagem stone, bolsos frontais e internos e caimento reto oversize.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/9972SD58A3.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/9972SD58A3.jpg','https://imgcentauro-a.akamaihd.net/660x660/9972SD58A4.jpg','https://imgcentauro-a.akamaihd.net/660x660/9972SD58A5.jpg'],
-    rating:4.6, reviews:145, badge:'TENDÊNCIA', featured:true, bestseller:false, stock:11, sizes:['P','M','G','GG'], colors:['Azul Claro','Azul Escuro','Preto'],
-    colorImages:{'Azul Claro':'https://images.unsplash.com/photo-1544441893-675973e31985?w=600&q=80','Azul Escuro':'https://images.unsplash.com/photo-1544441893-675973e31985?w=600&q=80','Preto':'https://images.unsplash.com/photo-1544441893-675973e31985?w=600&q=80'} },
-
-  // ── CALÇAS ────────────────────────────────────────────────────────────────
-  { id:6,  name:'Calça Feminina Nord Térmica',        category:'calcas',    gender:'feminino',  price:249.99, originalPrice:349.99,
-    description:'Legging cintura alta com suporte máximo, tecido sculpt compressivo e bolso lateral para uso no treino ou no dia a dia.',
-    image:'https://imgcentauro-a.akamaihd.net/1024x1024/99116902A6.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1024x1024/99116902A6.jpg','https://imgcentauro-a.akamaihd.net/660x660/99116902A5.jpg',],
-    rating:4.8, reviews:421, badge:'BEST SELLER', featured:true, bestseller:true, stock:22, sizes:['PP','P','M','G'], colors:['Preto','Roxo','Azul'],
-    colorImages:{'Preto':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80','Roxo':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80','Azul':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80'} },
-
-  { id:15, name:'Conjunto Fristyle Fitness Calça Legging com Bolso e Top Academia - Feminino',  category:'calcas',    gender:'feminino',  price:319.99, originalPrice:449.99,
-    description:'Kit top nadador + legging combinando, tecido sculpt 4-way stretch, costura reforçada e proteção UV 50+. Visual completo de academia.',
-    image:'https://imgcentauro-a.akamaihd.net/1024x1024/M0N1A202A2.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1024x1024/M0N1A202A2.jpg','https://imgcentauro-a.akamaihd.net/1024x1024/M0N1A202A1.jpg','https://imgcentauro-a.akamaihd.net/1024x1024/M0N1A202A4.jpg'],
-    rating:4.8, reviews:298, badge:'KIT ESPECIAL', featured:false, bestseller:true, stock:14, sizes:['PP','P','M','G'], colors:['Preto','Roxo Escuro','Verde Oliva'],
-    colorImages:{'Preto':'https://images.unsplash.com/photo-1554284126-aa88f22d8b74?w=600&q=80','Roxo Escuro':'https://images.unsplash.com/photo-1554284126-aa88f22d8b74?w=600&q=80','Verde Oliva':'https://images.unsplash.com/photo-1554284126-aa88f22d8b74?w=600&q=80'} },
-
-  { id:18, name:'Calça Masculina Oxer Elastic',        category:'calcas',    gender:'masculino', price:279.99, originalPrice:389.99,
-    description:'Calça cargo com 8 bolsos funcionais, tecido ripstop resistente, cintura ajustável e design tático urbano moderno.',
-    image:'https://imgcentauro-a.akamaihd.net/1500x1500/98482605A19.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1500x1500/98482605A19.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/98482605A18.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/98482605A17.jpg'],
-    rating:4.6, reviews:143, badge:null, featured:false, bestseller:false, stock:20, sizes:['38','40','42','44','46'], colors:['Verde Militar','Preto','Bege'],
-    colorImages:{'Verde Militar':'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80','Preto':'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80','Bege':'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80'} },
-
-  { id:27, name:'Calça Legging Oxer Campeão Slim - Feminina',  category:'calcas',    gender:'feminino',  price:199.99, originalPrice:279.99,
-    description:'Legging cintura alta com estampa camuflada exclusiva, tecido compressivo dupla camada, bolso lateral e costura lateral reforçada.',
-    image:'https://imgcentauro-a.akamaihd.net/1500x1500/97479402A16.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1500x1500/97479402A16.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/97479402A15.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/97479402A14.jpg'],
-    rating:4.5, reviews:198, badge:'20% OFF', featured:false, bestseller:false, stock:27, sizes:['PP','P','M','G'], colors:['Camuflado Verde','Camuflado Cinza','Preto'],
-    colorImages:{'Camuflado Verde':'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80','Camuflado Cinza':'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80','Preto':'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80'} },
-
-  { id:33, name:'Calça Jogger Masculina Oxer Moletom Bolso',      category:'calcas',    gender:'masculino', price:219.99, originalPrice:299.99,
-    description:'Jogger em moletom 320g com elástico no tornozelo, dois bolsos laterais e um traseiro, cordão ajustável no cós e caimento slim moderno.',
-    image:'https://imgcentauro-a.akamaihd.net/1500x1500/99103902A7.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1500x1500/99103902A7.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/99103902A5.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/99103902A6.jpg'],
-    rating:4.6, reviews:234, badge:null, featured:false, bestseller:false, stock:22, sizes:['P','M','G','GG'], colors:['Cinza Mescla','Preto','Bordo'],
-    colorImages:{'Cinza Mescla':'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=600&q=80','Preto':'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=600&q=80','Bordo':'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=600&q=80'} },
-
-
-  // ── SHORTS ────────────────────────────────────────────────────────────────
-  { id:4,  name:'Short Training Elite',      category:'shorts',    gender:'masculino', price:179.99, originalPrice:249.99,
-    description:'Short de treino com tecnologia anti-odor, elástico interno ajustável e bolso lateral com zíper para guardar seus essenciais.',
-    image:'https://imgcentauro-a.akamaihd.net/660x660/M18XRD02A1.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/660x660/M18XRD02A1.jpg','https://imgcentauro-a.akamaihd.net/1024x1024/M18XRD02A3.jpg'],
-    rating:4.5, reviews:201, badge:'PROMOÇÃO', featured:false, bestseller:false, stock:18, sizes:['P','M','G','GG'], colors:['Preto','Cinza','Azul'],
-    colorImages:{'Preto':'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=600&q=80','Cinza':'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=600&q=80','Azul':'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=600&q=80'} },
-
-  { id:22, name:'Shorts Ciclista Slim Fem.', category:'shorts',    gender:'feminino',  price:139.99, originalPrice:199.99,
-    description:'Short ciclista com cós largo de 10cm, tecido suplex liso com compressão leve, costuras planas e acabamento impecável para uso diário ou treino.',
-    image:'https://imgcentauro-a.akamaihd.net/1500x1500/98934502A2.jpg',
-    images:['https://imgcentauro-a.akamaihd.net/1500x1500/98934502A2.jpg','https://imgcentauro-a.akamaihd.net/1500x1500/98934502A1.jpg'],
-    rating:4.6, reviews:312, badge:'PROMOÇÃO', featured:false, bestseller:true, stock:40, sizes:['PP','P','M','G','GG'], colors:['Preto','Marsala','Verde Militar'],
-    colorImages:{'Preto':'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80','Marsala':'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80','Verde Militar':'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80'} },
-
- { id:32, name:'Óculos Esportivo UV400',    category:'acessorios',gender:'unissex',   price:149.99, originalPrice:219.99, description:'Armação leve em TR90 flexível, lentes polarizadas com proteção UV400, revestimento espelhado e estojo rígido incluso.', image:'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=80', images:['https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=80'], rating:4.5, reviews:156, badge:null, featured:false, bestseller:false, stock:28, sizes:['Único'], colors:['Preto Fumê','Azul Espelhado','Dourado'],
+  { id:1,  name:'Air Max 90 Premium',       category:'tenis',     gender:'masculino', price:599.99, originalPrice:799.99, description:'Tênis clássico icônico com amortecimento Air Max de alta responsividade. Cabedal em couro premium, solado em borracha resistente e lingueta acolchoada para conforto total.', image:U('photo-1542291026-7eec264c27ff'), images:[U('photo-1542291026-7eec264c27ff'),U('photo-1514989940723-37bb4cdf4d2f'),U('photo-1606107557195-0e29a4b5b4aa')], rating:4.8, reviews:245, badge:'25% OFF',    featured:true,  bestseller:true,  stock:12, sizes:['38','39','40','41','42','43','44'], colors:['Preto','Branco','Cinza'],
+    colorImages:{'Preto':U('photo-1491553895911-0055eca6402d'),'Branco':U('photo-1600185365926-3a2ce3cdb9eb'),'Cinza':U('photo-1608231387042-66d1773070a5')} },
+  { id:2,  name:'Nike Zoom Pegasus 40',      category:'tenis',     gender:'masculino', price:549.99, originalPrice:749.99, description:'Amortecimento Zoom Air responsivo, ideal para corridas de longa distância. Cabedal em mesh respirável e solado com entressola React.', image:U('photo-1460353581641-37baddab0fa2'), images:[U('photo-1460353581641-37baddab0fa2'),U('photo-1539185441755-769473a23570')], rating:4.7, reviews:189, badge:'NOVO', featured:true, bestseller:false, stock:8, sizes:['38','39','40','41','42','43'], colors:['Azul','Preto'],
+    colorImages:{'Azul':U('photo-1460353581641-37baddab0fa2'),'Preto':U('photo-1491553895911-0055eca6402d')} },
+  { id:3,  name:'Camiseta Dri-FIT Pro',      category:'camisetas', gender:'masculino', price:149.99, originalPrice:199.99, description:'Tecnologia Dri-FIT para máxima respirabilidade durante o treino. Tecido ultra-leve, costura plana e proteção UV 50+.', image:U('photo-1618354691373-d851c5c3a99b'), images:[U('photo-1618354691373-d851c5c3a99b'),U('photo-1581655353564-df123a1eb820')], rating:4.6, reviews:156, badge:null, featured:true, bestseller:false, stock:25, sizes:['P','M','G','GG'], colors:['Preto','Branco','Azul'],
+    colorImages:{'Preto':U('photo-1618354691373-d851c5c3a99b'),'Branco':U('photo-1521572163474-6864f9cf17ab'),'Azul':U('photo-1529374255404-311a2a4f1fd9')} },
+  { id:4,  name:'Short Training Elite',      category:'shorts',    gender:'masculino', price:179.99, originalPrice:249.99, description:'Short de treino com tecnologia anti-odor, elástico interno e bolso lateral com zíper.', image:U('photo-1562183247-9386efe42764'), images:[U('photo-1562183247-9386efe42764'),U('photo-1517438321277-e53455830956')], rating:4.5, reviews:201, badge:'PROMOÇÃO', featured:false, bestseller:false, stock:18, sizes:['P','M','G','GG'], colors:['Preto','Cinza'],
+    colorImages:{'Preto':U('photo-1562183247-9386efe42764'),'Cinza':U('photo-1517438321277-e53455830956')} },
+  { id:5,  name:'Moletom Essentials Heavy',  category:'hoodies',   gender:'masculino', price:299.99, originalPrice:399.99, description:'Moletom de algodão 400g com capuz, bolso canguru e ribana dupla nas mangas. Caimento oversized e acabamento premium.', image:U('photo-1556821840-3a63f95609a7'), images:[U('photo-1556821840-3a63f95609a7'),U('photo-1578768079052-aa76e52ff62e')], rating:4.7, reviews:267, badge:null, featured:true, bestseller:false, stock:15, sizes:['P','M','G','GG'], colors:['Preto','Cinza','Branco'],
+    colorImages:{'Preto':U('photo-1556821840-3a63f95609a7'),'Cinza':U('photo-1578587018452-892bacefd3f2'),'Branco':U('photo-1620799140408-edc6dcb6d633')} },
+  { id:6,  name:'Legging Sculpt Pro',        category:'calcas',    gender:'feminino',  price:249.99, originalPrice:349.99, description:'Legging cintura alta com suporte máximo, tecido sculpt compressivo e bolso lateral.', image:U('photo-1518611012118-696072aa579a'), images:[U('photo-1518611012118-696072aa579a'),U('photo-1506629082955-511b1aa562c8'),U('photo-1544367567-0f2fcb009e0b')], rating:4.8, reviews:421, badge:'BEST SELLER', featured:true, bestseller:true, stock:22, sizes:['PP','P','M','G'], colors:['Preto','Roxo','Azul'],
+    colorImages:{'Preto':U('photo-1506629082955-511b1aa562c8'),'Roxo':U('photo-1518611012118-696072aa579a'),'Azul':U('photo-1571019614242-c5c5dee9f50b')} },
+  { id:7,  name:'Tênis Revolution 7 Fem.',   category:'tenis',     gender:'feminino',  price:279.99, originalPrice:399.99, description:'Tênis leve e confortável para uso diário. Cabedal em mesh respirável, palmilha removível e solado antiderrapante.', image:U('photo-1560769629-975ec94e6a86'), images:[U('photo-1560769629-975ec94e6a86'),U('photo-1595950653106-6c9ebd614d3a')], rating:4.6, reviews:178, badge:'30% OFF', featured:false, bestseller:false, stock:10, sizes:['35','36','37','38','39','40'], colors:['Rosa','Branco','Preto'],
+    colorImages:{'Rosa':U('photo-1560769629-975ec94e6a86'),'Branco':U('photo-1543508282-6319a3e2621f'),'Preto':U('photo-1491553895911-0055eca6402d')} },
+  { id:8,  name:'Boné Futura Washed',        category:'acessorios',gender:'unissex',   price:99.99,  originalPrice:149.99, description:'Boné estruturado com lavagem especial, ajuste traseiro de metal e bordado frontal em relevo.', image:U('photo-1588850561407-ed78c282e89b'), images:[U('photo-1588850561407-ed78c282e89b'),U('photo-1521369909029-2afed882baee')], rating:4.5, reviews:134, badge:null, featured:false, bestseller:false, stock:35, sizes:['Único'], colors:['Preto','Branco','Bege'],
+    colorImages:{'Preto':U('photo-1588850561407-ed78c282e89b'),'Branco':U('photo-1521369909029-2afed882baee'),'Bege':U('photo-1575428652377-a2d80e2277fc')} },
+  { id:9,  name:'Mochila Elite Pro 30L',     category:'acessorios',gender:'unissex',   price:349.99, originalPrice:499.99, description:'Mochila premium 30 litros com compartimento acolchoado para notebook 15", alças ergonômicas e sistema de ventilação nas costas.', image:U('photo-1553062407-98eeb64c6a62'), images:[U('photo-1553062407-98eeb64c6a62'),U('photo-1622560480605-2d89bd98948e')], rating:4.7, reviews:289, badge:null, featured:false, bestseller:false, stock:12, sizes:['Único'], colors:['Preto','Cinza'],
+    colorImages:{'Preto':U('photo-1553062407-98eeb64c6a62'),'Cinza':U('photo-1581605405669-fdf436c79c6d')} },
+  { id:10, name:'Camiseta Sport Fit Fem.',   category:'camisetas', gender:'feminino',  price:89.99,  originalPrice:129.99, description:'Camiseta fitness com corte feminino, recortes laterais e tecido micro-perfurado para máxima ventilação.', image:U('photo-1518310383802-640f2d342648'), images:[U('photo-1518310383802-640f2d342648'),U('photo-1571019613454-1cb2f99b2d8b')], rating:4.5, reviews:203, badge:null, featured:false, bestseller:false, stock:30, sizes:['PP','P','M','G'], colors:['Rosa','Branco','Azul'],
+    colorImages:{'Rosa':U('photo-1518310383802-640f2d342648'),'Branco':U('photo-1521572163474-6864f9cf17ab'),'Azul':U('photo-1571019614242-c5c5dee9f50b')} },
+  { id:11, name:'Tênis Air Force 1 Low',     category:'tenis',     gender:'unissex',   price:699.99, originalPrice:899.99, description:'O clássico que nunca sai de moda. Cabedal em couro legítimo, solado Air e palmilha de espuma para conforto o dia todo.', image:U('photo-1600185365926-3a2ce3cdb9eb'), images:[U('photo-1600185365926-3a2ce3cdb9eb'),U('photo-1575537302964-96cd47c06b1b')], rating:4.9, reviews:512, badge:'LANÇAMENTO', featured:true, bestseller:false, stock:20, sizes:['36','37','38','39','40','41','42','43'], colors:['Branco','Preto'],
+    colorImages:{'Branco':U('photo-1600185365926-3a2ce3cdb9eb'),'Preto':U('photo-1606107557195-0e29a4b5b4aa')} },
+  { id:12, name:'Relógio GPS Sport Pro',     category:'acessorios',gender:'unissex',   price:899.99, originalPrice:1199.99, description:'Smartwatch esportivo com GPS integrado, monitor cardíaco, 20 modos de esporte e bateria de 14 dias.', image:U('photo-1434056886845-dac89ffe9b56'), images:[U('photo-1434056886845-dac89ffe9b56'),U('photo-1575311373937-040b8e1fd5b6')], rating:4.9, reviews:342, badge:'PREMIUM', featured:true, bestseller:false, stock:7, sizes:['Único'], colors:['Preto','Grafite','Azul'],
+    colorImages:{'Preto':U('photo-1434056886845-dac89ffe9b56'),'Grafite':U('photo-1508685096489-7aacd43bd3b1'),'Azul':U('photo-1575311373937-040b8e1fd5b6')} },
+  { id:13, name:'Tênis Urban Street',        category:'tenis',     gender:'unissex',   price:319.99, originalPrice:459.99, description:'Estilo urbano com conforto de corrida. Solado EVA ultra-leve, palmilha anatômica e cabedal vulcanizado com detalhe vintage.', image:U('photo-1525966222134-fcfa99b8ae77'), images:[U('photo-1525966222134-fcfa99b8ae77'),U('photo-1549298916-b41d501d3772')], rating:4.5, reviews:234, badge:null, featured:false, bestseller:false, stock:17, sizes:['37','38','39','40','41','42'], colors:['Bege','Branco','Preto'],
+    colorImages:{'Bege':U('photo-1549298916-b41d501d3772'),'Branco':U('photo-1460353581641-37baddab0fa2'),'Preto':U('photo-1491553895911-0055eca6402d')} },
+  { id:14, name:'Camiseta Oversize Graphic', category:'camisetas', gender:'unissex',   price:129.99, originalPrice:179.99, description:'Camiseta oversized com estampa gráfica exclusiva em serigrafia, tecido 100% algodão penteado.', image:U('photo-1576566588028-4147f3842f27'), images:[U('photo-1576566588028-4147f3842f27'),U('photo-1583743814966-8936f5b7be1a')], rating:4.6, reviews:312, badge:'NOVO', featured:true, bestseller:false, stock:28, sizes:['P','M','G','GG','3G'], colors:['Preto','Branco','Cinza'],
+    colorImages:{'Preto':U('photo-1583743814966-8936f5b7be1a'),'Branco':U('photo-1521572163474-6864f9cf17ab'),'Cinza':U('photo-1529374255404-311a2a4f1fd9')} },
+  { id:15, name:'Conjunto Treino Fem.',      category:'calcas',    gender:'feminino',  price:319.99, originalPrice:449.99, description:'Kit top nadador + legging combinando, tecido sculpt 4-way stretch, costura reforçada e proteção UV 50+.', image:'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80', images:['https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80'], rating:4.8, reviews:298, badge:'KIT ESPECIAL', featured:false, bestseller:true, stock:14, sizes:['PP','P','M','G'], colors:['Preto','Roxo Escuro','Verde Oliva'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80','Roxo Escuro':'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80','Verde Oliva':'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80'} },
+  { id:16, name:'Garrafa Térmica 750ml',     category:'acessorios',gender:'unissex',   price:119.99, originalPrice:169.99, description:'Garrafa térmica em inox 304 com parede dupla, mantém bebidas frias 24h e quentes 12h. Tampa rosqueável e bico flip-top.', image:'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80', images:['https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80'], rating:4.8, reviews:456, badge:'TOP SELLER', featured:false, bestseller:true, stock:45, sizes:['750ml'], colors:['Preto Matte','Prata','Azul Navy'],
+    colorImages:{'Preto Matte':'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80','Prata':'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80','Azul Navy':'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80'} },
+  { id:17, name:'Tênis Adidas Forum Low',    category:'tenis',     gender:'unissex',   price:459.99, originalPrice:599.99, description:'Ícone do streetwear dos anos 80 repaginado. Cabedal em couro premium, palmilha EVA com amortecimento e sistema de velcro decorativo na cano.', image:'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=600&q=80', images:['https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=600&q=80'], rating:4.7, reviews:198, badge:'NOVO', featured:true, bestseller:false, stock:14, sizes:['37','38','39','40','41','42','43'], colors:['Branco','Preto','Vermelho'],
+    colorImages:{'Branco':'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=600&q=80','Preto':'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80','Vermelho':'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&q=80'} },
+  { id:18, name:'Calça Cargo Tática',        category:'calcas',    gender:'masculino', price:279.99, originalPrice:389.99, description:'Calça cargo com 8 bolsos funcionais, tecido ripstop resistente, cintura ajustável e design tático urbano.', image:'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80', images:['https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80'], rating:4.6, reviews:143, badge:null, featured:false, bestseller:false, stock:20, sizes:['38','40','42','44','46'], colors:['Verde Militar','Preto','Bege'],
+    colorImages:{'Verde Militar':'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80','Preto':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80','Bege':'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80'} },
+  { id:19, name:'Top Esportivo Strappy',     category:'camisetas', gender:'feminino',  price:119.99, originalPrice:169.99, description:'Top nadador com alças cruzadas nas costas, sustentação média, tecido compressivo e proteção UV 50+. Ideal para treinos e yoga.', image:'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80', images:['https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80'], rating:4.5, reviews:231, badge:'MAIS VENDIDO', featured:false, bestseller:true, stock:33, sizes:['PP','P','M','G'], colors:['Preto','Rosa Neon','Azul Petróleo'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1503342452485-86b1cd2f6ef4?w=600&q=80','Rosa Neon':'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80','Azul Petróleo':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80'} },
+  { id:20, name:'Tênis Chunky Platform',     category:'tenis',     gender:'feminino',  price:389.99, originalPrice:519.99, description:'Solado tratorado de 5cm com visual bold e moderno. Cabedal em couro sintético premium, forro acolchoado e cadarço duplo.', image:'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&q=80', images:['https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&q=80'], rating:4.8, reviews:167, badge:'TENDÊNCIA', featured:true, bestseller:false, stock:9, sizes:['35','36','37','38','39'], colors:['Preto','Branco','Nude'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80','Branco':'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&q=80','Nude':'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80'} },
+  { id:21, name:'Moletom Zip-Up Oversized',  category:'hoodies',   gender:'unissex',   price:349.99, originalPrice:479.99, description:'Moletom aberto com zíper YKK, capuz com cordão, dois bolsos laterais e tecido fleece pesado 380g. Caimento oversized perfeito para layering.', image:'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=600&q=80', images:['https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=600&q=80'], rating:4.7, reviews:189, badge:null, featured:true, bestseller:false, stock:22, sizes:['P','M','G','GG','3G'], colors:['Cinza Mescla','Preto','Off-White'],
+    colorImages:{'Cinza Mescla':'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=600&q=80','Preto':'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80','Off-White':'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=600&q=80'} },
+  { id:22, name:'Shorts Ciclista Slim',      category:'shorts',    gender:'feminino',  price:139.99, originalPrice:199.99, description:'Short ciclista com cós largo de 10cm, tecido suplex liso com compressão leve, costuras planas e acabamento impecável para uso diário ou treino.', image:'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80', images:['https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80'], rating:4.6, reviews:312, badge:'PROMOÇÃO', featured:false, bestseller:true, stock:40, sizes:['PP','P','M','G','GG'], colors:['Preto','Marsala','Verde Militar'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80','Marsala':'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80','Verde Militar':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80'} },
+  { id:23, name:'Camiseta Básica Premium',   category:'camisetas', gender:'masculino', price:79.99,  originalPrice:119.99, description:'Camiseta 100% algodão penteado 30/1 com tingimento reativo, gola careca dupla e costura lateral. O básico que nunca decepciona.', image:'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=600&q=80', images:['https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=600&q=80'], rating:4.4, reviews:521, badge:'33% OFF', featured:false, bestseller:true, stock:60, sizes:['P','M','G','GG','3G'], colors:['Branco','Preto','Cinza','Azul Marinho','Verde'],
+    colorImages:{'Branco':'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80','Preto':'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=600&q=80','Cinza':'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=600&q=80','Azul Marinho':'https://images.unsplash.com/photo-1503342452485-86b1cd2f6ef4?w=600&q=80','Verde':'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80'} },
+  { id:24, name:'Tênis Running Ultra',       category:'tenis',     gender:'masculino', price:649.99, originalPrice:849.99, description:'Amortecimento de última geração com entressola BOOST, cabedal Primeknit respirável e placa de fibra de carbono para máximo retorno de energia.', image:'https://images.unsplash.com/photo-1539185441755-769473a23570?w=600&q=80', images:['https://images.unsplash.com/photo-1539185441755-769473a23570?w=600&q=80'], rating:4.9, reviews:88, badge:'PREMIUM', featured:true, bestseller:false, stock:6, sizes:['39','40','41','42','43','44'], colors:['Preto/Laranja','Branco/Azul'],
+    colorImages:{'Preto/Laranja':'https://images.unsplash.com/photo-1539185441755-769473a23570?w=600&q=80','Branco/Azul':'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&q=80'} },
+  { id:25, name:'Jaqueta Corta-Vento',       category:'hoodies',   gender:'masculino', price:399.99, originalPrice:549.99, description:'Jaqueta leve impermeável com capuz dobra no colarinho, zíper YKK, bolsos com zíper e logo refletivo. Ideal para corrida e ciclismo urbano.', image:'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80', images:['https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80'], rating:4.7, reviews:134, badge:'NOVO', featured:false, bestseller:false, stock:18, sizes:['P','M','G','GG'], colors:['Preto','Azul Royal','Verde Lima'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80','Azul Royal':'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&q=80','Verde Lima':'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=600&q=80'} },
+  { id:26, name:'Bolsa Shoulder Bag',        category:'acessorios',gender:'unissex',   price:189.99, originalPrice:269.99, description:'Shoulder bag compacta em couro vegano com alça ajustável, dois compartimentos internos e fechamento magnético. Perfeita para o dia a dia.', image:'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80', images:['https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80'], rating:4.6, reviews:276, badge:null, featured:false, bestseller:false, stock:25, sizes:['Único'], colors:['Preto','Marrom','Bege'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80','Marrom':'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80','Bege':'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80'} },
+  { id:27, name:'Legging Camuflada',         category:'calcas',    gender:'feminino',  price:199.99, originalPrice:279.99, description:'Legging cintura alta com estampa camuflada exclusiva, tecido compressivo dupla camada, bolso lateral e costura lateral reforçada.', image:'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80', images:['https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80'], rating:4.5, reviews:198, badge:'20% OFF', featured:false, bestseller:false, stock:27, sizes:['PP','P','M','G'], colors:['Camuflado Verde','Camuflado Cinza','Preto'],
+    colorImages:{'Camuflado Verde':'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80','Camuflado Cinza':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80','Preto':'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80'} },
+  { id:28, name:'Tênis Skate Pro Old School', category:'tenis',    gender:'unissex',   price:249.99, originalPrice:349.99, description:'Solado vulcanizado reforçado, palmilha Ultracush HD para absorção de impacto e cabedal em camurça premium. O parceiro ideal para o skate.', image:'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80', images:['https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80'], rating:4.7, reviews:345, badge:null, featured:true, bestseller:true, stock:30, sizes:['37','38','39','40','41','42','43'], colors:['Preto','Azul Marinho','Cinza'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80','Azul Marinho':'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80','Cinza':'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&q=80'} },
+  { id:29, name:'Camiseta Tie-Dye Urban',    category:'camisetas', gender:'unissex',   price:109.99, originalPrice:159.99, description:'Tie-dye artesanal com cada peça única. Tecido 100% algodão ringspun, cores com fixação a frio resistentes a lavagem e caimento levemente oversized.', image:'https://images.unsplash.com/photo-1503342452485-86b1cd2f6ef4?w=600&q=80', images:['https://images.unsplash.com/photo-1503342452485-86b1cd2f6ef4?w=600&q=80'], rating:4.4, reviews:267, badge:'EXCLUSIVO', featured:false, bestseller:false, stock:15, sizes:['P','M','G','GG'], colors:['Azul/Verde','Rosa/Roxo','Amarelo/Laranja'],
+    colorImages:{'Azul/Verde':'https://images.unsplash.com/photo-1503342452485-86b1cd2f6ef4?w=600&q=80','Rosa/Roxo':'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80','Amarelo/Laranja':'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80'} },
+  { id:30, name:'Mochila Slim Notebook 15"', category:'acessorios',gender:'unissex',   price:229.99, originalPrice:319.99, description:'Mochila slim para notebook 15", compartimento frontal organizador, alças acolchoadas, saída USB lateral e tecido resistente a água.', image:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80', images:['https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80'], rating:4.6, reviews:189, badge:null, featured:false, bestseller:false, stock:20, sizes:['Único'], colors:['Preto','Grafite','Azul Marinho'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80','Grafite':'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80','Azul Marinho':'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80'} },
+  { id:31, name:'Short Tactel Leve',         category:'shorts',    gender:'masculino', price:99.99,  originalPrice:149.99, description:'Short em tactel ultra-leve com forro interno, cós elástico com cadarço, dois bolsos laterais e acabamento premium para praia ou treino.', image:'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=600&q=80', images:['https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=600&q=80'], rating:4.3, reviews:412, badge:'33% OFF', featured:false, bestseller:true, stock:50, sizes:['P','M','G','GG'], colors:['Preto','Azul','Vinho','Cinza'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=600&q=80','Azul':'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80','Vinho':'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80','Cinza':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80'} },
+  { id:32, name:'Óculos Esportivo UV400',    category:'acessorios',gender:'unissex',   price:149.99, originalPrice:219.99, description:'Armação leve em TR90 flexível, lentes polarizadas com proteção UV400, revestimento espelhado e estojo rígido incluso.', image:'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=80', images:['https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=80'], rating:4.5, reviews:156, badge:null, featured:false, bestseller:false, stock:28, sizes:['Único'], colors:['Preto Fumê','Azul Espelhado','Dourado'],
     colorImages:{'Preto Fumê':'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=80','Azul Espelhado':'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=80','Dourado':'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80'} },
+  { id:33, name:'Calça Jogger Moletom',      category:'calcas',    gender:'masculino', price:219.99, originalPrice:299.99, description:'Jogger em moletom 320g com elástico no tornozelo, dois bolsos laterais e um traseiro, cordão ajustável no cós e caimento slim moderno.', image:'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80', images:['https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80'], rating:4.6, reviews:234, badge:null, featured:false, bestseller:false, stock:22, sizes:['P','M','G','GG'], colors:['Cinza Mescla','Preto','Bordo'],
+    colorImages:{'Cinza Mescla':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80','Preto':'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80','Bordo':'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80'} },
+  { id:34, name:'Tênis Slip-On Canvas',      category:'tenis',     gender:'unissex',   price:179.99, originalPrice:249.99, description:'Slip-on em canvas lavável, elástico lateral para fácil calce, palmilha removível Memory Foam e solado de borracha antiderrapante. Leve e prático.', image:'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80', images:['https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80'], rating:4.4, reviews:302, badge:'MAIS VENDIDO', featured:false, bestseller:true, stock:38, sizes:['36','37','38','39','40','41','42'], colors:['Preto','Branco','Navy'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80','Branco':'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80','Navy':'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=600&q=80'} },
+  { id:35, name:'Camiseta Polo Dry-Fit',     category:'camisetas', gender:'masculino', price:159.99, originalPrice:219.99, description:'Polo em piquet dry-fit com proteção UV 40+, três botões contrastantes, gola e punhos em ribana e corte regular de alta costura.', image:'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=600&q=80', images:['https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=600&q=80'], rating:4.5, reviews:178, badge:null, featured:false, bestseller:false, stock:24, sizes:['P','M','G','GG'], colors:['Branco','Preto','Azul Marinho','Verde'],
+    colorImages:{'Branco':'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80','Preto':'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=600&q=80','Azul Marinho':'https://images.unsplash.com/photo-1503342452485-86b1cd2f6ef4?w=600&q=80','Verde':'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80'} },
   { id:36, name:'Pulseira Esportiva Smart',  category:'acessorios',gender:'unissex',   price:299.99, originalPrice:429.99, description:'Pulseira fitness com monitor cardíaco, contador de passos, sono e calorias, notificações do smartphone e resistência à água ATM5. Bateria de 7 dias.', image:'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80', images:['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80'], rating:4.6, reviews:234, badge:'NOVO', featured:true, bestseller:false, stock:12, sizes:['Único'], colors:['Preto','Azul','Rosa'],
     colorImages:{'Preto':'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80','Azul':'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80','Rosa':'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80'} },
+  { id:37, name:'Jaqueta Jeans Destroyed',   category:'hoodies',   gender:'unissex',   price:329.99, originalPrice:469.99, description:'Jaqueta jeans com efeito destroyed e puídos artesanais, lavagem stone, bolsos frontais e internos e caimento reto oversize.', image:'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80', images:['https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80'], rating:4.6, reviews:145, badge:'TENDÊNCIA', featured:true, bestseller:false, stock:11, sizes:['P','M','G','GG'], colors:['Azul Claro','Azul Escuro','Preto'],
+    colorImages:{'Azul Claro':'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80','Azul Escuro':'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=600&q=80','Preto':'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80'} },
+  { id:38, name:'Short Feminino Ciclista Pb',category:'shorts',    gender:'feminino',  price:129.99, originalPrice:179.99, description:'Ciclista longo com cós franzido e detalhe de franzido lateral, tecido ponto roma leve e confortável, ideal para o dia a dia casual.', image:'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80', images:['https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80'], rating:4.5, reviews:289, badge:null, featured:false, bestseller:false, stock:35, sizes:['PP','P','M','G'], colors:['Preto','Branco','Nude'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80','Branco':'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80','Nude':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80'} },
+  { id:39, name:'Tênis Trail Running GTX',   category:'tenis',     gender:'masculino', price:729.99, originalPrice:949.99, description:'Gore-Tex waterproof, solado Vibram com travas multiangulares, proteção na ponta e tornozelo reforçado. Para trilhas e terrenos desafiadores.', image:'https://images.unsplash.com/photo-1539185441755-769473a23570?w=600&q=80', images:['https://images.unsplash.com/photo-1539185441755-769473a23570?w=600&q=80'], rating:4.9, reviews:67, badge:'PREMIUM', featured:true, bestseller:false, stock:5, sizes:['39','40','41','42','43'], colors:['Laranja/Preto','Verde/Cinza'],
+    colorImages:{'Laranja/Preto':'https://images.unsplash.com/photo-1539185441755-769473a23570?w=600&q=80','Verde/Cinza':'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=600&q=80'} },
+  { id:40, name:'Calça Wide Leg Feminina',   category:'calcas',    gender:'feminino',  price:239.99, originalPrice:329.99, description:'Wide leg de alfaiataria em crepe com cós de elástico embutido, pernas largas e comprimento ideal para usar com tênis ou salto.', image:'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80', images:['https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80'], rating:4.7, reviews:178, badge:'NOVO', featured:false, bestseller:false, stock:18, sizes:['34','36','38','40','42'], colors:['Preto','Bege','Cinza'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80','Bege':'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80','Cinza':'https://images.unsplash.com/photo-1541698444083-023c97d3f4b6?w=600&q=80'} },
+  { id:41, name:'Toalha Microfibra Sport',   category:'acessorios',gender:'unissex',   price:59.99,  originalPrice:89.99, description:'Toalha de microfibra de secagem rápida, 70x140cm, absorção 3x superior ao algodão, leve e compacta. Acompanha bolsa com zíper.', image:'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80', images:['https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80'], rating:4.3, reviews:398, badge:null, featured:false, bestseller:false, stock:70, sizes:['Único'], colors:['Preto','Azul','Vermelho'],
+    colorImages:{'Preto':'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80','Azul':'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80','Vermelho':'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80'} },
+  { id:42, name:'Moletom Cropped Feminino',  category:'hoodies',   gender:'feminino',  price:249.99, originalPrice:339.99, description:'Moletom cropped em algodão 300g com capuz, cordão e punhos em ribana. Caimento oversized e comprimento que define a cintura.', image:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80', images:['https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80'], rating:4.8, reviews:312, badge:'MAIS VENDIDO', featured:true, bestseller:true, stock:20, sizes:['PP','P','M','G'], colors:['Rosa','Lilás','Preto','Off-White'],
+    colorImages:{'Rosa':'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80','Lilás':'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=600&q=80','Preto':'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80','Off-White':'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=600&q=80'} }
 ];
 
 const categories = [
@@ -1100,6 +980,7 @@ function showProductDetail(id) {
       <div class="product-options">
         ${p.colors?.length ? `
           <div>
+            <label>Cor: <span id="selectedColorLabel" style="color:var(--accent);font-weight:700;">${p.colors.length > 1 ? 'Selecione' : p.colors[0]}</span></label>
             <div class="color-swatches">
               ${p.colors.map((c, ci) => `<div class="color-swatch ${p.colors.length === 1 ? 'selected' : ''}" onclick="selectColor(this,'${c}',${p.id})">${c}</div>`).join('')}
             </div>
@@ -1471,6 +1352,7 @@ function addToCartDetail() {
   const needsSize = selectedProduct.sizes?.length > 0;
   const needsColor = selectedProduct.colors?.length > 0;
   if (needsSize && !selectedSize) { showNotification('⚠️ Selecione um tamanho', 'warn'); return; }
+  if (needsColor && !selectedColor) { showNotification('⚠️ Selecione uma cor', 'warn'); return; }
   addCartItem({ ...selectedProduct, quantity: 1, selectedSize: selectedSize || null, selectedColor: selectedColor || selectedProduct.colors?.[0] || null });
 }
 function addToCart(id) {
@@ -2381,8 +2263,138 @@ function trackOrder() {
     </div>`;
 }
 
+/* ═══════════════════════════ VÍDEOS (feed estilo Reels/Shorts) ═══════════════════════════ */
+let videosFeedBuilt = false;
+
+/* Vídeos reais de produtos (banco de vídeos livres de direitos autorais — Mixkit License,
+   uso comercial liberado, sem necessidade de atribuição). Mapeados por id do produto. */
+const PRODUCT_VIDEOS = {
+  1:  'https://assets.mixkit.co/videos/15059/15059-360.mp4', // Air Max 90 — amarrando tênis antes de correr
+  2:  'https://assets.mixkit.co/videos/4893/4893-360.mp4',   // Nike Zoom Pegasus — passos caminhando na rua
+  4:  'https://assets.mixkit.co/videos/744/744-360.mp4',     // Short Training Elite — jogador de basquete
+  5:  'https://assets.mixkit.co/videos/1240/1240-360.mp4',   // Moletom Essentials — dançando sob luzes
+  6:  'https://assets.mixkit.co/videos/32812/32812-360.mp4', // Legging Sculpt Pro — pernas correndo na pista
+  7:  'https://assets.mixkit.co/videos/14766/14766-360.mp4', // Tênis Revolution 7 Fem — amarrando o tênis
+  8:  'https://assets.mixkit.co/videos/1236/1236-360.mp4',   // Boné Futura Washed — pose urbana com boné
+  19: 'https://assets.mixkit.co/videos/47879/47879-360.mp4', // Top Esportivo — correndo na esteira
+  20: 'https://assets.mixkit.co/videos/35987/35987-360.mp4', // Tênis Chunky Platform — pés descendo escada
+  21: 'https://assets.mixkit.co/videos/39874/39874-360.mp4', // Moletom Zip-Up — moda conceito
+  24: 'https://assets.mixkit.co/videos/407/407-360.mp4',     // Tênis Running Ultra — tênis branco urbano
+  28: 'https://assets.mixkit.co/videos/345/345-360.mp4',     // Tênis Skate Pro — equilibrando no trilho
+};
+
+function renderVideosFeed() {
+  const el = document.getElementById('videosFeedContainer');
+  if (!el || videosFeedBuilt) { syncVideoLikeStates(); return; }
+  videosFeedBuilt = true;
+
+  // Só entram no feed os produtos que têm vídeo real associado
+  const feed = products.filter(p => PRODUCT_VIDEOS[p.id]);
+
+  el.innerHTML = feed.map((p, i) => {
+    const discount = p.originalPrice ? Math.round(100 - (p.price / p.originalPrice) * 100) : 0;
+    return `
+    <section class="video-slide" data-id="${p.id}" data-index="${i}">
+      <video class="video-slide-media" src="${PRODUCT_VIDEOS[p.id]}" poster="${p.image}" muted loop playsinline preload="metadata"></video>
+      <div class="video-slide-gradient"></div>
+      <button class="video-mute-btn" onclick="toggleVideoMute(this)" aria-label="Som">
+        <svg class="icon-vol-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        <svg class="icon-vol-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      </button>
+      <div class="video-slide-top">
+        <span class="video-live-tag">● AO VIVO</span>
+      </div>
+      <div class="video-slide-actions">
+        <button class="video-action-btn btn-favorite" data-id="${p.id}" onclick="toggleWishlist(${p.id}, event)" aria-label="Favoritar">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span>Salvar</span>
+        </button>
+        <button class="video-action-btn" onclick="addToCart(${p.id})" aria-label="Adicionar ao carrinho">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Comprar</span>
+        </button>
+        <button class="video-action-btn" onclick="shareProduct(${p.id})" aria-label="Compartilhar">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <span>Enviar</span>
+        </button>
+      </div>
+      <div class="video-slide-info">
+        <div class="video-slide-brand"><span class="logo-mark" style="width:26px;height:26px;font-size:.65rem;">UF</span> Urban Flow</div>
+        <h3 class="video-slide-name">${p.name}</h3>
+        <div class="video-slide-price-row">
+          <span class="video-slide-price">R$ ${p.price.toFixed(2)}</span>
+          ${p.originalPrice ? `<span class="video-slide-old-price">R$ ${p.originalPrice.toFixed(2)}</span>` : ''}
+          ${discount > 0 ? `<span class="video-slide-badge">-${discount}%</span>` : ''}
+        </div>
+        <button class="btn-primary video-slide-cta" onclick="showProductDetail(${p.id})">Ver produto →</button>
+      </div>
+    </section>`;
+  }).join('');
+
+  syncVideoLikeStates();
+  initVideosFeedNav();
+}
+
+function syncVideoLikeStates() {
+  document.querySelectorAll('#videosFeedContainer .btn-favorite').forEach(btn => {
+    const id = Number(btn.dataset.id);
+    const inWish = (typeof wishlist !== 'undefined') && wishlist.some(w => w.id === id);
+    btn.classList.toggle('active', inWish);
+  });
+}
+
+function toggleVideoMute(btn) {
+  const slide = btn.closest('.video-slide');
+  const video = slide?.querySelector('video');
+  if (!video) return;
+  video.muted = !video.muted;
+  const on = btn.querySelector('.icon-vol-on');
+  const off = btn.querySelector('.icon-vol-off');
+  on.style.display = video.muted ? 'none' : 'block';
+  off.style.display = video.muted ? 'block' : 'none';
+}
+
+function initVideosFeedNav() {
+  const container = document.getElementById('videosFeedContainer');
+  if (!container || container.dataset.navReady) return;
+  container.dataset.navReady = '1';
+
+  // Toca o vídeo do slide visível e pausa os demais (economiza dados e CPU)
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const video = entry.target.querySelector('video');
+      const isActive = entry.isIntersecting && entry.intersectionRatio > 0.6;
+      entry.target.classList.toggle('video-slide-active', isActive);
+      if (!video) return;
+      if (isActive) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+  }, { root: container, threshold: [0, 0.6, 1] });
+  container.querySelectorAll('.video-slide').forEach(s => io.observe(s));
+
+  // Setas para desktop (scroll por roda/teclado já funciona nativamente via scroll-snap)
+  container.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); scrollVideosBy(1); }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); scrollVideosBy(-1); }
+  });
+}
+
+function scrollVideosBy(dir) {
+  const container = document.getElementById('videosFeedContainer');
+  if (!container) return;
+  const h = container.clientHeight;
+  container.scrollBy({ top: dir * h, behavior: 'smooth' });
+}
+
 /* ═══ NAVIGATE ═══ */
 function navigateTo(page) {
+  // Fecha o chat de IA (widget independente) se estiver aberto
+  closeAIChat();
+
   // Salva a página atual — exceto checkout e detalhe de produto
   const noRestore = ['checkout', 'productDetail'];
   localStorage.setItem('uf_current_page', noRestore.includes(page) ? 'home' : page);
@@ -2391,11 +2403,13 @@ function navigateTo(page) {
   document.getElementById('productsPage')?.classList.toggle('category-results-mode', page === 'products' && currentFilter !== 'todos');
   const map = {
     home: 'homePage', categories: 'categoriesPage', products: 'productsPage', productDetail: 'productDetailPage',
-    about: 'aboutPage', cart: 'cartPage', wishlist: 'wishlistPage',
+    about: 'aboutPage', cart: 'cartPage', wishlist: 'wishlistPage', videos: 'videosPage',
     checkout: 'checkoutPage', profile: 'profilePage', tracking: 'trackingPage'
   };
   document.getElementById(map[page])?.classList.add('active');
 
+  if (page === 'videos')        { renderVideosFeed(); }
+  else { document.querySelectorAll('#videosFeedContainer video').forEach(v => v.pause()); }
   if (page === 'cart')          { renderCart();     setTimeout(()=>injectBackBar('cart'), 60); }
   else if (page === 'wishlist') { renderWishlist(); setTimeout(()=>injectBackBar('wishlist'), 60); }
   else if (page === 'about')    { renderAbout();    setTimeout(()=>injectBackBar('about'), 60); }
@@ -2767,7 +2781,235 @@ function showSettings() {
 }
 
 function showSupport() {
-  showNotification('Suporte em desenvolvimento - Entre em contato: contato@urbanflow.com', 'warn');
+  openAIChat();
+}
+
+/* ═══════════════════════════ AI CHAT (Assistente Urban Flow) ═══════════════════════════ */
+let aiChatStarted = false;
+let aiChatTyping  = false;
+
+const AI_CHAT_QUICK_REPLIES = [
+  '🚚 Prazo de entrega',
+  '↩️ Como trocar/devolver',
+  '📏 Guia de tamanhos',
+  '💳 Formas de pagamento',
+  '📦 Rastrear meu pedido',
+  '🙋 Falar com humano'
+];
+
+/* Base de respostas por palavras-chave — cada entrada tem um "keywords" array e uma "reply" */
+const AI_CHAT_RULES = [
+  {
+    keywords: ['frete', 'entrega', 'prazo', 'demora', 'quanto tempo', 'chega'],
+    reply: 'O frete é <strong>grátis para compras acima de R$ 299</strong> 🚚. O prazo médio de entrega é de 3 a 10 dias úteis, dependendo da sua região. Assim que o pedido é despachado, você recebe o código de rastreio por e-mail.'
+  },
+  {
+    keywords: ['troca', 'devolu', 'devolver', 'cancelar pedido', 'arrepend'],
+    reply: 'Você tem até <strong>30 dias corridos</strong> após o recebimento para solicitar troca ou devolução, sem custo adicional ↩️. É só acessar <em>Meu Perfil → Meus Pedidos</em> e escolher o pedido, ou me chamar aqui que eu te ajudo a iniciar o processo.'
+  },
+  {
+    keywords: ['tamanho', 'numeração', 'numeracao', 'numero', 'número', 'tabela de medidas', 'guia de tamanho'],
+    reply: 'Temos um <strong>Guia de Tamanhos</strong> completo com medidas de pé, busto, cintura e quadril para te ajudar a escolher o tamanho ideal 📏. Você encontra esse guia na página de cada produto, no botão "Guia de Tamanhos".'
+  },
+  {
+    keywords: ['pagamento', 'pagar', 'parcel', 'pix', 'boleto', 'cartão', 'cartao', 'juros'],
+    reply: 'Aceitamos <strong>cartão de crédito (em até 10x sem juros)</strong>, <strong>Pix</strong> (aprovação na hora) e <strong>boleto bancário</strong> 💳. Você escolhe a forma de pagamento na etapa de finalização da compra.'
+  },
+  {
+    keywords: ['rastre', 'meu pedido', 'status do pedido', 'onde esta', 'onde está', 'cade meu', 'cadê meu'],
+    reply: 'Para rastrear seu pedido, acesse a aba <strong>"Rastrear Pedido"</strong> no menu e informe o número do pedido — ele está no e-mail de confirmação da compra 📦. Quer que eu te leve até lá?',
+    action: { label: 'Ir para Rastrear Pedido', fn: "navigateTo('tracking')" }
+  },
+  {
+    keywords: ['humano', 'atendente', 'pessoa', 'whatsapp', 'falar com alguem', 'falar com alguém'],
+    reply: 'Sem problemas! Você pode falar diretamente com nosso time pelo WhatsApp ou e-mail 🙋 — é só usar o botão verde de WhatsApp no canto da tela ou escrever para <strong>contato@urbanflow.com</strong>.'
+  },
+  {
+    keywords: ['segur', 'confia', 'golpe', 'site seguro'],
+    reply: 'Pode comprar tranquilo! A Urban Flow usa <strong>certificado SSL</strong>, pagamento protegido e somos uma <strong>loja verificada</strong> 🔒. Seus dados e pagamentos estão sempre seguros por aqui.'
+  },
+  {
+    keywords: ['cupom', 'desconto', 'promo', 'oferta'],
+    reply: 'De olho nas nossas ofertas! ⚡ Você confere os produtos com desconto direto na home, na seção "Oferta do Dia", e também nas categorias em destaque. Fique atento também às novidades toda semana.'
+  },
+  {
+    keywords: ['oi', 'olá', 'ola', 'bom dia', 'boa tarde', 'boa noite', 'oii', 'eae', 'e aí'],
+    reply: 'Oi! 👋 Que bom te ver por aqui. Sou o assistente virtual da Urban Flow e posso te ajudar com frete, trocas, tamanhos, pagamento e rastreio de pedidos. No que posso ajudar?'
+  },
+  {
+    keywords: ['obrigad', 'valeu', 'brigad', 'ok', 'entendi', 'blz', 'beleza'],
+    reply: 'Por nada! 😊 Se precisar de mais alguma coisa, é só chamar. Estou por aqui!'
+  }
+];
+
+/* Abre o widget de chat — é um overlay independente (não faz parte do
+   sistema de "páginas" do site), sempre fixo e centralizado na tela,
+   então não importa a posição de rolagem da página por trás. */
+function openAIChat() {
+  const overlay = document.getElementById('aiChatPage');
+  if (!overlay) return;
+  if (overlay.classList.contains('ai-chat-open')) return;
+
+  // Trava o scroll do site por trás enquanto o chat está aberto
+  document.documentElement.classList.add('ai-chat-lock');
+  document.body.classList.add('ai-chat-lock');
+
+  overlay.classList.add('ai-chat-open');
+  bnActive && bnActive('bn-meli');
+
+  // Registra um estado no histórico do navegador: assim o botão/gesto de
+  // "voltar" do celular fecha o chat em vez de sair da página.
+  history.pushState({ uf_ai_chat: true }, '');
+
+  const box = document.getElementById('aiChatMessages');
+  if (box && !aiChatStarted) {
+    aiChatStarted = true;
+    box.innerHTML = '';
+    aiChatAppendBot('Olá! 👋 Sou o assistente virtual da <strong>Urban Flow</strong>. Posso te ajudar com dúvidas sobre frete, trocas, tamanhos, pagamento e rastreio de pedidos. Como posso ajudar hoje?');
+    renderAIChatSuggestions();
+  }
+  aiChatScrollToBottom();
+  // Sem foco automático no input: em mobile isso força o navegador a
+  // rolar a tela pra revelar o teclado, o que causava o "pulo" pra baixo.
+  // O usuário toca no campo quando quiser digitar.
+}
+
+function closeAIChat(fromPopState) {
+  const overlay = document.getElementById('aiChatPage');
+  if (!overlay || !overlay.classList.contains('ai-chat-open')) return;
+  overlay.classList.remove('ai-chat-open');
+  document.documentElement.classList.remove('ai-chat-lock');
+  document.body.classList.remove('ai-chat-lock');
+  document.getElementById('aiChatInput')?.blur();
+
+  // Volta o destaque da bottom nav pra aba que realmente está ativa
+  const current = localStorage.getItem('uf_current_page') || 'home';
+  const activeMap = { home: 'bn-home', videos: 'bn-videos', cart: 'bn-cart' };
+  bnActive && bnActive(activeMap[current] || 'bn-home');
+
+  // Se fechou pelo X/voltar/clique-fora (não pelo botão físico de voltar),
+  // desfaz o estado extra que criamos no histórico ao abrir o chat.
+  if (!fromPopState && history.state && history.state.uf_ai_chat) {
+    history.back();
+  }
+}
+
+/* Botão/gesto físico de "voltar" do navegador ou do celular fecha o chat,
+   em vez de sair da página, enquanto o chat estiver aberto. */
+window.addEventListener('popstate', function () {
+  closeAIChat(true);
+});
+
+/* Tecla ESC também fecha (desktop) */
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') closeAIChat();
+});
+
+/* Bind extra via JS (além do onclick inline no HTML) — garante que os
+   botões de voltar/fechar funcionem mesmo se o atributo onclick por
+   algum motivo não disparar no ambiente onde o site for hospedado. */
+document.addEventListener('DOMContentLoaded', function () {
+  const overlay = document.getElementById('aiChatPage');
+  if (!overlay) return;
+  overlay.querySelector('.ai-chat-back')?.addEventListener('click', function (e) { e.preventDefault(); closeAIChat(); });
+  overlay.querySelector('.ai-chat-close')?.addEventListener('click', function (e) { e.preventDefault(); closeAIChat(); });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeAIChat(); });
+});
+
+function renderAIChatSuggestions() {
+  const wrap = document.getElementById('aiChatSuggestions');
+  if (!wrap) return;
+  wrap.innerHTML = AI_CHAT_QUICK_REPLIES.map(q =>
+    `<button type="button" class="ai-chip" onclick="aiChatQuickSend('${q.replace(/'/g, "\\'")}')">${q}</button>`
+  ).join('');
+}
+
+function aiChatQuickSend(text) {
+  // remove emoji dos atalhos antes de mandar como "mensagem do usuário"
+  const clean = text.replace(/^[^\wÀ-ÿ]+\s*/, '');
+  aiChatSend(clean);
+}
+
+function handleAIChatSubmit(e) {
+  e.preventDefault();
+  const input = document.getElementById('aiChatInput');
+  const text = input.value.trim();
+  if (!text) return false;
+  input.value = '';
+  aiChatSend(text);
+  return false;
+}
+
+function aiChatSend(text) {
+  if (aiChatTyping) return;
+  aiChatAppendUser(text);
+  aiChatTyping = true;
+  const typingEl = aiChatShowTyping();
+
+  const delay = 550 + Math.random() * 500;
+  setTimeout(() => {
+    typingEl.remove();
+    const match = aiChatFindReply(text);
+    aiChatAppendBot(match.reply, match.action);
+    aiChatTyping = false;
+    aiChatScrollToBottom();
+  }, delay);
+}
+
+function aiChatFindReply(text) {
+  const q = text.toLowerCase();
+  for (const rule of AI_CHAT_RULES) {
+    if (rule.keywords.some(k => q.includes(k))) return rule;
+  }
+  return {
+    reply: 'Ainda estou aprendendo sobre esse assunto 🤔. Posso te ajudar com <strong>frete, trocas/devoluções, tamanhos, formas de pagamento</strong> ou <strong>rastreio de pedido</strong>. Se preferir, fale com um atendente humano pelo WhatsApp.'
+  };
+}
+
+function aiChatAppendUser(text) {
+  const box = document.getElementById('aiChatMessages');
+  if (!box) return;
+  const div = document.createElement('div');
+  div.className = 'ai-msg ai-msg-user';
+  div.innerHTML = `<div class="ai-bubble">${escapeAIHtml(text)}</div>`;
+  box.appendChild(div);
+  aiChatScrollToBottom();
+}
+
+function aiChatAppendBot(html, action) {
+  const box = document.getElementById('aiChatMessages');
+  if (!box) return;
+  const div = document.createElement('div');
+  div.className = 'ai-msg ai-msg-bot';
+  div.innerHTML = `
+    <span class="ai-msg-avatar">✦</span>
+    <div class="ai-bubble">
+      ${html}
+      ${action ? `<button type="button" class="ai-bubble-action" onclick="${action.fn}">${action.label}</button>` : ''}
+    </div>`;
+  box.appendChild(div);
+  aiChatScrollToBottom();
+}
+
+function aiChatShowTyping() {
+  const box = document.getElementById('aiChatMessages');
+  const div = document.createElement('div');
+  div.className = 'ai-msg ai-msg-bot ai-msg-typing';
+  div.innerHTML = `<span class="ai-msg-avatar">✦</span><div class="ai-bubble ai-typing-bubble"><span></span><span></span><span></span></div>`;
+  box.appendChild(div);
+  aiChatScrollToBottom();
+  return div;
+}
+
+function aiChatScrollToBottom() {
+  const box = document.getElementById('aiChatMessages');
+  if (box) box.scrollTop = box.scrollHeight;
+}
+
+function escapeAIHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
 }
 
 function logout() {
