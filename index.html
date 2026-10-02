@@ -401,17 +401,6 @@
   </section>
 </div>
 
-<!-- ===================== VÍDEOS PAGE (feed estilo Reels/Shorts) ===================== -->
-<div class="page" id="videosPage">
-  <div class="video-feed-header">
-    <button class="video-feed-back" onclick="navigateTo('home');bnActive('bn-home')" aria-label="Voltar">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-    </button>
-    <span>Vídeos</span>
-  </div>
-  <div class="video-feed-container" id="videosFeedContainer" tabindex="0"></div>
-</div>
-
 <!-- ===================== SOBRE PAGE ===================== -->
 <div class="page" id="aboutPage">
   <section class="section container">
@@ -747,14 +736,6 @@
     <span>Início</span>
   </button>
 
-  <button class="bn-item" id="bn-videos" onclick="navigateTo('videos');bnActive('bn-videos')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="5" width="18" height="14" rx="2"/>
-      <path d="m10 9 5 3-5 3z"/>
-    </svg>
-    <span>Vídeos</span>
-  </button>
-
   <button class="bn-item" id="bn-cart" onclick="navigateTo('cart');bnActive('bn-cart')">
     <span class="bn-badge" id="bnCartBadge" style="display:none">0</span>
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -824,5 +805,16 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 });
 </script>
+<section class="visual-inspection-overlay" id="visualInspectionOverlay" role="dialog" aria-modal="true" aria-labelledby="visualInspectionTitle" aria-describedby="visualInspectionMessage" hidden>
+  <div class="visual-inspection-card">
+    <span class="visual-inspection-mark" aria-hidden="true">UF</span>
+    <p class="visual-inspection-eyebrow">URBAN FLOW</p>
+    <h2 id="visualInspectionTitle">Navegação pausada</h2>
+    <p id="visualInspectionMessage">Este atalho não está disponível nesta loja. Recarregue a página para continuar navegando.</p>
+    <button type="button" onclick="window.location.reload()">Recarregar página</button>
+    <small>Esta é apenas uma barreira visual no navegador.</small>
+  </div>
+</section>
+
 </body>
 </html>

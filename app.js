@@ -211,9 +211,9 @@ const products = [
 ];
 
 const categories = [
-  { id:'camisetas', name:'Camisetas',  image:'https://imgcentauro-a.akamaihd.net/660x660/M195NW49A1.jpg' },
+  { id:'camisetas', name:'Camisetas',  image:'https://imgcentauro-a.akamaihd.net/660x660/M19E1H02A1.jpg' },
   { id:'shorts',    name:'Shorts',     image:'https://imgcentauro-a.akamaihd.net/660x660/M18XRD02A1.jpg' },
-  { id:'tenis',     name:'Tênis',      image:'https://imgcentauro-a.akamaihd.net/660x660/982718QWA2.jpg' },
+  { id:'tenis',     name:'Tênis',      image:'https://imgcentauro-a.akamaihd.net/660x660/M18SSV31A1.jpg' },
   { id:'hoodies',   name:'Moletons',   image:'https://imgcentauro-a.akamaihd.net/1024x1024/99386451A6.jpg' },
   { id:'calcas',    name:'Calças',     image:'https://imgcentauro-a.akamaihd.net/1500x1500/98482605A19.jpg' },
   { id:'acessorios',name:'Acessórios', image:'https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=800&q=85' }
@@ -318,7 +318,7 @@ function init() {
 
   // Restaura a última página visitada e vai pro topo
   const lastPage = localStorage.getItem('uf_current_page') || 'home';
-  navigateTo(lastPage);
+  navigateTo(lastPage === 'videos' ? 'home' : lastPage);
   window.scrollTo({ top: 0, behavior: 'instant' });
   if (authGateActive) openModal();
 }
@@ -490,6 +490,31 @@ function closeSearch() {
 
 /* ═══ EVENT LISTENERS ═══ */
 function setupEventListeners() {
+  const inspectionOverlay = document.getElementById('visualInspectionOverlay');
+  const pauseForInspectionShortcut = () => {
+    if (!inspectionOverlay || !inspectionOverlay.hidden) return;
+    inspectionOverlay.hidden = false;
+    inspectionOverlay.querySelector('button')?.focus();
+  };
+
+  document.addEventListener('keydown', event => {
+    const key = event.key.toLowerCase();
+    const devToolsShortcut = event.key === 'F12'
+      || ((event.ctrlKey || event.metaKey) && event.shiftKey && ['i', 'j', 'c', 'k', 'm', 'p'].includes(key))
+      || ((event.ctrlKey || event.metaKey) && !event.shiftKey && key === 'u')
+      || (event.metaKey && event.altKey && ['i', 'j', 'c'].includes(key));
+
+    if (!devToolsShortcut) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    pauseForInspectionShortcut();
+  }, true);
+
+  document.addEventListener('contextmenu', event => {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    event.preventDefault();
+  });
+
   /* Mega menu */
   const navProdutos = document.getElementById('navProdutos');
   const megaMenu    = document.getElementById('megaMenu');
@@ -651,7 +676,7 @@ function closeMega() {
 function renderCategories() {
   document.getElementById('categoriesGrid').innerHTML = categories.map(cat => `
     <div class="category-card" onclick="selectMarketplaceCategory('${cat.id}', this)">
-      <div class="category-image"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></div>
+      <div class="category-image category-image-${cat.id}"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></div>
       <div class="category-overlay"><h3 class="category-name">${cat.name}</h3></div>
     </div>`).join('');
 }
@@ -661,7 +686,7 @@ function renderMarketplaceCategories() {
   if (!grid) return;
   grid.innerHTML = categories.map(cat => `
     <button class="market-category-item" onclick="selectMarketplaceCategory('${cat.id}', this)">
-      <span class="market-category-image"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></span>
+      <span class="market-category-image market-category-image-${cat.id}"><img src="${cat.image}" alt="${cat.name}" loading="lazy"></span>
       <span>${cat.name}</span>
     </button>`).join('');
 }
@@ -1053,34 +1078,7 @@ function createProductCard(p) {
   const avgRating = pRevs.length ? (pRevs.reduce((s,r)=>s+r.rating,0)/pRevs.length).toFixed(1) : p.rating;
   const totalRevs = pRevs.length + (p.reviews || 0);
   const cardImgId = `cimg_${p.id}`;
-  const hasColorImgs = p.colorImages && Object.keys(p.colorImages).length > 0;
   const installments = (p.price / 10).toFixed(2);
-
-  // Color swatches with names mapped to CSS-friendly colors
-  const colorMap = {
-    'Preto':'#1a1a1a','Branco':'#f5f5f5','Cinza':'#9ca3af','Azul':'#3b82f6',
-    'Azul Marinho':'#1e3a5f','Azul Royal':'#2563eb','Azul Petróleo':'#0f4c5c',
-    'Azul Espelhado':'#60a5fa','Azul Claro':'#bfdbfe','Azul Escuro':'#1e40af',
-    'Azul Navy':'#1e3a5f','Navy':'#1e3a5f','Rosa':'#f9a8d4','Rosa Neon':'#ff2d78',
-    'Roxo':'#7c3aed','Lilás':'#c4b5fd','Roxo Escuro':'#4c1d95',
-    'Verde':'#16a34a','Verde Militar':'#4d6b45','Verde Oliva':'#6b7c3d','Verde Lima':'#84cc16',
-    'Verde/Cinza':'#6b7c3d','Camuflado Verde':'#4d6b45','Camuflado Cinza':'#6b7280',
-    'Vermelho':'#dc2626','Vinho':'#7f1d1d','Marsala':'#9b2335','Bordo':'#800020',
-    'Bege':'#d4b896','Nude':'#d4a574','Marrom':'#7c5c3e','Grafite':'#4b5563',
-    'Preto Matte':'#1a1a1a','Preto Fumê':'#2d2d2d','Prata':'#c0c0c0','Dourado':'#d4af37',
-    'Off-White':'#f8f4ef','Cinza Mescla':'#9ca3af','Laranja/Preto':'#ea580c',
-    'Preto/Laranja':'#1a1a1a','Branco/Azul':'#f5f5f5','Amarelo/Laranja':'#f59e0b',
-    'Azul/Verde':'#0d9488','Rosa/Roxo':'#ec4899','Azul Petróleo':'#0f4c5c',
-    'Camuflado Verde':'#4d6b45','Camuflado Cinza':'#6b7280',
-  };
-
-  const colorSwatches = p.colors?.length ? p.colors.map((c, i) => {
-    const bg = colorMap[c] || '#888';
-    const isLight = ['Branco','Off-White','Nude','Bege','Prata','Branco/Azul'].includes(c);
-    const borderStyle = isLight ? 'border:1.5px solid #ddd;' : '';
-    const img = hasColorImgs && p.colorImages[c] ? `data-img="${p.colorImages[c]}"` : '';
-    return `<div class="card-color-dot ${i===0?'active':''}" title="${c}" ${img} data-cardimg="${cardImgId}" onclick="cardSwapColor(this,event)" style="background:${bg};${borderStyle}"></div>`;
-  }).join('') : '';
 
   return `
     <div class="product-card ml-card" onclick="showProductDetail(${p.id})">
@@ -1094,7 +1092,6 @@ function createProductCard(p) {
       <div class="product-info">
         <div class="product-category">${getCatName(p.category)}</div>
         <h3 class="product-name">${p.name}</h3>
-        ${colorSwatches ? `<div class="card-color-swatches" onclick="event.stopPropagation()">${colorSwatches}</div>` : ''}
         <div class="product-rating">
           <span class="stars">${renderStars(parseFloat(avgRating))}</span>
           <span class="rating-count">${avgRating} (${totalRevs})</span>
@@ -1116,18 +1113,6 @@ function createProductCard(p) {
         <button class="btn-add-cart" onclick="showProductDetail(${p.id}); event.stopPropagation();">Ver Produto</button>
       </div>
     </div>`;
-}
-
-function cardSwapColor(dot, e) {
-  e.stopPropagation();
-  const imgId = dot.dataset.cardimg;
-  const newSrc = dot.dataset.img;
-  if (newSrc && imgId) {
-    const img = document.getElementById(imgId);
-    if (img) { img.style.opacity='0'; setTimeout(()=>{ img.src=newSrc; img.style.opacity='1'; },150); }
-  }
-  dot.parentElement.querySelectorAll('.card-color-dot').forEach(d => d.classList.remove('active'));
-  dot.classList.add('active');
 }
 
 function renderStars(r) {
@@ -1155,14 +1140,13 @@ function showProductDetail(id) {
     const pageRoutes = {
       homePage: 'home', categoriesPage: 'categories', productsPage: 'products',
       aboutPage: 'about', cartPage: 'cart', wishlistPage: 'wishlist',
-      videosPage: 'videos', profilePage: 'profile', trackingPage: 'tracking'
+      profilePage: 'profile', trackingPage: 'tracking'
     };
     productDetailReturnPage = pageRoutes[activePage.id] || 'products';
   }
 
   selectedProduct = products.find(p => p.id === id);
   if (!selectedProduct) return;
-  selectedColor = null;
   selectedSize = null;
   addToRecentlyViewed(id);
   const p = selectedProduct;
@@ -1224,13 +1208,6 @@ function showProductDetail(id) {
       <p class="product-detail-description">${p.description}</p>
       ${p.stock <= 5 ? `<div class="badge-group"><span class="info-badge" style="background:#fff7ed;color:#c2410c;">⚡ Últimas ${p.stock} unidades!</span></div>` : ''}
       <div class="product-options">
-        ${p.colors?.length ? `
-          <div>
-            <label>Cor: <span id="selectedColorLabel" style="color:var(--accent);font-weight:700;">${p.colors.length > 1 ? 'Selecione' : p.colors[0]}</span></label>
-            <div class="color-swatches">
-              ${p.colors.map((c, ci) => `<div class="color-swatch ${p.colors.length === 1 ? 'selected' : ''}" onclick="selectColor(this,'${c}',${p.id})">${c}</div>`).join('')}
-            </div>
-          </div>` : ''}
         ${p.sizes?.length ? `
           <div>
             <label>Tamanho: <span id="selectedSizeLabel" style="color:var(--accent);font-weight:700;">Selecione</span> <a href="#" onclick="openSizeGuide('${p.category}');return false;" style="color:var(--gray-400);font-size:.75rem;font-weight:600;text-decoration:none;margin-left:.4rem;">Ver guia →</a></label>
@@ -1240,9 +1217,7 @@ function showProductDetail(id) {
           </div>` : ''}
       </div>
       <div class="product-detail-actions">
-        <button class="btn-add-cart btn-add-cart-detail" id="btnAddToCartDetail" onclick="addToCartDetail()">
-          🛒 ${p.sizes?.length ? 'Selecione tamanho e cor' : 'Adicionar ao Carrinho'}
-        </button>
+        <button class="btn-add-cart btn-add-cart-detail" id="btnAddToCartDetail" onclick="addToCartDetail()">${p.sizes?.length ? '🛒 Selecione o tamanho' : '🛒 Adicionar ao Carrinho'}</button>
         <button class="btn-favorite ${inWish?'active':''}" data-id="${p.id}" onclick="toggleWishlist(${p.id},event)" aria-label="Favorito">
           ${inWish ? HEART_ACTIVE : HEART_EMPTY}
         </button>
@@ -1254,10 +1229,6 @@ function showProductDetail(id) {
       </div>
     </div>`;
 
-  // Auto-selecionar se só uma cor
-  if (p.colors?.length === 1) {
-    selectedColor = p.colors[0];
-  }
   if (!p.sizes?.length) {
     const btn = document.getElementById('btnAddToCartDetail');
     if (btn) { btn.textContent = '🛒 Adicionar ao Carrinho'; btn.classList.remove('btn-pending'); }
@@ -1290,23 +1261,7 @@ function showProductDetail(id) {
   }, 60);
 }
 
-let selectedColor = null;
 let selectedSize = null;
-
-function selectColor(el, color, productId) {
-  el.parentElement.querySelectorAll('.color-swatch').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedColor = color;
-  const lbl = document.getElementById('selectedColorLabel');
-  if (lbl) lbl.textContent = color;
-  // Mudar imagem se o produto tiver imagens por cor
-  const p = products.find(x => x.id === productId);
-  if (p && p.colorImages && p.colorImages[color]) {
-    const img = document.getElementById('mainProductImg');
-    if (img) img.src = p.colorImages[color];
-  }
-  updateCartBtnState();
-}
 
 function selectSize(el, size) {
   el.parentElement.querySelectorAll('.size-option').forEach(o => o.classList.remove('selected'));
@@ -1322,25 +1277,20 @@ function updateCartBtnState() {
   const btn = document.getElementById('btnAddToCartDetail');
   if (!btn) return;
   const needsSize = selectedProduct.sizes?.length > 0;
-  const needsColor = selectedProduct.colors?.length > 0;
   const hasSize = !needsSize || selectedSize;
-  const hasColor = !needsColor || selectedColor;
-  if (hasSize && hasColor) {
+  if (hasSize) {
     btn.textContent = '🛒 Adicionar ao Carrinho';
     btn.style.opacity = '1';
     btn.style.background = '';
   } else {
-    const missing = [];
-    if (needsSize && !selectedSize) missing.push('tamanho');
-    if (needsColor && !selectedColor) missing.push('cor');
-    btn.textContent = `⚠️ Selecione ${missing.join(' e ')}`;
+    btn.textContent = '⚠️ Selecione o tamanho';
     btn.style.opacity = '0.7';
     btn.style.background = 'var(--gray-700)';
   }
 }
 
 function selectOpt(el, type) {
-  el.parentElement.querySelectorAll('.size-option, .color-swatch').forEach(o => o.classList.remove('selected'));
+  el.parentElement.querySelectorAll('.size-option').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
 }
 
@@ -1613,15 +1563,13 @@ function toggleWishlist(id, e) {
 function addToCartDetail() {
   if (!selectedProduct) return;
   const needsSize = selectedProduct.sizes?.length > 0;
-  const needsColor = selectedProduct.colors?.length > 0;
   if (needsSize && !selectedSize) { showNotification('⚠️ Selecione um tamanho', 'warn'); return; }
-  if (needsColor && !selectedColor) { showNotification('⚠️ Selecione uma cor', 'warn'); return; }
-  addCartItem({ ...selectedProduct, quantity: 1, selectedSize: selectedSize || null, selectedColor: selectedColor || selectedProduct.colors?.[0] || null });
+  addCartItem({ ...selectedProduct, quantity: 1, selectedSize: selectedSize || null });
 }
 function addToCart(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
-  addCartItem({ ...p, quantity: 1, selectedSize: p.sizes?.[0] || null, selectedColor: p.colors?.[0] || null });
+  addCartItem({ ...p, quantity: 1, selectedSize: p.sizes?.[0] || null });
 }
 function addCartItem(item) {
   const idx = cart.findIndex(c => c.id === item.id && c.selectedSize === item.selectedSize);
@@ -1629,18 +1577,51 @@ function addCartItem(item) {
   saveCart(); updateCartBadge(); showNotification('🛒 Adicionado ao carrinho!');
 }
 
+function amountToCents(amount) {
+  return Math.round(Number(amount) * 100);
+}
+
+function formatBRLFromCents(cents) {
+  return (cents / 100).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function getOrderTotalCents(order) {
+  if (Number.isInteger(order.totalCents)) return order.totalCents;
+  const total = Number(order.total);
+  return Number.isFinite(total) ? amountToCents(total) : null;
+}
+
+function formatOrderTotal(order) {
+  const totalCents = getOrderTotalCents(order);
+  return totalCents === null ? '--' : formatBRLFromCents(totalCents);
+}
+
 function getCartTotals() {
-  const sub = cart.reduce((s,i) => s+i.price*i.quantity, 0);
-  let discount = 0;
-  let shipping = sub >= 299 ? 0 : 29.90;
+  const subCents = cart.reduce((sum, item) => sum + amountToCents(item.price) * item.quantity, 0);
+  let discountCents = 0;
+  let shippingCents = subCents >= 29900 ? 0 : 2990;
   if (appliedCoupon) {
     const c = COUPONS[appliedCoupon];
-    if (c.type === 'percent')  discount = sub * c.value / 100;
-    if (c.type === 'fixed')    discount = Math.min(c.value, sub);
-    if (c.type === 'shipping') shipping = 0;
+    if (c.type === 'percent')  discountCents = Math.round(subCents * c.value / 100);
+    if (c.type === 'fixed')    discountCents = Math.min(amountToCents(c.value), subCents);
+    if (c.type === 'shipping') shippingCents = 0;
   }
-  const total = sub - discount + shipping;
-  return { sub, discount, shipping, total };
+  const totalCents = subCents - discountCents + shippingCents;
+  return {
+    sub: subCents / 100,
+    discount: discountCents / 100,
+    shipping: shippingCents / 100,
+    total: totalCents / 100,
+    subCents,
+    discountCents,
+    shippingCents,
+    totalCents
+  };
 }
 
 function renderCart() {
@@ -1657,7 +1638,7 @@ function renderCart() {
     return;
   }
 
-  const { sub, discount, shipping, total } = getCartTotals();
+  const { sub, discount, shipping, total, subCents, discountCents, shippingCents, totalCents } = getCartTotals();
   const pct = Math.min((sub / 299) * 100, 100);
 
   el.innerHTML = `
@@ -1670,11 +1651,10 @@ function renderCart() {
               <div class="cart-item-info">
                 <h3>${item.name}</h3>
                 ${item.selectedSize  ? `<p>Tamanho: <strong>${item.selectedSize}</strong></p>` : ''}
-                ${item.selectedColor ? `<p>Cor: <strong>${item.selectedColor}</strong></p>`    : ''}
                 <p style="color:var(--accent);font-weight:700;">R$ ${item.price.toFixed(2)} / un.</p>
               </div>
               <div class="cart-item-actions">
-                <div class="cart-item-price">R$ ${(item.price * item.quantity).toFixed(2)}</div>
+                <div class="cart-item-price">${formatBRLFromCents(amountToCents(item.price) * item.quantity)}</div>
                 <div class="quantity-controls">
                   <button onclick="updateQty(${i}, -1)">−</button>
                   <span style="font-weight:700;min-width:1.5rem;text-align:center;">${item.quantity}</span>
@@ -1687,15 +1667,15 @@ function renderCart() {
       </div>
       <div class="cart-summary">
         <h3>Resumo do Pedido</h3>
-        <div class="cart-summary-row"><span>Subtotal (${cart.reduce((s,i)=>s+i.quantity,0)} itens)</span><span>R$ ${sub.toFixed(2)}</span></div>
-        ${discount > 0 ? `<div class="cart-summary-row" style="color:var(--success);"><span>🎟 Desconto (${appliedCoupon})</span><span>-R$ ${discount.toFixed(2)}</span></div>` : ''}
+        <div class="cart-summary-row"><span>Subtotal (${cart.reduce((s,i)=>s+i.quantity,0)} itens)</span><span>${formatBRLFromCents(subCents)}</span></div>
+        ${discount > 0 ? `<div class="cart-summary-row" style="color:var(--success);"><span>🎟 Desconto (${appliedCoupon})</span><span>-${formatBRLFromCents(discountCents)}</span></div>` : ''}
         <div class="cart-summary-row">
           <span>Frete</span>
-          <span>${shipping === 0 ? '<strong style="color:var(--success);">✓ GRÁTIS</strong>' : `R$ ${shipping.toFixed(2)}`}</span>
+          <span>${shipping === 0 ? '<strong style="color:var(--success);">✓ GRÁTIS</strong>' : formatBRLFromCents(shippingCents)}</span>
         </div>
         ${sub < 299 && shipping > 0 ? `
           <div style="margin:.25rem 0 .75rem;">
-            <p style="font-size:.82rem;color:var(--gray-600);margin-bottom:.4rem;">Faltam <strong>R$ ${(299-sub).toFixed(2)}</strong> para frete grátis 🚚</p>
+            <p style="font-size:.82rem;color:var(--gray-600);margin-bottom:.4rem;">Faltam <strong>${formatBRLFromCents(29900-subCents)}</strong> para frete grátis 🚚</p>
             <div class="shipping-bar"><div class="shipping-bar-fill" style="width:${pct}%"></div></div>
           </div>` : ''}
 
@@ -1715,7 +1695,7 @@ function renderCart() {
 
         <div class="cart-summary-row">
           <strong>Total</strong>
-          <strong style="color:var(--accent);font-size:1.6rem;">R$ ${total.toFixed(2)}</strong>
+          <strong style="color:var(--accent);font-size:1.6rem;">${formatBRLFromCents(totalCents)}</strong>
         </div>
         <button class="btn-checkout" onclick="checkout()">Finalizar Compra →</button>
         <button onclick="navigateTo('products')" style="width:100%;padding:.85rem;background:none;border:2px solid var(--gray-200);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:.85rem;font-family:inherit;margin-top:.75rem;transition:var(--transition);">← Continuar Comprando</button>
@@ -1796,7 +1776,7 @@ function renderCheckoutStepper() {
 }
 
 function renderCheckoutSidebar() {
-  const { sub, discount, shipping, total } = getCartTotals();
+  const { discount, shipping, subCents, discountCents, shippingCents, totalCents } = getCartTotals();
   document.getElementById('checkoutSidebar').innerHTML = `
     <div class="checkout-order-title">🛒 Resumo do Pedido</div>
     <div class="checkout-order-items">
@@ -1804,14 +1784,14 @@ function renderCheckoutSidebar() {
         <div class="checkout-order-item">
           <img class="checkout-order-img" src="${item.image}" alt="${item.name}" loading="lazy">
           <div class="checkout-order-item-name">${item.name} × ${item.quantity}</div>
-          <div class="checkout-order-item-price">R$ ${(item.price * item.quantity).toFixed(2)}</div>
+          <div class="checkout-order-item-price">${formatBRLFromCents(amountToCents(item.price) * item.quantity)}</div>
         </div>`).join('')}
     </div>
     <hr class="checkout-order-divider">
-    <div class="checkout-order-row"><span>Subtotal</span><span>R$ ${sub.toFixed(2)}</span></div>
-    ${discount > 0 ? `<div class="checkout-order-row" style="color:var(--success);"><span>Desconto</span><span>-R$ ${discount.toFixed(2)}</span></div>` : ''}
-    <div class="checkout-order-row"><span>Frete</span><span>${shipping===0?'<span style="color:var(--success);font-weight:700;">GRÁTIS</span>':`R$ ${shipping.toFixed(2)}`}</span></div>
-    <div class="checkout-order-total"><span>Total</span><span style="color:var(--accent);">R$ ${total.toFixed(2)}</span></div>
+    <div class="checkout-order-row"><span>Subtotal</span><span>${formatBRLFromCents(subCents)}</span></div>
+    ${discount > 0 ? `<div class="checkout-order-row" style="color:var(--success);"><span>Desconto</span><span>-${formatBRLFromCents(discountCents)}</span></div>` : ''}
+    <div class="checkout-order-row"><span>Frete</span><span>${shipping===0?'<span style="color:var(--success);font-weight:700;">GRÁTIS</span>':formatBRLFromCents(shippingCents)}</span></div>
+    <div class="checkout-order-total"><span>Total</span><span style="color:var(--accent);">${formatBRLFromCents(totalCents)}</span></div>
     <div style="margin-top:1.5rem;font-size:.78rem;color:var(--gray-500);display:flex;flex-direction:column;gap:.4rem;">
       <span>ℹ️ Pagamentos online ainda indisponíveis</span>
       <span>📦 Entrega em 3–8 dias úteis</span>
@@ -2141,7 +2121,8 @@ function renderProfile() {
     return;
   }
 
-  const totalSpent = orders.reduce((s,o) => s + o.total, 0);
+  const totalSpentCents = orders.reduce((sum, order) => sum + (getOrderTotalCents(order) ?? 0), 0);
+  const formattedTotal = formatBRLFromCents(totalSpentCents);
   const initials = currentUser.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
 
   el.innerHTML = `
@@ -2150,23 +2131,18 @@ function renderProfile() {
       <div class="profile-header-inner">
         <div class="prof-avatar">${initials}</div>
         <div class="prof-info">
-          <span class="prof-eyebrow">ÁREA DO CLIENTE</span>
-            <div class="prof-name-row">
-              <h1 class="prof-name">${currentUser.name}</h1>
-            <span class="prof-badge-verified">Conta ativa</span>
-            </div>
-            <p class="prof-email">${currentUser.email}</p>
-          <span class="prof-member">Urban Flow · Minha conta</span>
-          </div>
-          <button class="prof-logout" onclick="logout()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            Sair
-          </button>
+          <h1 class="prof-name">${currentUser.name}</h1>
+          <p class="prof-email">${currentUser.email}</p>
         </div>
-        <div class="prof-stats">
+        <button class="prof-logout" onclick="logout()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sair da conta
+        </button>
+      </div>
+      <div class="prof-stats">
           <div class="prof-stat">
-            <strong>R$ ${totalSpent.toFixed(0)}</strong>
-            <span>Total Gasto</span>
+            <strong>${formattedTotal}</strong>
+            <span>Total em pedidos</span>
           </div>
           <div class="prof-stat-div"></div>
           <div class="prof-stat" onclick="navigateTo('cart')" style="cursor:pointer;">
@@ -2183,8 +2159,8 @@ function renderProfile() {
             <strong>${orders.length}</strong>
             <span>Pedidos</span>
           </div>
-        </div>
       </div>
+    </div>
 
       <!-- TABS -->
       <div class="profile-tabs">
@@ -2238,23 +2214,23 @@ function renderProfileOverview() {
     <div class="profile-overview">
       <!-- Quick Actions -->
       <div class="po-section">
-        <h3 class="po-section-title">Atalhos da conta</h3>
+        <h3 class="po-section-title">Acesso rápido</h3>
         <div class="po-quick-grid">
           <div class="po-quick-card" onclick="navigateTo('cart')">
-            <div class="po-qc-icon">🛒</div>
+            <div class="po-qc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.1 11.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L22 9H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg></div>
             <span>Carrinho</span>
           </div>
           <div class="po-quick-card" onclick="navigateTo('wishlist')">
-            <div class="po-qc-icon">❤️</div>
+            <div class="po-qc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 8.7c0 4.1-8.8 10-8.8 10s-8.8-5.9-8.8-10a4.7 4.7 0 0 1 8.8-2.2 4.7 4.7 0 0 1 8.8 2.2Z"/></svg></div>
             <span>Favoritos</span>
           </div>
           <div class="po-quick-card" onclick="navigateTo('tracking')">
-            <div class="po-qc-icon">📦</div>
+            <div class="po-qc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 7 9-4 9 4v10l-9 4-9-4V7Z"/><path d="m3 7 9 4 9-4M12 11v10M7.5 5 16 9"/></svg></div>
             <span>Rastrear</span>
           </div>
           <div class="po-quick-card" onclick="openAIChat()">
-            <div class="po-qc-icon">✦</div>
-            <span>Ajuda com IA</span>
+            <div class="po-qc-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-5 4v-4.8a2.5 2.5 0 0 1-1-2V5.5Z"/><path d="M8 8h8M8 11.5h5"/></svg></div>
+            <span>Ajuda</span>
           </div>
         </div>
       </div>
@@ -2271,7 +2247,7 @@ function renderProfileOverview() {
               <div class="po-order-meta">${o.date} · ${o.items?.length||0} ${o.items?.length===1?'item':'itens'}</div>
             </div>
             <div class="po-order-right">
-              <span class="po-order-price">R$ ${o.total?.toFixed(2)||'--'}</span>
+              <span class="po-order-price">${formatOrderTotal(o)}</span>
               <span class="hype-status-pill status-${o.status||'processando'}">${o.status||'Processando'}</span>
             </div>
           </div>`).join('') : `<div class="po-empty"><p>Nenhum pedido ainda.</p><button class="btn-primary btn-sm" onclick="navigateTo('products')">Explorar Produtos</button></div>`}
@@ -2305,7 +2281,7 @@ function renderProfileOrders() {
             <div class="po-order-meta">${o.date} · ${o.items?.length||0} ${o.items?.length===1?'item':'itens'} · ${(o.payment?.method||'').toUpperCase()||'PIX'}</div>
           </div>
           <div class="po-order-right">
-            <span class="po-order-price">R$ ${o.total?.toFixed(2)||'--'}</span>
+            <span class="po-order-price">${formatOrderTotal(o)}</span>
             <span class="hype-status-pill status-${o.status||'processando'}">${o.status||'Processando'}</span>
           </div>
         </div>`).join('') : `<div class="po-empty"><p>Nenhum pedido ainda.</p><button class="btn-primary btn-sm" onclick="navigateTo('products')">Explorar Produtos</button></div>`}
@@ -2483,7 +2459,7 @@ function trackOrder() {
       <div class="tracking-order-header">
         <div>
           <div style="font-weight:800;font-size:1rem;">Pedido #${order.id}</div>
-          <div style="font-size:.78rem;color:var(--gray-500);">${order.date} · R$ ${order.total?.toFixed(2)}</div>
+          <div style="font-size:.78rem;color:var(--gray-500);">${order.date} · ${formatOrderTotal(order)}</div>
         </div>
         <span class="profile-order-status status-${order.status||'processando'}">${order.status==='entregue'?'Entregue':order.status==='enviado'?'Em Transporte':'Processando'}</span>
       </div>
@@ -2506,133 +2482,6 @@ function trackOrder() {
     </div>`;
 }
 
-/* ═══════════════════════════ VÍDEOS (feed estilo Reels/Shorts) ═══════════════════════════ */
-let videosFeedBuilt = false;
-
-/* Vídeos reais de produtos (banco de vídeos livres de direitos autorais — Mixkit License,
-   uso comercial liberado, sem necessidade de atribuição). Mapeados por id do produto. */
-const PRODUCT_VIDEOS = {
-  1:  'https://assets.mixkit.co/videos/15059/15059-360.mp4', // Air Max 90 — amarrando tênis antes de correr
-  2:  'https://assets.mixkit.co/videos/4893/4893-360.mp4',   // Nike Zoom Pegasus — passos caminhando na rua
-  4:  'https://assets.mixkit.co/videos/744/744-360.mp4',     // Short Training Elite — jogador de basquete
-  5:  'https://assets.mixkit.co/videos/1240/1240-360.mp4',   // Moletom Essentials — dançando sob luzes
-  6:  'https://assets.mixkit.co/videos/32812/32812-360.mp4', // Legging Sculpt Pro — pernas correndo na pista
-  7:  'https://assets.mixkit.co/videos/14766/14766-360.mp4', // Tênis Revolution 7 Fem — amarrando o tênis
-  8:  'https://assets.mixkit.co/videos/1236/1236-360.mp4',   // Boné Futura Washed — pose urbana com boné
-  19: 'https://assets.mixkit.co/videos/47879/47879-360.mp4', // Top Esportivo — correndo na esteira
-  20: 'https://assets.mixkit.co/videos/35987/35987-360.mp4', // Tênis Chunky Platform — pés descendo escada
-  21: 'https://assets.mixkit.co/videos/39874/39874-360.mp4', // Moletom Zip-Up — moda conceito
-  24: 'https://assets.mixkit.co/videos/407/407-360.mp4',     // Tênis Running Ultra — tênis branco urbano
-  28: 'https://assets.mixkit.co/videos/345/345-360.mp4',     // Tênis Skate Pro — equilibrando no trilho
-};
-
-function renderVideosFeed() {
-  const el = document.getElementById('videosFeedContainer');
-  if (!el || videosFeedBuilt) { syncVideoLikeStates(); return; }
-  videosFeedBuilt = true;
-
-  // Só entram no feed os produtos que têm vídeo real associado
-  const feed = products.filter(p => PRODUCT_VIDEOS[p.id]);
-
-  el.innerHTML = feed.map((p, i) => {
-    const discount = p.originalPrice ? Math.round(100 - (p.price / p.originalPrice) * 100) : 0;
-    return `
-    <section class="video-slide" data-id="${p.id}" data-index="${i}">
-      <video class="video-slide-media" src="${PRODUCT_VIDEOS[p.id]}" poster="${p.image}" muted loop playsinline preload="metadata"></video>
-      <div class="video-slide-gradient"></div>
-      <button class="video-mute-btn" onclick="toggleVideoMute(this)" aria-label="Som">
-        <svg class="icon-vol-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-        <svg class="icon-vol-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-      </button>
-      <div class="video-slide-top">
-        <span class="video-live-tag">● AO VIVO</span>
-      </div>
-      <div class="video-slide-actions">
-        <button class="video-action-btn btn-favorite" data-id="${p.id}" onclick="toggleWishlist(${p.id}, event)" aria-label="Favoritar">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span>Salvar</span>
-        </button>
-        <button class="video-action-btn" onclick="addToCart(${p.id})" aria-label="Adicionar ao carrinho">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span>Comprar</span>
-        </button>
-        <button class="video-action-btn" onclick="shareProduct(${p.id})" aria-label="Compartilhar">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          <span>Enviar</span>
-        </button>
-      </div>
-      <div class="video-slide-info">
-        <div class="video-slide-brand"><span class="logo-mark" style="width:26px;height:26px;font-size:.65rem;">UF</span> Urban Flow</div>
-        <h3 class="video-slide-name">${p.name}</h3>
-        <div class="video-slide-price-row">
-          <span class="video-slide-price">R$ ${p.price.toFixed(2)}</span>
-          ${p.originalPrice ? `<span class="video-slide-old-price">R$ ${p.originalPrice.toFixed(2)}</span>` : ''}
-          ${discount > 0 ? `<span class="video-slide-badge">-${discount}%</span>` : ''}
-        </div>
-        <button class="btn-primary video-slide-cta" onclick="showProductDetail(${p.id})">Ver produto →</button>
-      </div>
-    </section>`;
-  }).join('');
-
-  syncVideoLikeStates();
-  initVideosFeedNav();
-}
-
-function syncVideoLikeStates() {
-  document.querySelectorAll('#videosFeedContainer .btn-favorite').forEach(btn => {
-    const id = Number(btn.dataset.id);
-    const inWish = (typeof wishlist !== 'undefined') && wishlist.some(w => w.id === id);
-    btn.classList.toggle('active', inWish);
-  });
-}
-
-function toggleVideoMute(btn) {
-  const slide = btn.closest('.video-slide');
-  const video = slide?.querySelector('video');
-  if (!video) return;
-  video.muted = !video.muted;
-  const on = btn.querySelector('.icon-vol-on');
-  const off = btn.querySelector('.icon-vol-off');
-  on.style.display = video.muted ? 'none' : 'block';
-  off.style.display = video.muted ? 'block' : 'none';
-}
-
-function initVideosFeedNav() {
-  const container = document.getElementById('videosFeedContainer');
-  if (!container || container.dataset.navReady) return;
-  container.dataset.navReady = '1';
-
-  // Toca o vídeo do slide visível e pausa os demais (economiza dados e CPU)
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      const video = entry.target.querySelector('video');
-      const isActive = entry.isIntersecting && entry.intersectionRatio > 0.6;
-      entry.target.classList.toggle('video-slide-active', isActive);
-      if (!video) return;
-      if (isActive) {
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
-    });
-  }, { root: container, threshold: [0, 0.6, 1] });
-  container.querySelectorAll('.video-slide').forEach(s => io.observe(s));
-
-  // Setas para desktop (scroll por roda/teclado já funciona nativamente via scroll-snap)
-  container.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); scrollVideosBy(1); }
-    if (e.key === 'ArrowUp')   { e.preventDefault(); scrollVideosBy(-1); }
-  });
-}
-
-function scrollVideosBy(dir) {
-  const container = document.getElementById('videosFeedContainer');
-  if (!container) return;
-  const h = container.clientHeight;
-  container.scrollBy({ top: dir * h, behavior: 'smooth' });
-}
-
 /* ═══ NAVIGATE ═══ */
 function navigateTo(page) {
   closeNotifications();
@@ -2647,13 +2496,11 @@ function navigateTo(page) {
   document.getElementById('productsPage')?.classList.toggle('category-results-mode', page === 'products' && currentFilter !== 'todos');
   const map = {
     home: 'homePage', categories: 'categoriesPage', products: 'productsPage', productDetail: 'productDetailPage',
-    about: 'aboutPage', cart: 'cartPage', wishlist: 'wishlistPage', videos: 'videosPage',
+    about: 'aboutPage', cart: 'cartPage', wishlist: 'wishlistPage',
     checkout: 'checkoutPage', profile: 'profilePage', tracking: 'trackingPage'
   };
   document.getElementById(map[page])?.classList.add('active');
 
-  if (page === 'videos')        { renderVideosFeed(); }
-  else { document.querySelectorAll('#videosFeedContainer video').forEach(v => v.pause()); }
   if (page === 'cart')          { renderCart();     setTimeout(()=>injectBackBar('cart'), 60); }
   else if (page === 'wishlist') { renderWishlist(); setTimeout(()=>injectBackBar('wishlist'), 60); }
   else if (page === 'about')    { renderAbout();    setTimeout(()=>injectBackBar('about'), 60); }
@@ -3018,12 +2865,35 @@ function updateUserUI() {
 function showNotification(msg, type = 'success') {
   document.querySelectorAll('.uf-notif').forEach(n => n.remove());
   const n = document.createElement('div');
-  n.className = 'uf-notif';
   const isWarn = type === 'warn';
-  n.style.cssText = `position:fixed;bottom:2rem;right:2rem;background:${isWarn?'#fff7ed':'#111'};color:${isWarn?'#92400e':'#fff'};border:${isWarn?'1px solid #fed7aa':'none'};padding:1rem 1.5rem;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.2);z-index:9999;font-weight:600;font-size:.9rem;animation:nfIn .3s cubic-bezier(.34,1.56,.64,1);max-width:320px;`;
-  n.textContent = msg;
+  const isCartSuccess = msg.startsWith('🛒 Adicionado ao carrinho');
+  const cleanMessage = msg.replace(/^(?:🛒|⚠️|✅|🎉|👋|❤️|💔|⭐|🔕)\s*/u, '');
+  const message = isCartSuccess ? 'Seu produto já está no carrinho.' : cleanMessage;
+  const icon = isWarn
+    ? '<path d="M12 3 2.8 19a1.2 1.2 0 0 0 1 1.8h16.4a1.2 1.2 0 0 0 1-1.8L12 3Z"/><path d="M12 9v4m0 3h.01"/>'
+    : isCartSuccess
+    ? '<path d="M3 4h2l2.1 10.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>'
+    : '<path d="m5 12 4 4L19 6"/>';
+  n.className = `uf-notif ${isWarn ? 'uf-notif-warn' : 'uf-notif-success'}${isCartSuccess ? ' uf-notif-cart' : ''}`;
+  n.setAttribute('role', isWarn ? 'alert' : 'status');
+  n.setAttribute('aria-live', isWarn ? 'assertive' : 'polite');
+  n.innerHTML = `
+    <span class="uf-notif-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${icon}</svg>
+    </span>
+    <span class="uf-notif-copy">
+      <strong>${isCartSuccess ? 'Adicionado ao carrinho' : isWarn ? 'Atenção' : 'Tudo certo'}</strong>
+      <span></span>
+    </span>
+    <button class="uf-notif-close" type="button" aria-label="Fechar notificação">×</button>`;
+  n.querySelector('.uf-notif-copy > span').textContent = message;
+  n.querySelector('.uf-notif-close').addEventListener('click', () => n.remove());
   document.body.appendChild(n);
-  setTimeout(() => { n.style.animation = 'nfOut .3s ease'; setTimeout(() => n.remove(), 300); }, 3000);
+  const timer = setTimeout(() => {
+    n.classList.add('uf-notif-leaving');
+    setTimeout(() => n.remove(), 220);
+  }, 3000);
+  n.querySelector('.uf-notif-close').addEventListener('click', () => clearTimeout(timer), { once: true });
 }
 
 function closeNotifications() {
@@ -3256,7 +3126,7 @@ function closeAIChat(fromPopState) {
 
   // Volta o destaque da bottom nav pra aba que realmente está ativa
   const current = localStorage.getItem('uf_current_page') || 'home';
-  const activeMap = { home: 'bn-home', videos: 'bn-videos', cart: 'bn-cart' };
+  const activeMap = { home: 'bn-home', cart: 'bn-cart' };
   bnActive && bnActive(activeMap[current] || 'bn-home');
 
   // Se fechou pelo X/voltar/clique-fora (não pelo botão físico de voltar),
