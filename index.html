@@ -114,20 +114,18 @@
       <div class="search-bar">
         <svg class="search-icon-left" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="text" placeholder="Buscar tênis, moletons..." id="searchInput" autocomplete="off">
-        <button type="button" class="search-camera-btn" aria-label="Buscar por imagem" onclick="showNotification('📷 Busca por imagem em breve!')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        </button>
         <button type="button" class="search-clear" id="searchClear" style="display:none">✕</button>
       </div>
       <div class="search-dropdown" id="searchDropdown"></div>
     </div>
-    <button class="ml-bell-btn" type="button" aria-label="Notificações" onclick="showNotification('🔔 Você não tem novas notificações')">
+    <button class="ml-bell-btn" id="notificationsButton" type="button" aria-label="Notificações" aria-expanded="false" aria-controls="notificationsPopover" onclick="toggleNotifications(event)">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
     </button>
+    <section class="notifications-popover" id="notificationsPopover" aria-label="Notificações" hidden></section>
   </div>
-  <button class="mobile-location-row" type="button" aria-label="Escolher local de entrega">
+  <button class="mobile-location-row" type="button" aria-label="Escolher local de entrega" onclick="openDeliveryAddress()">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
-    <span>Enviar para <strong>seu endereço</strong></span>
+    <span>Enviar para <strong data-delivery-label>seu endereço</strong></span>
     <span class="location-chevron">›</span>
   </button>
 </header>
@@ -135,18 +133,34 @@
 <!-- ══════════════ MOBILE DRAWER ══════════════ -->
 <div class="mobile-nav" id="mobileNav">
   <div class="mobile-nav-header">
-    <span class="mobile-nav-title">MENU</span>
+    <div class="mobile-nav-brand">
+      <span class="mobile-nav-mark" aria-hidden="true">UF</span>
+      <span class="mobile-nav-brand-copy"><strong>URBAN FLOW</strong><small>MENU DA LOJA</small></span>
+    </div>
     <button class="mobile-nav-close" onclick="closeMobileMenu()" aria-label="Fechar menu">✕</button>
   </div>
-  <div class="mobile-nav-links">
-    <a href="#" onclick="navigateTo('home');closeMobileMenu();return false;">Home</a>
-    <a href="#" onclick="navigateTo('products');closeMobileMenu();return false;">Produtos</a>
-    <a href="#" onclick="navigateTo('about');closeMobileMenu();return false;">Sobre</a>
-    <a href="#" onclick="navigateTo('tracking');closeMobileMenu();return false;">Rastrear pedido</a>
-    <a href="#" onclick="navigateTo('tracking');closeMobileMenu();return false;">Ajuda</a>
+  <div class="mobile-nav-links" aria-label="Navegação principal">
+    <a href="#" onclick="navigateTo('home');closeMobileMenu();return false;">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Home</span>
+    </a>
+    <a href="#" onclick="navigateTo('products');closeMobileMenu();return false;">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="8" cy="7" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="10" cy="17" r="1"/></svg><span>Produtos</span>
+    </a>
+    <a href="#" onclick="navigateTo('about');closeMobileMenu();return false;">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg><span>Sobre</span>
+    </a>
+    <a href="#" onclick="navigateTo('tracking');closeMobileMenu();return false;">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v11H3zM14 11h4l3 3v4h-7z"/><circle cx="7.5" cy="18.5" r="1.5"/><circle cx="17.5" cy="18.5" r="1.5"/></svg><span>Rastrear pedido</span>
+    </a>
+    <a href="#" onclick="navigateTo('profile');closeMobileMenu();return false;">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Minha conta</span>
+    </a>
+    <a href="#" onclick="closeMobileMenu();openAIChat();return false;">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 2.2 7.1L21 12l-6.8 2.9L12 22l-2.2-7.1L3 12l6.8-2.9L12 2Z"/></svg><span>Ajuda com IA</span><small>Online</small>
+    </a>
   </div>
   <div class="mobile-nav-categories">
-    <span class="mobile-nav-cat-label">CATEGORIAS</span>
+    <span class="mobile-nav-cat-label">EXPLORE POR CATEGORIA</span>
     <div class="mobile-nav-chips">
       <button onclick="filterByCategory('tenis');navigateTo('products');closeMobileMenu()">Tênis</button>
       <button onclick="filterByCategory('camisetas');navigateTo('products');closeMobileMenu()">Camisetas</button>
@@ -156,6 +170,7 @@
       <button onclick="filterByCategory('acessorios');navigateTo('products');closeMobileMenu()">Acessórios</button>
     </div>
   </div>
+  <div class="mobile-nav-footer"><span>URBAN FLOW</span><span>Estilo que acompanha você</span></div>
 </div>
 
 <!-- ===================== HOME PAGE ===================== -->
@@ -168,7 +183,6 @@
     <button onclick="filterByCategory('calcas')">Calças</button>
     <button onclick="filterByCategory('acessorios')">Acessórios</button>
   </nav>
-  <div class="mobile-security-strip"><strong>Pagamento seguro,</strong> protegemos seu dinheiro <span>›</span></div>
   <section class="hero" id="heroSection">
     <div class="hero-slides">
       <div class="hero-slide active" style="--bg:url('https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=2000&q=80')">
@@ -583,6 +597,46 @@
   </div>
 </div>
 
+<!-- ===================== DELIVERY ADDRESS MODAL ===================== -->
+<div class="modal" id="deliveryAddressModal" role="dialog" aria-modal="true" aria-labelledby="deliveryAddressTitle">
+  <div class="generic-modal-content delivery-modal-content">
+    <button class="modal-close" type="button" aria-label="Fechar" onclick="closeDeliveryAddress()">×</button>
+    <span class="delivery-modal-icon" aria-hidden="true">📍</span>
+    <h2 id="deliveryAddressTitle">Onde você quer receber?</h2>
+    <p class="delivery-modal-copy">Informe seu endereço para usarmos na entrega do pedido. Você pode preencher manualmente ou buscar pelo CEP.</p>
+    <form id="deliveryAddressForm">
+      <div class="delivery-form-grid">
+        <label class="delivery-field delivery-field-full">CEP
+          <span class="delivery-cep-row">
+            <input id="deliveryCep" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000" required oninput="fmtCep(this)">
+            <button type="button" class="delivery-lookup-button" onclick="lookupDeliveryCEP()">Buscar CEP</button>
+          </span>
+        </label>
+        <label class="delivery-field delivery-field-full">Rua / Avenida
+          <input id="deliveryStreet" type="text" autocomplete="street-address" placeholder="Nome da rua" required>
+        </label>
+        <label class="delivery-field">Número
+          <input id="deliveryNumber" type="text" placeholder="Número" required>
+        </label>
+        <label class="delivery-field">Complemento
+          <input id="deliveryComplement" type="text" placeholder="Apto, bloco (opcional)">
+        </label>
+        <label class="delivery-field delivery-field-full">Bairro
+          <input id="deliveryNeighborhood" type="text" placeholder="Bairro">
+        </label>
+        <label class="delivery-field">Cidade
+          <input id="deliveryCity" type="text" autocomplete="address-level2" placeholder="Cidade" required>
+        </label>
+        <label class="delivery-field">Estado
+          <input id="deliveryState" type="text" autocomplete="address-level1" maxlength="2" placeholder="UF" required>
+        </label>
+      </div>
+      <p class="delivery-form-status" id="deliveryFormStatus" role="status" aria-live="polite"></p>
+      <button class="btn-primary delivery-save-button" type="submit">Salvar endereço</button>
+    </form>
+  </div>
+</div>
+
 <!-- ===================== SIZE GUIDE MODAL ===================== -->
 <div class="modal" id="sizeModal" role="dialog" aria-label="Guia de Tamanhos">
   <div class="generic-modal-content">
@@ -642,6 +696,7 @@
     <div class="footer-section">
       <h3>Atendimento</h3>
       <ul>
+        <li><a href="#" onclick="openAIChat();return false;">Ajuda com IA</a></li>
         <li><a href="mailto:contato@urbanflow.com">contato@urbanflow.com</a></li>
         <li><a href="tel:+5517992680298">(17) 99268-0298</a></li>
         <li><a href="https://wa.me/5517992680298" target="_blank" rel="noopener">WhatsApp</a></li>

@@ -211,12 +211,12 @@ const products = [
 ];
 
 const categories = [
-  { id:'camisetas', name:'Camisetas',  image:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80' },
-  { id:'shorts',    name:'Shorts',     image:'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=800&q=80' },
-  { id:'tenis',     name:'Tênis',      image:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80' },
-  { id:'hoodies',   name:'Moletons',   image:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=800&q=80' },
-  { id:'calcas',    name:'Calças',     image:'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=800&q=80' },
-  { id:'acessorios',name:'Acessórios', image:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80' }
+  { id:'camisetas', name:'Camisetas',  image:'https://imgcentauro-a.akamaihd.net/660x660/M195NW49A1.jpg' },
+  { id:'shorts',    name:'Shorts',     image:'https://imgcentauro-a.akamaihd.net/660x660/M18XRD02A1.jpg' },
+  { id:'tenis',     name:'Tênis',      image:'https://imgcentauro-a.akamaihd.net/660x660/982718QWA2.jpg' },
+  { id:'hoodies',   name:'Moletons',   image:'https://imgcentauro-a.akamaihd.net/1024x1024/99386451A6.jpg' },
+  { id:'calcas',    name:'Calças',     image:'https://imgcentauro-a.akamaihd.net/1500x1500/98482605A19.jpg' },
+  { id:'acessorios',name:'Acessórios', image:'https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=800&q=85' }
 ];
 
 /* ─── CUPONS ─── */
@@ -275,6 +275,7 @@ let slideInterval;
 let touchStartX    = 0;
 let checkoutStep   = 1;
 let checkoutData   = { address: {}, payment: { method: 'pix' } };
+let deliveryAddress = JSON.parse(localStorage.getItem('uf_delivery_address') || 'null');
 let reviewRating   = 0;
 
 /* merge avaliações iniciais sem sobrescrever as do usuário */
@@ -305,6 +306,7 @@ function init() {
   updateCartBadge();
   updateWishlistBadge();
   updateUserUI();
+  updateDeliveryAddressLabel();
   setupEventListeners();
   setupSearch();
   initSlider();
@@ -513,11 +515,20 @@ function setupEventListeners() {
   document.addEventListener('click', e => {
     if (!e.target.closest('.user-menu')) document.getElementById('userDropdown').classList.remove('active');
     if (!e.target.closest('.header-left') && !e.target.closest('.mega-menu')) closeMega();
+    if (!e.target.closest('.mobile-search-row')) closeNotifications();
   });
   document.getElementById('authModalClose').addEventListener('click', closeModal);
   document.getElementById('authModal').addEventListener('click', e => { if (e.target === document.getElementById('authModal')) closeModal(); });
+  document.getElementById('deliveryAddressForm').addEventListener('submit', saveDeliveryAddress);
+  document.getElementById('deliveryAddressModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('deliveryAddressModal')) closeDeliveryAddress();
+  });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeModal(); closeSizeModal(); closeShareModal(); closeMega(); }
+    if (e.key === 'Escape') {
+      closeModal(); closeDeliveryAddress();
+      closeSizeModal(); closeShareModal(); closeMega();
+      closeNotifications();
+    }
   });
   document.getElementById('loginForm').addEventListener('submit', handleLogin);
   document.getElementById('registerForm').addEventListener('submit', handleRegister);
@@ -526,6 +537,107 @@ function setupEventListeners() {
     document.getElementById('hamburger').classList.toggle('open', isOpen);
     document.getElementById('navOverlay').classList.toggle('show', isOpen);
   });
+}
+
+function openDeliveryAddress() {
+  const modal = document.getElementById('deliveryAddressModal');
+  const address = deliveryAddress || {};
+  const fields = {
+    deliveryCep: address.cep,
+    deliveryStreet: address.street,
+    deliveryNumber: address.number,
+    deliveryComplement: address.complement,
+    deliveryNeighborhood: address.neighborhood,
+    deliveryCity: address.city,
+    deliveryState: address.state
+  };
+  Object.entries(fields).forEach(([id, value]) => {
+    const field = document.getElementById(id);
+    if (field) field.value = value || '';
+  });
+  const status = document.getElementById('deliveryFormStatus');
+  status.textContent = '';
+  status.classList.remove('is-error', 'is-success');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeliveryAddress() {
+  document.getElementById('deliveryAddressModal').classList.remove('active');
+  document.body.style.overflow = document.querySelector('.modal.active') ? 'hidden' : '';
+}
+
+async function lookupDeliveryCEP() {
+  const cep = document.getElementById('deliveryCep').value.replace(/\D/g, '');
+  const status = document.getElementById('deliveryFormStatus');
+  status.classList.remove('is-error', 'is-success');
+  if (cep.length !== 8) {
+    status.textContent = 'Digite um CEP válido com 8 números.';
+    status.classList.add('is-error');
+    return;
+  }
+
+  status.textContent = 'Buscando endereço...';
+  try {
+    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    if (!response.ok) throw new Error(`Consulta de CEP falhou (${response.status}).`);
+    const result = await response.json();
+    if (result.erro) {
+      status.textContent = 'CEP não encontrado. Confira o número ou preencha o endereço manualmente.';
+      status.classList.add('is-error');
+      return;
+    }
+
+    document.getElementById('deliveryStreet').value = result.logradouro || '';
+    document.getElementById('deliveryNeighborhood').value = result.bairro || '';
+    document.getElementById('deliveryCity').value = result.localidade || '';
+    document.getElementById('deliveryState').value = result.uf || '';
+    status.textContent = 'Endereço encontrado. Informe o número e salve.';
+    status.classList.add('is-success');
+  } catch (error) {
+    console.error('Não foi possível consultar o CEP:', error);
+    status.textContent = 'Não foi possível consultar o CEP agora. Preencha o endereço manualmente.';
+    status.classList.add('is-error');
+  }
+}
+
+function saveDeliveryAddress(event) {
+  event.preventDefault();
+  const cep = document.getElementById('deliveryCep').value.replace(/\D/g, '');
+  const address = {
+    cep: document.getElementById('deliveryCep').value.trim(),
+    street: document.getElementById('deliveryStreet').value.trim(),
+    number: document.getElementById('deliveryNumber').value.trim(),
+    complement: document.getElementById('deliveryComplement').value.trim(),
+    neighborhood: document.getElementById('deliveryNeighborhood').value.trim(),
+    city: document.getElementById('deliveryCity').value.trim(),
+    state: document.getElementById('deliveryState').value.trim().toUpperCase()
+  };
+  const status = document.getElementById('deliveryFormStatus');
+  if (cep.length !== 8 || !address.street || !address.number || !address.city || !/^[A-Z]{2}$/.test(address.state)) {
+    status.textContent = 'Confira o CEP, rua, número, cidade e estado antes de salvar.';
+    status.classList.remove('is-success');
+    status.classList.add('is-error');
+    return;
+  }
+
+  deliveryAddress = address;
+  localStorage.setItem('uf_delivery_address', JSON.stringify(deliveryAddress));
+  updateDeliveryAddressLabel();
+  if (checkoutStep === 1 && document.getElementById('checkoutPage').classList.contains('active')) {
+    checkoutData.address = { ...checkoutData.address, ...deliveryAddress };
+    renderCheckoutStep();
+  }
+  closeDeliveryAddress();
+  showNotification('Endereço de entrega salvo neste dispositivo.');
+}
+
+function updateDeliveryAddressLabel() {
+  const label = document.querySelector('[data-delivery-label]');
+  if (!label) return;
+  label.textContent = deliveryAddress
+    ? `${deliveryAddress.city}/${deliveryAddress.state}`
+    : 'seu endereço';
 }
 
 function closeMega() {
@@ -1652,7 +1764,10 @@ function checkout() {
   if (!currentUser) { showNotification('⚠️ Faça login para finalizar', 'warn'); openModal(); return; }
   if (!cart.length) { showNotification('⚠️ Seu carrinho está vazio', 'warn'); return; }
   checkoutStep = 1;
-  checkoutData = { address: {}, payment: { method: 'pix' } };
+  checkoutData = {
+    address: deliveryAddress ? { ...deliveryAddress, name: currentUser.name || '' } : {},
+    payment: { method: 'pix' }
+  };
   navigateTo('checkout');
 }
 
@@ -1698,7 +1813,7 @@ function renderCheckoutSidebar() {
     <div class="checkout-order-row"><span>Frete</span><span>${shipping===0?'<span style="color:var(--success);font-weight:700;">GRÁTIS</span>':`R$ ${shipping.toFixed(2)}`}</span></div>
     <div class="checkout-order-total"><span>Total</span><span style="color:var(--accent);">R$ ${total.toFixed(2)}</span></div>
     <div style="margin-top:1.5rem;font-size:.78rem;color:var(--gray-500);display:flex;flex-direction:column;gap:.4rem;">
-      <span>🔒 Pagamento 100% seguro</span>
+      <span>ℹ️ Pagamentos online ainda indisponíveis</span>
       <span>📦 Entrega em 3–8 dias úteis</span>
       <span>↩️ 30 dias para devolução</span>
     </div>`;
@@ -1842,32 +1957,15 @@ function prevCheckoutStep() {
 }
 
 function renderPaymentStep(main) {
-  const selMethod = checkoutData.payment.method;
   main.innerHTML = `
-    <div class="checkout-section-title">💳 Forma de Pagamento</div>
-    <div class="payment-methods">
-      <div class="payment-method ${selMethod==='pix'?'selected':''}" onclick="selectPayMethod('pix')">
-        <div class="payment-method-radio"></div>
-        <div class="payment-method-icon">📱</div>
-        <div class="payment-method-label"><strong>PIX</strong><small>Aprovação instantânea · Sem taxas</small></div>
-      </div>
-      <div class="payment-method ${selMethod==='card'?'selected':''}" onclick="selectPayMethod('card')">
-        <div class="payment-method-radio"></div>
-        <div class="payment-method-icon">💳</div>
-        <div class="payment-method-label"><strong>Cartão de Crédito / Débito</strong><small>Até 10x sem juros</small></div>
-      </div>
-      <div class="payment-method ${selMethod==='boleto'?'selected':''}" onclick="selectPayMethod('boleto')">
-        <div class="payment-method-radio"></div>
-        <div class="payment-method-icon">🏦</div>
-        <div class="payment-method-label"><strong>Boleto Bancário</strong><small>Vencimento em 3 dias úteis</small></div>
-      </div>
+    <div class="checkout-section-title">💳 Pagamento indisponível</div>
+    <div class="payment-info-notice">
+      <strong>Não faça pagamentos por esta tela</strong>
+      <span>O site ainda não está conectado a um processador financeiro. Nenhum pagamento pode ser recebido ou confirmado. Não informe dados de cartão nem use códigos PIX de demonstração.</span>
     </div>
-    <div id="paymentDetailBox"></div>
     <div class="checkout-nav-btns">
-      <button class="btn-prev-step" onclick="prevCheckoutStep()">← Voltar</button>
-      <button class="btn-next-step" id="btnFinalize" onclick="nextCheckoutStep()">🔒 Finalizar Pedido</button>
+      <button class="btn-prev-step" onclick="prevCheckoutStep()">← Revisar endereço</button>
     </div>`;
-  renderPaymentDetail(selMethod);
 }
 
 function selectPayMethod(method) {
@@ -1975,27 +2073,7 @@ function validateCardForm() {
 }
 
 function processPayment() {
-  const method = checkoutData.payment.method;
-  if (method === 'card' && !validateCardForm()) return;
-
-  const { total } = getCartTotals();
-  const orderId = `UF${Date.now().toString().slice(-8)}`;
-  const order = {
-    id: orderId, date: new Date().toLocaleDateString('pt-BR'),
-    items: [...cart], total, method, status: 'processando',
-    address: checkoutData.address
-  };
-  orders.unshift(order);
-  saveOrders();
-  cart = []; appliedCoupon = null;
-  saveCart(); updateCartBadge();
-
-  checkoutStep = 3;
-  checkoutData.orderId = orderId;
-  checkoutData.total = total;
-  renderCheckoutStepper();
-  renderCheckoutStep();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showNotification('Pagamento indisponível: conecte um processador de pagamentos antes de concluir o pedido.', 'warn');
 }
 
 function renderConfirmationStep(main) {
@@ -2068,24 +2146,23 @@ function renderProfile() {
 
   el.innerHTML = `
     <div class="profile-page">
-      <!-- HEADER COMPACTO -->
-      <div class="profile-header-card">
-        <div class="profile-header-inner">
-          <div class="prof-avatar">${initials}</div>
-          <div class="prof-info">
+    <div class="profile-header-card">
+      <div class="profile-header-inner">
+        <div class="prof-avatar">${initials}</div>
+        <div class="prof-info">
+          <span class="prof-eyebrow">ÁREA DO CLIENTE</span>
             <div class="prof-name-row">
               <h1 class="prof-name">${currentUser.name}</h1>
-              <span class="prof-badge-verified">✓ Verificado</span>
+            <span class="prof-badge-verified">Conta ativa</span>
             </div>
             <p class="prof-email">${currentUser.email}</p>
-            <span class="prof-member">Membro desde ${new Date().getFullYear()}</span>
+          <span class="prof-member">Urban Flow · Minha conta</span>
           </div>
           <button class="prof-logout" onclick="logout()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             Sair
           </button>
         </div>
-        <!-- STATS ROW COMPACTO -->
         <div class="prof-stats">
           <div class="prof-stat">
             <strong>R$ ${totalSpent.toFixed(0)}</strong>
@@ -2161,7 +2238,7 @@ function renderProfileOverview() {
     <div class="profile-overview">
       <!-- Quick Actions -->
       <div class="po-section">
-        <h3 class="po-section-title">Acesso Rápido</h3>
+        <h3 class="po-section-title">Atalhos da conta</h3>
         <div class="po-quick-grid">
           <div class="po-quick-card" onclick="navigateTo('cart')">
             <div class="po-qc-icon">🛒</div>
@@ -2175,9 +2252,9 @@ function renderProfileOverview() {
             <div class="po-qc-icon">📦</div>
             <span>Rastrear</span>
           </div>
-          <div class="po-quick-card" onclick="switchProfileTab('editProfile')">
-            <div class="po-qc-icon">⚙️</div>
-            <span>Configurações</span>
+          <div class="po-quick-card" onclick="openAIChat()">
+            <div class="po-qc-icon">✦</div>
+            <span>Ajuda com IA</span>
           </div>
         </div>
       </div>
@@ -2558,6 +2635,7 @@ function scrollVideosBy(dir) {
 
 /* ═══ NAVIGATE ═══ */
 function navigateTo(page) {
+  closeNotifications();
   // Fecha o chat de IA (widget independente) se estiver aberto
   closeAIChat();
 
@@ -2946,6 +3024,120 @@ function showNotification(msg, type = 'success') {
   n.textContent = msg;
   document.body.appendChild(n);
   setTimeout(() => { n.style.animation = 'nfOut .3s ease'; setTimeout(() => n.remove(), 300); }, 3000);
+}
+
+function closeNotifications() {
+  const panel = document.getElementById('notificationsPopover');
+  const button = document.getElementById('notificationsButton');
+  if (!panel || !button) return;
+  panel.hidden = true;
+  button.setAttribute('aria-expanded', 'false');
+}
+
+function toggleNotifications(event) {
+  event?.stopPropagation();
+  const panel = document.getElementById('notificationsPopover');
+  const button = document.getElementById('notificationsButton');
+  if (!panel || !button) return;
+  if (!panel.hidden) {
+    closeNotifications();
+    return;
+  }
+
+  renderNotifications(panel);
+  panel.hidden = false;
+  button.setAttribute('aria-expanded', 'true');
+}
+
+function renderNotifications(panel) {
+  panel.replaceChildren();
+
+  const header = document.createElement('div');
+  header.className = 'notifications-popover-header';
+  const title = document.createElement('div');
+  const heading = document.createElement('strong');
+  heading.textContent = 'Notificações';
+  const subtitle = document.createElement('span');
+  subtitle.textContent = 'Atualizações dos seus pedidos';
+  title.append(heading, subtitle);
+
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'notifications-close';
+  close.setAttribute('aria-label', 'Fechar notificações');
+  close.textContent = '×';
+  close.addEventListener('click', closeNotifications);
+  header.append(title, close);
+  panel.appendChild(header);
+
+  const content = document.createElement('div');
+  content.className = 'notifications-popover-content';
+  const recentOrders = orders.slice(0, 5);
+
+  if (recentOrders.length) {
+    recentOrders.forEach(order => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'notification-order';
+
+      const icon = document.createElement('span');
+      icon.className = 'notification-order-icon';
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = '📦';
+
+      const details = document.createElement('span');
+      details.className = 'notification-order-details';
+      const orderTitle = document.createElement('strong');
+      orderTitle.textContent = `Pedido #${order.id}`;
+      const description = document.createElement('span');
+      const itemCount = order.items?.length || 0;
+      description.textContent = `${order.status || 'Pedido recebido'} · ${itemCount} ${itemCount === 1 ? 'item' : 'itens'}`;
+      const date = document.createElement('small');
+      date.textContent = order.date || '';
+      details.append(orderTitle, description, date);
+      item.append(icon, details);
+      item.addEventListener('click', () => {
+        closeNotifications();
+        navigateTo('tracking');
+        const input = document.getElementById('trackingInput');
+        if (input) {
+          input.value = String(order.id || '');
+          trackOrder();
+        }
+      });
+      content.appendChild(item);
+    });
+  } else {
+    const empty = document.createElement('div');
+    empty.className = 'notifications-empty';
+    const icon = document.createElement('span');
+    icon.className = 'notifications-empty-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = '🔔';
+    const message = document.createElement('strong');
+    message.textContent = currentUser ? 'Tudo em dia por aqui' : 'Acompanhe seus pedidos';
+    const description = document.createElement('p');
+    description.textContent = currentUser
+      ? 'As atualizações dos seus pedidos aparecerão aqui.'
+      : 'Entre na sua conta para acompanhar as atualizações dos seus pedidos.';
+    const action = document.createElement('button');
+    action.type = 'button';
+    action.className = 'notifications-action';
+    action.textContent = currentUser ? 'Ver meus pedidos' : 'Entrar na conta';
+    action.addEventListener('click', () => {
+      closeNotifications();
+      if (currentUser) {
+        profileTab = 'orders';
+        navigateTo('profile');
+      } else {
+        openModal();
+      }
+    });
+    empty.append(icon, message, description, action);
+    content.appendChild(empty);
+  }
+
+  panel.appendChild(content);
 }
 
 /* ═══ UTILS ═══ */
