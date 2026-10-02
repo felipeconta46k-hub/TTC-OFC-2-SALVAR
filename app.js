@@ -268,6 +268,7 @@ let sortBy         = 'relevancia';
 let priceMin       = 0;
 let priceMax       = 1500;
 let selectedProduct = null;
+let productDetailReturnPage = 'products';
 let currentSlide   = 0;
 let slideInterval;
 let touchStartX    = 0;
@@ -1035,6 +1036,16 @@ function addToRecentlyViewed(id) {
 
 /* ═══ PRODUCT DETAIL ═══ */
 function showProductDetail(id) {
+  const activePage = document.querySelector('.page.active');
+  if (activePage && activePage.id !== 'productDetailPage') {
+    const pageRoutes = {
+      homePage: 'home', categoriesPage: 'categories', productsPage: 'products',
+      aboutPage: 'about', cartPage: 'cart', wishlistPage: 'wishlist',
+      videosPage: 'videos', profilePage: 'profile', trackingPage: 'tracking'
+    };
+    productDetailReturnPage = pageRoutes[activePage.id] || 'products';
+  }
+
   selectedProduct = products.find(p => p.id === id);
   if (!selectedProduct) return;
   selectedColor = null;
@@ -1053,7 +1064,16 @@ function showProductDetail(id) {
   document.getElementById('productDetailContainer').innerHTML = `
     <div class="product-detail-gallery">
       <div class="product-main-image zoom-container" id="mainImage" onclick="openZoom(this.querySelector('img').src,'${p.name}')">
-        <img src="${p.image}" alt="${p.name}" id="mainProductImg">
+        <img src="${p.image}" alt="${p.name}" id="mainProductImg" draggable="false">
+        ${p.images?.length > 1 ? `
+          <button class="gallery-arrow gallery-arrow-prev" type="button" aria-label="Foto anterior" onclick="event.stopPropagation();navigateProductImage(-1)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button class="gallery-arrow gallery-arrow-next" type="button" aria-label="Próxima foto" onclick="event.stopPropagation();navigateProductImage(1)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+          <span class="gallery-counter" id="galleryCounter" aria-live="polite">1 / ${p.images.length}</span>
+        ` : ''}
         <div class="zoom-hint"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> Clique para zoom</div>
       </div>
       <div class="product-thumbnails" id="productThumbs">
@@ -1225,9 +1245,26 @@ function openZoom(src, alt) {
 
 function changeMainImage(src, thumb) {
   const img = document.getElementById('mainProductImg');
-  if (img) img.src = src;
-  document.querySelectorAll('.product-thumbnail').forEach(t => t.classList.remove('active'));
-  thumb.classList.add('active');
+  if (img) {
+    img.style.opacity = '0';
+    setTimeout(() => {
+      img.src = src;
+      img.style.opacity = '1';
+    }, 120);
+  }
+  const thumbs = Array.from(document.querySelectorAll('.product-thumbnail'));
+  thumbs.forEach(t => t.classList.toggle('active', t === thumb));
+  const counter = document.getElementById('galleryCounter');
+  if (counter) counter.textContent = `${thumbs.indexOf(thumb) + 1} / ${thumbs.length}`;
+}
+
+function navigateProductImage(direction) {
+  const thumbs = Array.from(document.querySelectorAll('.product-thumbnail'));
+  if (thumbs.length < 2) return;
+  const activeIndex = Math.max(0, thumbs.findIndex(thumb => thumb.classList.contains('active')));
+  const nextIndex = (activeIndex + direction + thumbs.length) % thumbs.length;
+  const image = thumbs[nextIndex].querySelector('img');
+  if (image) changeMainImage(image.src, thumbs[nextIndex]);
 }
 
 
@@ -1999,12 +2036,27 @@ function renderProfile() {
   
   if (!currentUser) {
     el.innerHTML = `
-      <div style="text-align:center;padding:6rem 2rem;max-width:480px;margin:0 auto;">
-        <div style="font-size:4rem;margin-bottom:1.5rem;">👤</div>
-        <h2 style="font-family:var(--font-head);font-size:2.2rem;font-weight:900;margin-bottom:.8rem;">Sua conta</h2>
-        <p style="color:var(--gray-500);margin-bottom:2rem;">Faça login para acessar pedidos, favoritos e configurações.</p>
-        <button class="btn-primary" style="width:100%;padding:1.1rem;" onclick="openModal()">Entrar na Conta</button>
-        <p style="margin-top:1rem;font-size:.88rem;color:var(--gray-500);">Não tem conta? <a onclick="switchAuthTab('register');openModal()" style="color:var(--accent);font-weight:700;cursor:pointer;">Cadastre-se grátis</a></p>
+      <div class="profile-guest-shell">
+        <section class="profile-guest-card" aria-labelledby="profileGuestTitle">
+          <div class="profile-guest-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <circle cx="24" cy="17" r="8" stroke="currentColor" stroke-width="2.5"/>
+              <path d="M9 41v-4a15 15 0 0 1 30 0v4H9Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="profile-guest-eyebrow">SUA CONTA URBAN FLOW</span>
+          <h2 id="profileGuestTitle">Tudo da sua loja, em um só lugar</h2>
+          <p class="profile-guest-copy">Entre para acompanhar seus pedidos, salvar favoritos e deixar suas próximas compras mais rápidas.</p>
+          <div class="profile-guest-benefits" aria-label="Vantagens da sua conta">
+            <div><span aria-hidden="true">📦</span><strong>Pedidos</strong><small>Acompanhe entregas</small></div>
+            <div><span aria-hidden="true">♡</span><strong>Favoritos</strong><small>Salve seus achados</small></div>
+            <div><span aria-hidden="true">⚡</span><strong>Mais praticidade</strong><small>Compre mais rápido</small></div>
+          </div>
+          <div class="profile-guest-actions">
+            <button class="btn-primary profile-guest-login" onclick="openModal()">Entrar na conta <span aria-hidden="true">→</span></button>
+            <p>É novo por aqui? <button class="profile-guest-register" onclick="switchAuthTab('register');openModal()">Criar conta grátis</button></p>
+          </div>
+        </section>
       </div>`;
     return;
   }
@@ -2541,7 +2593,7 @@ function navigateTo(page) {
 /* ── Barra de voltar universal (desktop + mobile) ── */
 function injectBackBar(page) {
   const backBarConfig = {
-    productDetail: { label: 'Voltar ao Início',      action: ()=>navigateTo('home') },
+    productDetail: { label: 'Voltar',                action: ()=>navigateTo(productDetailReturnPage) },
     products:      { label: 'Voltar ao Início',       action: ()=>navigateTo('home') },
     cart:          { label: 'Continuar Comprando',    action: ()=>navigateTo('products') },
     wishlist:      { label: 'Voltar aos Produtos',    action: ()=>navigateTo('products') },
@@ -2587,26 +2639,33 @@ function initMobileGallerySwipe() {
   }
 
   const images = Array.from(thumbs).map(t => t.querySelector('img')?.src).filter(Boolean);
-  let currentIdx = 0;
-
-  function goToImage(idx) {
-    if (idx < 0) idx = images.length - 1;
-    if (idx >= images.length) idx = 0;
-    currentIdx = idx;
-    mainImg.style.opacity = '0';
-    setTimeout(() => { mainImg.src = images[currentIdx]; mainImg.style.opacity = '1'; }, 120);
-    thumbs.forEach((t, i) => t.classList.toggle('active', i === currentIdx));
-  }
-
+  let pointerStart = null;
+  let suppressClick = false;
   mainImg.style.transition = 'opacity .12s ease';
+  mainImg.draggable = false;
   const mainWrap = document.getElementById('mainImage');
   if (mainWrap) {
-    let txStart = 0;
-    mainWrap.addEventListener('touchstart', e => { txStart = e.touches[0].clientX; }, { passive: true });
-    mainWrap.addEventListener('touchend',   e => {
-      const diff = txStart - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 40) goToImage(diff > 0 ? currentIdx + 1 : currentIdx - 1);
+    mainWrap.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      pointerStart = { x: e.clientX, y: e.clientY };
     }, { passive: true });
+    mainWrap.addEventListener('pointerup', e => {
+      if (!pointerStart) return;
+      const deltaX = e.clientX - pointerStart.x;
+      const deltaY = e.clientY - pointerStart.y;
+      pointerStart = null;
+      if (Math.abs(deltaX) < 45 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+      suppressClick = true;
+      navigateProductImage(deltaX < 0 ? 1 : -1);
+      setTimeout(() => { suppressClick = false; }, 400);
+    }, { passive: true });
+    mainWrap.addEventListener('pointercancel', () => { pointerStart = null; }, { passive: true });
+    mainWrap.addEventListener('click', e => {
+      if (!suppressClick) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      suppressClick = false;
+    }, true);
   }
 }
 

@@ -98,9 +98,18 @@
       </div>
     </div>
   </div>
+  <div class="mobile-brand-row">
+    <button class="mobile-brand-lockup" type="button" onclick="navigateTo('home')" aria-label="Urban Flow, página inicial">
+      <span class="mobile-brand-monogram">UF</span>
+      <span class="mobile-brand-name"><strong>URBAN FLOW</strong><small>MODA URBANA</small></span>
+    </button>
+    <span class="mobile-brand-edition">LOJA OFICIAL</span>
+  </div>
   <!-- Barra de busca: fora do header-container, só aparece no mobile -->
   <div class="mobile-search-row">
-    <button class="ml-avatar-btn" type="button" onclick="navigateTo('profile')" aria-label="Minha conta"><span>UF</span></button>
+    <button class="ml-avatar-btn" type="button" onclick="navigateTo('profile')" aria-label="Minha conta">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
+    </button>
     <div class="search-wrapper">
       <div class="search-bar">
         <svg class="search-icon-left" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -152,7 +161,12 @@
 <!-- ===================== HOME PAGE ===================== -->
 <div class="page active" id="homePage">
   <nav class="mobile-home-departments" aria-label="Departamentos da home">
-    <button class="active">Tudo</button><button>Primeira compra</button><button>Moda</button><button>Beleza</button><button>Celulares</button><button>Veículos</button>
+    <button class="active" onclick="filterByCategory('todos')">Tudo</button>
+    <button onclick="filterByCategory('tenis')">Tênis</button>
+    <button onclick="filterByCategory('camisetas')">Camisetas</button>
+    <button onclick="filterByCategory('hoodies')">Moletons</button>
+    <button onclick="filterByCategory('calcas')">Calças</button>
+    <button onclick="filterByCategory('acessorios')">Acessórios</button>
   </nav>
   <div class="mobile-security-strip"><strong>Pagamento seguro,</strong> protegemos seu dinheiro <span>›</span></div>
   <section class="hero" id="heroSection">
