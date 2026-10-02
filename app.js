@@ -258,6 +258,7 @@ const HEART_EMPTY  = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none
 let cart           = JSON.parse(localStorage.getItem('uf_cart'))     || [];
 let wishlist       = JSON.parse(localStorage.getItem('uf_wishlist')) || [];
 let currentUser    = JSON.parse(localStorage.getItem('uf_user'))     || null;
+let authGateActive = !currentUser;
 let orders         = JSON.parse(localStorage.getItem('uf_orders'))   || [];
 let reviews        = JSON.parse(localStorage.getItem('uf_reviews'))  || {};
 let recentlyViewed = JSON.parse(localStorage.getItem('uf_recent'))   || [];
@@ -317,6 +318,7 @@ function init() {
   const lastPage = localStorage.getItem('uf_current_page') || 'home';
   navigateTo(lastPage);
   window.scrollTo({ top: 0, behavior: 'instant' });
+  if (authGateActive) openModal();
 }
 
 /* ═══ SKELETON ═══ */
@@ -2806,15 +2808,19 @@ function validateRegisterEmail(input) {
 function openModal() {
   switchAuthTab('login');
   document.getElementById('authModal').classList.add('active');
+  document.body.classList.toggle('auth-required', authGateActive);
   document.body.style.overflow = 'hidden';
 }
 function openModalRegister() {
   switchAuthTab('register');
   document.getElementById('authModal').classList.add('active');
+  document.body.classList.toggle('auth-required', authGateActive);
   document.body.style.overflow = 'hidden';
 }
 function closeModal() {
+  if (authGateActive && !currentUser) return;
   document.getElementById('authModal').classList.remove('active');
+  document.body.classList.remove('auth-required');
   document.body.style.overflow = '';
   document.querySelectorAll('.error-message').forEach(e => { e.classList.remove('active'); e.textContent = ''; });
   document.getElementById('loginForm').reset();
@@ -2861,6 +2867,7 @@ function handleLogin(e) {
     if (user) {
       currentUser = { name: user.name, email: user.email };
       localStorage.setItem('uf_user', JSON.stringify(currentUser));
+      authGateActive = false;
       updateUserUI(); closeModal();
       showNotification(`👋 Bem-vindo de volta, ${user.name}!`);
     } else {
@@ -2891,14 +2898,16 @@ function handleRegister(e) {
     localStorage.setItem('uf_users', JSON.stringify(users));
     currentUser = { name, email };
     localStorage.setItem('uf_user', JSON.stringify(currentUser));
+    authGateActive = false;
     updateUserUI(); closeModal();
     showNotification(`🎉 Conta criada! Bem-vindo, ${name}!`);
   }, 500);
 }
 function handleLogout() {
-  currentUser = null; localStorage.removeItem('uf_user'); updateUserUI();
+  currentUser = null; authGateActive = true; localStorage.removeItem('uf_user'); updateUserUI();
   document.getElementById('userDropdown').classList.remove('active');
-  showNotification('👋 Até logo!');
+  openModal();
+  showNotification('👋 Entre novamente para continuar');
 }
 
 /* ═══ USER UI ═══ */
@@ -3185,10 +3194,12 @@ function escapeAIHtml(str) {
 
 function logout() {
   currentUser = null;
+  authGateActive = true;
   localStorage.removeItem('uf_user');
   updateUserUI();
   navigateTo('home');
-  showNotification('Você saiu da conta');
+  openModal();
+  showNotification('Entre novamente para continuar');
 }
 
 /* ═══ BOOT ═══ */

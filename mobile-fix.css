@@ -4713,3 +4713,20 @@ footer {
   .gallery-arrow-prev { left: 9px; }
   .gallery-arrow-next { right: 9px; }
 }
+
+.auth-required-note {
+  display: none;
+}
+
+body.auth-required #authModal .modal-close {
+  display: none !important;
+}
+
+body.auth-required #authModal .auth-required-note {
+  display: block;
+  margin: 0 0 1rem;
+  color: var(--gray-600);
+  font-size: .84rem;
+  font-weight: 600;
+  text-align: center;
+}
