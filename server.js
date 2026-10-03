@@ -26,6 +26,33 @@ const coupons = {
 };
 
 if (baseUrl.startsWith('https://')) app.set('trust proxy', 1);
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+  res.set({
+    'Content-Security-Policy': [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "frame-ancestors 'none'",
+      "form-action 'self'",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "img-src 'self' data: https:",
+      "connect-src 'self' https://viacep.com.br",
+      ...(process.env.NODE_ENV === 'production' ? ['upgrade-insecure-requests'] : [])
+    ].join('; '),
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY'
+  });
+  if (process.env.NODE_ENV === 'production') {
+    res.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
+  if (req.path.startsWith('/api/')) res.set('Cache-Control', 'no-store');
+  next();
+});
 app.use(express.json({ limit: '32kb' }));
 
 function isNonEmptyString(value, maxLength = 200) {
@@ -132,7 +159,7 @@ function calculateOrder(body, authenticatedCustomer) {
   return {
     customer: { name: authenticatedCustomer.name, email: authenticatedCustomer.email },
     address: {
-      name: String(address.name || customer.name).trim().slice(0, 120),
+      name: String(address.name || authenticatedCustomer.name).trim().slice(0, 120),
       cep: address.cep.trim(),
       street: address.street.trim(),
       number: address.number.trim(),
@@ -289,6 +316,22 @@ const customerAuthLimiter = rateLimit({
   message: { error: 'Muitas tentativas. Aguarde 15 minutos e tente novamente.' }
 });
 
+const checkoutLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Muitos pedidos em pouco tempo. Aguarde alguns minutos e tente novamente.' }
+});
+
+const orderStatusLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Muitas consultas de pedido. Aguarde um minuto e tente novamente.' }
+});
+
 app.get('/api/health', async (_req, res) => {
   try {
     await pool.query('SELECT 1');
@@ -400,8 +443,9 @@ app.put('/api/customer/profile', requireSameOrigin, requireCustomer, async (req,
 app.post('/api/customer/change-password', requireSameOrigin, requireCustomer, async (req, res) => {
   const currentPassword = req.body?.currentPassword;
   const newPassword = req.body?.newPassword;
-  if (typeof currentPassword !== 'string' || typeof newPassword !== 'string' ||
-      newPassword.length < 8 || Buffer.byteLength(newPassword, 'utf8') > 128) {
+  if (typeof currentPassword !== 'string' || Buffer.byteLength(currentPassword, 'utf8') > 128 ||
+      typeof newPassword !== 'string' || newPassword.length < 8 ||
+      Buffer.byteLength(newPassword, 'utf8') > 128) {
     return badRequest(res, 'A nova senha deve ter entre 8 e 128 bytes.');
   }
 
@@ -422,7 +466,7 @@ app.post('/api/customer/change-password', requireSameOrigin, requireCustomer, as
   }
 });
 
-app.post('/api/checkout', requireCustomer, async (req, res) => {
+app.post('/api/checkout', requireSameOrigin, requireCustomer, checkoutLimiter, async (req, res) => {
   const order = calculateOrder(req.body, req.customer);
   if (order.error) return badRequest(res, order.error);
 
@@ -469,12 +513,12 @@ app.post('/api/checkout', requireCustomer, async (req, res) => {
   }
 });
 
-app.get('/api/orders/:id/status', async (req, res) => {
+app.get('/api/orders/:id/status', requireCustomer, orderStatusLimiter, async (req, res) => {
   if (!orderIdPattern.test(req.params.id)) return res.status(404).json({ error: 'Pedido não encontrado.' });
   try {
     const result = await pool.query(
-      'SELECT id, status, total_cents, paid_at, created_at FROM orders WHERE id = $1',
-      [req.params.id]
+      'SELECT id, status, total_cents, paid_at, created_at FROM orders WHERE id = $1 AND customer_email = $2',
+      [req.params.id, req.customer.email]
     );
     if (!result.rowCount) return res.status(404).json({ error: 'Pedido não encontrado.' });
     const order = result.rows[0];

@@ -68,6 +68,8 @@ O painel é protegido por senha, tem limite de tentativas de login e usa cookie 
 
 ## Limitações e observações importantes
 
+- F12 e as ferramentas de desenvolvedor não podem ser bloqueados de forma confiável; o código e a interface enviados ao navegador são visíveis ao usuário. A proteção real é manter segredos no servidor, validar operações na API e atualizar as dependências.
+- O servidor envia cabeçalhos de segurança, limita tentativas de autenticação e pedidos e exige uma sessão de cliente para consultar o status de um pedido. Isso reduz riscos comuns, mas não substitui revisão contínua, backups e atualização de credenciais expostas.
 - Com QR Pix e confirmação manual, não há webhook bancário nem confirmação automática. O cliente pode iniciar um pedido sem pagar; ele continua pendente até ser conferido por você.
 - O servidor calcula o total com base nos preços do catálogo em `catalog.js`; mantenha os preços de `catalog.js` e `app.js` sincronizados.
 - O QR Pix fica pendente até a confirmação manual e não expira automaticamente. Se houver pagamento duplicado ou a maior, confira o extrato e resolva a diferença diretamente com o cliente.

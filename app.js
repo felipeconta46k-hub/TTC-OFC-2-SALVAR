@@ -2146,8 +2146,8 @@ function renderProfile() {
       <div class="profile-header-inner">
         <div class="prof-avatar">${initials}</div>
         <div class="prof-info">
-          <h1 class="prof-name">${currentUser.name}</h1>
-          <p class="prof-email">${currentUser.email}</p>
+          <h1 class="prof-name">${escapeHtml(currentUser.name)}</h1>
+          <p class="prof-email">${escapeHtml(currentUser.email)}</p>
         </div>
         <button class="prof-logout" onclick="logout()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -2310,19 +2310,19 @@ function renderEditProfileForm() {
       <div class="profile-form">
         <div class="pf-group">
           <label class="pf-label">Nome completo</label>
-          <input class="pf-input" type="text" id="editName" value="${currentUser.name}" placeholder="Seu nome">
+          <input class="pf-input" type="text" id="editName" value="${escapeHtml(currentUser.name)}" placeholder="Seu nome">
         </div>
         <div class="pf-group">
           <label class="pf-label">E-mail</label>
-          <input class="pf-input" type="email" id="editEmail" value="${currentUser.email}" placeholder="seu@email.com">
+          <input class="pf-input" type="email" id="editEmail" value="${escapeHtml(currentUser.email)}" placeholder="seu@email.com">
         </div>
         <div class="pf-group">
           <label class="pf-label">Telefone</label>
-          <input class="pf-input" type="tel" id="editPhone" value="${currentUser.phone||''}" placeholder="(00) 00000-0000">
+          <input class="pf-input" type="tel" id="editPhone" value="${escapeHtml(currentUser.phone || '')}" placeholder="(00) 00000-0000">
         </div>
         <div class="pf-group pf-group-full">
           <label class="pf-label">CPF</label>
-          <input class="pf-input" type="text" id="editCpf" value="${currentUser.cpf||''}" placeholder="000.000.000-00" maxlength="14">
+          <input class="pf-input" type="text" id="editCpf" value="${escapeHtml(currentUser.cpf || '')}" placeholder="000.000.000-00" maxlength="14">
         </div>
         <div id="editProfileMsg"></div>
         <button class="btn-primary" onclick="saveProfileEdits()" style="margin-top:1rem;">Salvar Alterações</button>
@@ -2892,8 +2892,8 @@ function updateUserUI() {
     dropdown.innerHTML = `
       <div style="padding:.5rem 0 1rem;border-bottom:1px solid var(--gray-200);margin-bottom:.75rem;">
         <p style="font-size:.7rem;color:var(--gray-500);text-transform:uppercase;margin-bottom:.25rem;">Logado como</p>
-        <p style="font-weight:700;">${currentUser.name}</p>
-        <p style="font-size:.78rem;color:var(--gray-500);">${currentUser.email}</p>
+        <p style="font-weight:700;">${escapeHtml(currentUser.name)}</p>
+        <p style="font-size:.78rem;color:var(--gray-500);">${escapeHtml(currentUser.email)}</p>
       </div>
       <button class="ud-btn ud-btn--outline" onclick="navigateTo('profile');document.getElementById('userDropdown').classList.remove('active');">👤 Meu Perfil</button>
       <button class="ud-btn ud-btn--outline" onclick="navigateTo('wishlist');document.getElementById('userDropdown').classList.remove('active');">❤️ Favoritos</button>
@@ -3300,6 +3300,16 @@ function escapeAIHtml(str) {
   const d = document.createElement('div');
   d.textContent = str;
   return d.innerHTML;
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[character]);
 }
 
 async function logout() {
