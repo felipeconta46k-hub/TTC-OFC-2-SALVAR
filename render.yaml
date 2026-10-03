@@ -2,6 +2,7 @@ services:
   - type: web
     name: urban-flow-shop
     runtime: node
+    plan: free
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /api/health
