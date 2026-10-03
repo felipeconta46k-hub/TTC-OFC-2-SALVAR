@@ -3,7 +3,7 @@
 /* ─────────────────────────── DADOS ─────────────────────────── */
 const products = [
   // ── TÊNIS ──────────────────────────────────────────────────────────────────
-  { id:1,  name:'Tênis Nike Gamma Force',   category:'tenis',     gender:'masculino', price:599.99, originalPrice:799.99,
+  { id:1,  name:'Tênis Nike Gamma Force',   category:'tenis',     gender:'masculino', price:0.99, originalPrice:799.99,
     description:'Tênis clássico icônico com amortecimento de alta responsividade. Cabedal em couro premium, solado em borracha resistente e lingueta acolchoada para conforto total.',
     image:'https://imgcentauro-a.akamaihd.net/660x660/982718QWA2.jpg',
     images:['https://imgcentauro-a.akamaihd.net/660x660/982718QWA2.jpg','https://imgcentauro-a.akamaihd.net/660x660/982718QWA1.jpg','https://imgcentauro-a.akamaihd.net/660x660/982718QWA9.jpg'],
