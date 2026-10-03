@@ -1224,7 +1224,7 @@ function showProductDetail(id) {
       </div>
       <div class="badge-group" style="margin-top:1rem;">
         <span class="info-badge">🚚 Frete GRÁTIS acima de R$ 299</span>
-        <span class="info-badge">💳 10x sem juros</span>
+        <span class="info-badge">📱 Pix</span>
         <span class="info-badge">↩️ 30 dias para devolver</span>
       </div>
     </div>`;
@@ -1601,6 +1601,21 @@ function formatOrderTotal(order) {
   return totalCents === null ? '--' : formatBRLFromCents(totalCents);
 }
 
+function getOrderStatusLabel(status) {
+  return ({
+    pending: 'Aguardando pagamento',
+    paid: 'Pagamento aprovado',
+    rejected: 'Pagamento recusado',
+    cancelled: 'Pagamento cancelado',
+    refunded: 'Pagamento reembolsado',
+    chargeback: 'Pagamento contestado',
+    disputed: 'Pagamento em análise',
+    failed: 'Falha no pagamento',
+    enviado: 'Em Transporte',
+    entregue: 'Entregue'
+  })[status] || 'Processando';
+}
+
 function getCartTotals() {
   const subCents = cart.reduce((sum, item) => sum + amountToCents(item.price) * item.quantity, 0);
   let discountCents = 0;
@@ -1793,7 +1808,7 @@ function renderCheckoutSidebar() {
     <div class="checkout-order-row"><span>Frete</span><span>${shipping===0?'<span style="color:var(--success);font-weight:700;">GRÁTIS</span>':formatBRLFromCents(shippingCents)}</span></div>
     <div class="checkout-order-total"><span>Total</span><span style="color:var(--accent);">${formatBRLFromCents(totalCents)}</span></div>
     <div style="margin-top:1.5rem;font-size:.78rem;color:var(--gray-500);display:flex;flex-direction:column;gap:.4rem;">
-      <span>ℹ️ Pagamentos online ainda indisponíveis</span>
+      <span>📱 Pague via Pix para o vendedor</span>
       <span>📦 Entrega em 3–8 dias úteis</span>
       <span>↩️ 30 dias para devolução</span>
     </div>`;
@@ -1803,6 +1818,7 @@ function renderCheckoutStep() {
   const main = document.getElementById('checkoutMain');
   if (checkoutStep === 1) renderAddressStep(main);
   else if (checkoutStep === 2) renderPaymentStep(main);
+  else if (checkoutData.pixPayload) renderPixPayment();
   else renderConfirmationStep(main);
 }
 
@@ -1938,155 +1954,151 @@ function prevCheckoutStep() {
 
 function renderPaymentStep(main) {
   main.innerHTML = `
-    <div class="checkout-section-title">💳 Pagamento indisponível</div>
+    <div class="checkout-section-title">📱 Pagamento via Pix</div>
     <div class="payment-info-notice">
-      <strong>Não faça pagamentos por esta tela</strong>
-      <span>O site ainda não está conectado a um processador financeiro. Nenhum pagamento pode ser recebido ou confirmado. Não informe dados de cartão nem use códigos PIX de demonstração.</span>
+      <strong>Pix direto para a conta do vendedor</strong>
+      <span>Seu pedido ficará aguardando até o vendedor conferir o recebimento no banco. Não pague se o nome do beneficiário ou o valor no aplicativo do banco estiver diferente.</span>
     </div>
     <div class="checkout-nav-btns">
       <button class="btn-prev-step" onclick="prevCheckoutStep()">← Revisar endereço</button>
+      <button class="btn-next-step" id="pixCheckoutButton" onclick="processPayment()">Gerar Pix do pedido →</button>
     </div>`;
 }
 
-function selectPayMethod(method) {
-  checkoutData.payment.method = method;
-  document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('selected'));
-  event.currentTarget.classList.add('selected');
-  renderPaymentDetail(method);
-}
+async function processPayment() {
+  const button = document.getElementById('pixCheckoutButton');
+  if (!button || button.disabled) return;
+  if (!cart.length || !currentUser?.email || !checkoutData.address?.street) {
+    showNotification('⚠️ Revise seus dados de acesso, endereço e carrinho.', 'warn');
+    return;
+  }
 
-function renderPaymentDetail(method) {
-  const box = document.getElementById('paymentDetailBox');
-  if (!box) return;
-  const { total } = getCartTotals();
-  const pixCode = `f9c237ab-4263-4f92-91e7-bd0a9023563b${Math.random().toString(36).substr(2,32)}${total.toFixed(2).replace('.','').padStart(8,'0')}5802BR5925Urban Flow Shop6009Sao Paulo62070503***6304${Math.floor(Math.random()*9999).toString().padStart(4,'0')}`;
-  const boletoCode = `link.mercadopago.com.br/boletourbanflow${Math.floor(Math.random()*9999)} ${new Date(Date.now()+3*86400000).toLocaleDateString('pt-BR')} ${total.toFixed(2)}`;
+  button.disabled = true;
+  button.textContent = 'Gerando seu Pix...';
+  try {
+    const response = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer: { name: checkoutData.address.name || currentUser.name, email: currentUser.email },
+        address: checkoutData.address,
+        coupon: appliedCoupon,
+        items: cart.map(item => ({
+          id: item.id,
+          quantity: item.quantity,
+          selectedSize: item.selectedSize || null
+        }))
+      })
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Não foi possível criar o pedido Pix.');
+    if (!result.orderId || !result.pixPayload || !result.qrCode) throw new Error('Resposta inválida do servidor de pagamentos.');
 
-  if (method === 'pix') {
-    const pixCode = "00020126580014BR.GOV.BCB.PIX0136f9c237ab-4263-4f92-91e7-bd0a9023563b5204000053039865802BR5913RICARDO PEDRO6007CATIGUA62070503***63047C5F";
-
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pixCode)}`;
-    
-    console.log(qrUrl);
-    box.innerHTML = `
-      <div class="payment-detail-box pix-box">
-        <img class="pix-qr" src="${qrUrl}" alt="QR Code PIX" loading="lazy">
-        <p style="font-size:.85rem;color:var(--gray-600);margin-bottom:.75rem;">Ou copie o código abaixo e cole no seu app de banco:</p>
-        <div class="pix-code-box" id="pixCodeEl">${pixCode.slice(0,60)}...</div>
-        <button class="btn-copy-pix" onclick="copyText('${pixCode}', this, 'PIX Copiado! ✓')">📋 Copiar Código PIX</button>
-        <p style="font-size:.78rem;color:var(--gray-500);margin-top:.75rem;">⚡ Aprovação instantânea após o pagamento</p>
-      </div>`;
-  } else if (method === 'card') {
-    box.innerHTML = `
-      <div class="payment-detail-box">
-        <div class="checkout-form-grid">
-          <div class="checkout-form-group full">
-            <label>Número do Cartão</label>
-            <div class="card-input-wrap">
-              <input class="checkout-input" id="cardNumber" type="text" placeholder="0000 0000 0000 0000" maxlength="19" oninput="fmtCard(this)" style="padding-right:3rem;">
-              <span class="card-flag" id="cardFlag">💳</span>
-            </div>
-          </div>
-          <div class="checkout-form-group full">
-            <label>Nome no Cartão</label>
-            <input class="checkout-input" id="cardName" type="text" placeholder="Igual ao cartão" oninput="this.value=this.value.toUpperCase()">
-          </div>
-          <div class="checkout-form-group">
-            <label>Validade</label>
-            <input class="checkout-input" id="cardExpiry" type="text" placeholder="MM/AA" maxlength="5" oninput="fmtExpiry(this)">
-          </div>
-          <div class="checkout-form-group">
-            <label>CVV</label>
-            <input class="checkout-input" id="cardCvv" type="text" placeholder="123" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')">
-          </div>
-          <div class="checkout-form-group full">
-            <label>Parcelas</label>
-            <select class="checkout-input" id="cardInstall">
-              ${Array.from({length:10},(_,i)=>`<option value="${i+1}">${i+1}x de R$ ${(total/(i+1)).toFixed(2)} ${i===0?'(à vista)':'sem juros'}</option>`).join('')}
-            </select>
-          </div>
-        </div>
-      </div>`;
-  } else {
-    box.innerHTML = `
-      <div class="payment-detail-box boleto-box">
-        <p style="font-size:.88rem;color:var(--gray-600);margin-bottom:1rem;">Vencimento: <strong>${new Date(Date.now()+3*86400000).toLocaleDateString('pt-BR')}</strong></p>
-        <div class="boleto-barcode" id="boletoCode">${boletoCode}</div>
-        <button class="btn-copy-boleto" onclick="copyText('${boletoCode}', this, 'Código Copiado! ✓')">📋 Copiar Código do Boleto</button>
-        <p style="font-size:.78rem;color:var(--gray-500);margin-top:.75rem;">⚠️ Após o pagamento, pode levar até 3 dias úteis para compensar.</p>
-      </div>`;
+    checkoutData.orderId = result.orderId;
+    checkoutData.totalCents = result.totalCents;
+    checkoutData.pixPayload = result.pixPayload;
+    checkoutData.qrCode = result.qrCode;
+    checkoutData.receiverName = result.receiverName;
+    orders.unshift({
+      id: result.orderId,
+      date: new Date().toLocaleDateString('pt-BR'),
+      items: cart.map(item => ({ ...item })),
+      totalCents: result.totalCents,
+      status: 'pending',
+      address: { ...checkoutData.address }
+    });
+    saveOrders();
+    cart = [];
+    saveCart();
+    updateCartBadge();
+    checkoutStep = 3;
+    renderCheckoutStepper();
+    renderPixPayment();
+    pollOrderPaymentStatus(result.orderId);
+  } catch (error) {
+    showNotification(`⚠️ ${error.message}`, 'warn');
+    button.disabled = false;
+    button.textContent = 'Gerar Pix do pedido →';
   }
 }
 
-function fmtCard(el) {
-  let v = el.value.replace(/\D/g,'').slice(0,16);
-  el.value = v.replace(/(\d{4})(?=\d)/g,'$1 ');
-  const flag = document.getElementById('cardFlag');
-  if (!flag) return;
-  if (v.startsWith('4')) flag.textContent = '💳 Visa';
-  else if (v.startsWith('5')) flag.textContent = '💳 Master';
-  else if (v.startsWith('3')) flag.textContent = '💳 Amex';
-  else flag.textContent = '💳';
-}
-function fmtExpiry(el) {
-  let v = el.value.replace(/\D/g,'').slice(0,4);
-  el.value = v.length > 2 ? v.replace(/(\d{2})(\d+)/,'$1/$2') : v;
-}
-function copyText(text, btn, successMsg) {
-  navigator.clipboard.writeText(text).then(() => {
-    const orig = btn.textContent;
-    btn.textContent = successMsg;
-    setTimeout(() => { btn.textContent = orig; }, 2000);
-  }).catch(() => showNotification('⚠️ Não foi possível copiar', 'warn'));
-}
-
-function validateCardForm() {
-  const num = document.getElementById('cardNumber')?.value.replace(/\s/g,'');
-  const name = document.getElementById('cardName')?.value.trim();
-  const exp = document.getElementById('cardExpiry')?.value;
-  const cvv = document.getElementById('cardCvv')?.value;
-  if (!num || num.length < 16) { showNotification('⚠️ Número do cartão inválido', 'warn'); return false; }
-  if (!name || name.length < 3) { showNotification('⚠️ Nome no cartão inválido', 'warn'); return false; }
-  if (!exp || exp.length < 5) { showNotification('⚠️ Validade inválida', 'warn'); return false; }
-  if (!cvv || cvv.length < 3) { showNotification('⚠️ CVV inválido', 'warn'); return false; }
-  return true;
-}
-
-function processPayment() {
-  showNotification('Pagamento indisponível: conecte um processador de pagamentos antes de concluir o pedido.', 'warn');
-}
-
-function renderConfirmationStep(main) {
-  const methodIcons = { pix:'📱', card:'💳', boleto:'🏦' };
-  const methodNames = { pix:'PIX', card:'Cartão de Crédito', boleto:'Boleto Bancário' };
+function renderPixPayment() {
+  const main = document.getElementById('checkoutMain');
   main.innerHTML = `
     <div class="checkout-confirmation">
-      <span class="confirmation-icon">🎉</span>
-      <div class="confirmation-title">Pedido Confirmado!</div>
-      <div class="confirmation-order-num">Número do pedido: <strong>${checkoutData.orderId}</strong></div>
-      <p style="color:var(--gray-600);font-size:.95rem;margin-bottom:1.5rem;">
-        ${checkoutData.payment.method === 'pix'
-          ? 'Aguardando confirmação do pagamento PIX. Você receberá um e-mail de confirmação.'
-          : checkoutData.payment.method === 'boleto'
-          ? 'Seu boleto foi gerado. Após o pagamento, você receberá a confirmação por e-mail.'
-          : 'Seu pedido está sendo processado. Você receberá um e-mail de confirmação em breve.'}
-      </p>
-      <div class="confirmation-steps">
-        <div class="confirmation-step"><div class="confirmation-step-icon">✅</div><strong>Pedido feito</strong><span>Agora</span></div>
-        <div class="confirmation-step"><div class="confirmation-step-icon">📦</div><strong>Preparando</strong><span>1–2 dias</span></div>
-        <div class="confirmation-step"><div class="confirmation-step-icon">🚚</div><strong>A caminho</strong><span>3–5 dias</span></div>
-        <div class="confirmation-step"><div class="confirmation-step-icon">🏠</div><strong>Entregue</strong><span>5–8 dias</span></div>
-      </div>
-      <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:1.5rem;margin:1.5rem 0;text-align:left;">
-        <div style="font-weight:700;margin-bottom:.5rem;">📍 Entregar em:</div>
-        <p style="font-size:.88rem;color:var(--gray-600);">${checkoutData.address.street}, ${checkoutData.address.number} — ${checkoutData.address.neighborhood || ''}<br>${checkoutData.address.city}/${checkoutData.address.state} · CEP ${checkoutData.address.cep}</p>
-      </div>
+      <span class="confirmation-icon">📱</span>
+      <div class="confirmation-title" id="pixPaymentTitle">Pedido aguardando Pix</div>
+      <div class="confirmation-order-num">ID do pedido: <strong id="pixOrderId"></strong></div>
+      <p style="font-size:1.2rem;font-weight:700;margin:1rem 0;">Valor exato: <strong id="pixOrderTotal"></strong></p>
+      <p>Beneficiário: <strong id="pixReceiverName"></strong></p>
+      <img id="pixQrImage" alt="QR Code Pix do pedido" width="280" height="280" style="display:block;margin:1rem auto;background:white;padding:8px;border-radius:12px;">
+      <button class="btn-secondary" type="button" onclick="copyOrderPix()">Copiar Pix copia e cola</button>
+      <p style="color:var(--gray-600);font-size:.95rem;margin:1rem 0;" id="pixPaymentMessage">Abra o aplicativo do banco, escaneie o QR Code e confira beneficiário e valor antes de pagar.</p>
+      <p style="color:var(--gray-600);font-size:.85rem;margin-bottom:1.5rem;">O pedido só muda para pago após o vendedor conferir o crédito no extrato bancário.</p>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
         <button class="btn-primary" onclick="navigateTo('home')">Continuar Comprando</button>
-        <button class="btn-secondary" onclick="navigateTo('tracking')">📦 Rastrear Pedido</button>
         <button class="btn-secondary" onclick="navigateTo('profile')">👤 Meus Pedidos</button>
       </div>
     </div>`;
+
+  document.getElementById('pixOrderId').textContent = checkoutData.orderId;
+  document.getElementById('pixOrderTotal').textContent = formatBRLFromCents(checkoutData.totalCents);
+  document.getElementById('pixReceiverName').textContent = checkoutData.receiverName;
+  document.getElementById('pixQrImage').src = checkoutData.qrCode;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderConfirmationStep(main) {
+  main.innerHTML = `
+    <div class="checkout-confirmation">
+      <span class="confirmation-icon">⏳</span>
+      <div class="confirmation-title">Pedido aguardando Pix</div>
+      <div class="confirmation-order-num">ID do pedido: <strong>${checkoutData.orderId || ''}</strong></div>
+      <p style="color:var(--gray-600);font-size:.95rem;margin:1rem 0;">Confira o recebimento no painel do vendedor. Se ainda não pagou, gere um novo pedido para receber um Pix válido.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="navigateTo('home')">Continuar Comprando</button>
+        <button class="btn-secondary" onclick="navigateTo('profile')">👤 Meus Pedidos</button>
+      </div>
+    </div>`;
+}
+
+async function copyOrderPix() {
+  try {
+    await navigator.clipboard.writeText(checkoutData.pixPayload);
+    showNotification('✅ Pix copiado. Confira o valor antes de pagar.');
+  } catch {
+    showNotification('⚠️ Não foi possível copiar. Escaneie o QR Code.', 'warn');
+  }
+}
+
+async function pollOrderPaymentStatus(orderId) {
+  for (let attempt = 0; attempt < 120; attempt++) {
+    try {
+      const response = await fetch(`/api/orders/${encodeURIComponent(orderId)}/status`);
+      if (!response.ok) throw new Error('Não foi possível consultar o status do pedido.');
+      const order = await response.json();
+      const localOrder = orders.find(item => item.id === orderId);
+      if (localOrder) {
+        localOrder.status = order.status;
+        saveOrders();
+      }
+
+      const title = document.getElementById('pixPaymentTitle');
+      const message = document.getElementById('pixPaymentMessage');
+      if (!title || !message) return;
+      if (order.status === 'paid') {
+        title.textContent = 'Pagamento confirmado pelo vendedor';
+        message.textContent = 'Seu pagamento foi conferido. O pedido está confirmado.';
+        return;
+      }
+      title.textContent = 'Pedido aguardando pagamento';
+    } catch (error) {
+      const message = document.getElementById('pixPaymentMessage');
+      if (message) message.textContent = `${error.message} Atualize a página mais tarde para conferir.`;
+      return;
+    }
+    await new Promise(resolve => setTimeout(resolve, 10000));
+  }
 }
 
 /* ═══ PROFILE ═══ */
@@ -2248,7 +2260,7 @@ function renderProfileOverview() {
             </div>
             <div class="po-order-right">
               <span class="po-order-price">${formatOrderTotal(o)}</span>
-              <span class="hype-status-pill status-${o.status||'processando'}">${o.status||'Processando'}</span>
+              <span class="hype-status-pill status-${o.status||'processando'}">${getOrderStatusLabel(o.status)}</span>
             </div>
           </div>`).join('') : `<div class="po-empty"><p>Nenhum pedido ainda.</p><button class="btn-primary btn-sm" onclick="navigateTo('products')">Explorar Produtos</button></div>`}
       </div>
@@ -2278,11 +2290,11 @@ function renderProfileOrders() {
         <div class="po-order-item" onclick="document.getElementById('trackingInput').value='${o.id}';navigateTo('tracking');trackOrder();" style="cursor:pointer;">
           <div class="po-order-left">
             <div class="po-order-id">#${o.id}</div>
-            <div class="po-order-meta">${o.date} · ${o.items?.length||0} ${o.items?.length===1?'item':'itens'} · ${(o.payment?.method||'').toUpperCase()||'PIX'}</div>
+            <div class="po-order-meta">${o.date} · ${o.items?.length||0} ${o.items?.length===1?'item':'itens'} · PIX</div>
           </div>
           <div class="po-order-right">
             <span class="po-order-price">${formatOrderTotal(o)}</span>
-            <span class="hype-status-pill status-${o.status||'processando'}">${o.status||'Processando'}</span>
+            <span class="hype-status-pill status-${o.status||'processando'}">${getOrderStatusLabel(o.status)}</span>
           </div>
         </div>`).join('') : `<div class="po-empty"><p>Nenhum pedido ainda.</p><button class="btn-primary btn-sm" onclick="navigateTo('products')">Explorar Produtos</button></div>`}
     </div>`;
@@ -2446,9 +2458,9 @@ function trackOrder() {
   }
 
   const steps = [
-    { label: 'Pedido confirmado',    date: order.date, done: true },
-    { label: 'Pagamento aprovado',   date: order.date, done: order.status !== 'processando' },
-    { label: 'Preparando para envio',date: '',          done: order.status !== 'processando' },
+    { label: 'Pedido recebido',      date: order.date, done: true },
+    { label: 'Pagamento aprovado',   date: order.status === 'pending' ? '' : order.date, done: ['paid', 'processando', 'enviado', 'entregue'].includes(order.status) },
+    { label: 'Preparando para envio',date: '',          done: ['processando', 'enviado', 'entregue'].includes(order.status) },
     { label: 'Em transporte',        date: '',          done: order.status === 'enviado' || order.status === 'entregue' },
     { label: 'Entregue',             date: '',          done: order.status === 'entregue', current: order.status === 'enviado' }
   ];
@@ -2461,7 +2473,7 @@ function trackOrder() {
           <div style="font-weight:800;font-size:1rem;">Pedido #${order.id}</div>
           <div style="font-size:.78rem;color:var(--gray-500);">${order.date} · ${formatOrderTotal(order)}</div>
         </div>
-        <span class="profile-order-status status-${order.status||'processando'}">${order.status==='entregue'?'Entregue':order.status==='enviado'?'Em Transporte':'Processando'}</span>
+        <span class="profile-order-status status-${order.status||'processando'}">${getOrderStatusLabel(order.status)}</span>
       </div>
       <div class="tracking-timeline">
         ${steps.map((s, i) => `
@@ -3055,7 +3067,7 @@ const AI_CHAT_RULES = [
   },
   {
     keywords: ['pagamento', 'pagar', 'parcel', 'pix', 'boleto', 'cartão', 'cartao', 'juros'],
-    reply: 'Aceitamos <strong>cartão de crédito (em até 10x sem juros)</strong>, <strong>Pix</strong> (aprovação na hora) e <strong>boleto bancário</strong> 💳. Você escolhe a forma de pagamento na etapa de finalização da compra.'
+    reply: 'Aceitamos <strong>Pix direto para o vendedor</strong>. O QR Code mostra o valor exato do pedido. O pagamento é confirmado após o vendedor conferir o crédito no banco; não considere um comprovante enviado pelo comprador como confirmação.'
   },
   {
     keywords: ['rastre', 'meu pedido', 'status do pedido', 'onde esta', 'onde está', 'cade meu', 'cadê meu'],
@@ -3068,7 +3080,7 @@ const AI_CHAT_RULES = [
   },
   {
     keywords: ['segur', 'confia', 'golpe', 'site seguro'],
-    reply: 'Pode comprar tranquilo! A Urban Flow usa <strong>certificado SSL</strong>, pagamento protegido e somos uma <strong>loja verificada</strong> 🔒. Seus dados e pagamentos estão sempre seguros por aqui.'
+    reply: 'O pagamento é feito por Pix direto para a chave do vendedor. Antes de confirmar no aplicativo do seu banco, confira o nome do beneficiário e o valor exibidos. O vendedor confirma o pedido depois de verificar o crédito na conta.'
   },
   {
     keywords: ['cupom', 'desconto', 'promo', 'oferta'],

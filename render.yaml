@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: urban-flow-shop
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: APP_BASE_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: PIX_KEY
+        sync: false
+      - key: PIX_RECEIVER_NAME
+        sync: false
+      - key: PIX_RECEIVER_CITY
+        sync: false
+      - key: SELLER_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        sync: false

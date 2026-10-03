@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel do vendedor — Urban Flow</title>
+  <style>
+    :root { color-scheme: light; font-family: Arial, sans-serif; background: #f4f5f7; color: #171717; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { width: min(980px, calc(100% - 32px)); margin: 40px auto; }
+    header, .panel { padding: 22px; background: #fff; border: 1px solid #e2e4e8; border-radius: 14px; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; }
+    h1, h2, p { margin-top: 0; }
+    h1 { font-size: 1.35rem; margin-bottom: 4px; }
+    h2 { font-size: 1.15rem; }
+    .muted { color: #626873; }
+    .panel { margin-bottom: 18px; }
+    label { display: block; font-weight: 700; margin: 14px 0 6px; }
+    input { width: 100%; max-width: 440px; padding: 12px; border: 1px solid #aeb3bc; border-radius: 8px; font: inherit; }
+    button { padding: 11px 15px; border: 0; border-radius: 8px; background: #161616; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+    button:disabled { opacity: .55; cursor: wait; }
+    .secondary { background: #e8eaf0; color: #171717; }
+    .order { border: 1px solid #e2e4e8; border-radius: 10px; padding: 18px; margin: 14px 0; }
+    .order-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .order-id { overflow-wrap: anywhere; font-family: monospace; font-size: .9rem; }
+    .amount { font-size: 1.2rem; font-weight: 800; }
+    .order-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
+    .order-details p { margin: 0 0 6px; overflow-wrap: anywhere; }
+    .items { padding-left: 20px; }
+    .pending { color: #805900; font-weight: 700; }
+    .paid { color: #166534; font-weight: 700; }
+    #loginError, #dashboardError { color: #991b1b; }
+    [hidden] { display: none !important; }
+    @media (max-width: 560px) { main { width: min(100% - 20px, 980px); margin: 14px auto; } header, .panel { padding: 16px; } }
+  </style>
+  <script src="/seller.js" defer></script>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Urban Flow · Painel do vendedor</h1>
+        <p class="muted" style="margin:0">Confira o Pix no seu banco antes de marcar um pedido como pago.</p>
+      </div>
+      <button id="logoutButton" class="secondary" type="button" hidden>Sair</button>
+    </header>
+
+    <section id="loginPanel" class="panel">
+      <h2>Acesso do vendedor</h2>
+      <form id="loginForm">
+        <label for="sellerPassword">Senha do vendedor</label>
+        <input id="sellerPassword" name="password" type="password" autocomplete="current-password" required>
+        <p id="loginError" role="alert" hidden></p>
+        <button id="loginButton" type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <section id="ordersPanel" class="panel" hidden>
+      <div class="order-head">
+        <div>
+          <h2>Pedidos</h2>
+          <p class="muted">Até 200 pedidos recentes. Atualize para buscar novos.</p>
+        </div>
+        <button id="refreshButton" class="secondary" type="button">Atualizar pedidos</button>
+      </div>
+      <p id="dashboardError" role="alert" hidden></p>
+      <div id="ordersList" aria-live="polite"></div>
+    </section>
+  </main>
+</body>
+</html>

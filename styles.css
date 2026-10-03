@@ -1576,6 +1576,10 @@ nav a:hover::after { width: 100%; }
 .status-processando { background: var(--black); color: #fff; }
 .status-enviado { background: var(--accent); color: #fff; }
 .status-entregue { background: var(--white); border: 2px solid var(--gray-200); color: var(--black); }
+.status-pending { background: #fff4d6; color: #805900; }
+.status-paid { background: #dcfce7; color: #166534; }
+.status-rejected, .status-cancelled, .status-failed, .status-chargeback, .status-disputed { background: #fee2e2; color: #991b1b; }
+.status-refunded { background: var(--gray-100); color: var(--gray-700); }
 
 /* Responsivo Perfil Hype */
 @media(max-width: 768px) {
@@ -1798,6 +1802,14 @@ nav a:hover::after { width: 100%; }
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+.profile-order-status.status-pending { background: #fff4d6; color: #805900; }
+.profile-order-status.status-paid { background: #dcfce7; color: #166534; }
+.profile-order-status.status-rejected,
+.profile-order-status.status-cancelled,
+.profile-order-status.status-failed,
+.profile-order-status.status-chargeback,
+.profile-order-status.status-disputed { background: #fee2e2; color: #991b1b; }
+.profile-order-status.status-refunded { background: var(--gray-100); color: var(--gray-700); }
 
 /* Empty States */
 .profile-empty {
