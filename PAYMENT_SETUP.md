@@ -71,5 +71,5 @@ O painel é protegido por senha, tem limite de tentativas de login e usa cookie 
 - Com QR Pix e confirmação manual, não há webhook bancário nem confirmação automática. O cliente pode iniciar um pedido sem pagar; ele continua pendente até ser conferido por você.
 - O servidor calcula o total com base nos preços do catálogo em `catalog.js`; mantenha os preços de `catalog.js` e `app.js` sincronizados.
 - O QR Pix fica pendente até a confirmação manual e não expira automaticamente. Se houver pagamento duplicado ou a maior, confira o extrato e resolva a diferença diretamente com o cliente.
-- Os logins de cliente existentes continuam salvos no navegador e não são uma autenticação de conta segura no servidor. O painel do vendedor usa autenticação separada.
+- As contas de cliente novas são armazenadas no PostgreSQL; a senha é protegida com hash scrypt e nunca fica salva em texto puro. Cada cliente precisa criar sua conta novamente: os cadastros antigos que estavam apenas no navegador não são migrados. O painel do vendedor usa autenticação separada.
 - Render gratuito pode suspender o servidor por inatividade. Isso pode atrasar o carregamento da loja e do painel; confira as condições do plano antes de depender dele para vendas.

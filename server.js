@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const crypto = require('node:crypto');
 const path = require('node:path');
+const { promisify } = require('node:util');
 const express = require('express');
 const { rateLimit } = require('express-rate-limit');
 const { Pool } = require('pg');
@@ -14,6 +15,8 @@ const baseUrl = (process.env.APP_BASE_URL || `http://localhost:${port}`).replace
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const orderIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const sellerCookieName = 'uf_seller_session';
+const customerCookieName = 'uf_customer_session';
+const scrypt = promisify(crypto.scrypt);
 
 const coupons = {
   URBAN10: { type: 'percent', value: 10 },
@@ -83,17 +86,9 @@ function createPixPayload({ amountCents, txid }) {
   return `${payload}${crc16Ccitt(payload)}`;
 }
 
-function calculateOrder(body) {
+function calculateOrder(body, authenticatedCustomer) {
   if (!body || !Array.isArray(body.items) || body.items.length < 1 || body.items.length > 50) {
     return { error: 'Carrinho inválido.' };
-  }
-
-  const customer = body.customer;
-  if (!customer || !isNonEmptyString(customer.name, 120) ||
-      typeof customer.email !== 'string' ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email) ||
-      customer.email.length > 254) {
-    return { error: 'Informe um nome e e-mail válidos.' };
   }
 
   const address = body.address;
@@ -135,7 +130,7 @@ function calculateOrder(body) {
   if (coupon?.type === 'shipping') shippingCents = 0;
 
   return {
-    customer: { name: customer.name.trim(), email: customer.email.trim().toLowerCase() },
+    customer: { name: authenticatedCustomer.name, email: authenticatedCustomer.email },
     address: {
       name: String(address.name || customer.name).trim().slice(0, 120),
       cep: address.cep.trim(),
@@ -166,6 +161,83 @@ function parseCookies(header = '') {
 
 function signSellerSession(value) {
   return crypto.createHmac('sha256', process.env.SESSION_SECRET).update(value).digest('hex');
+}
+
+function signCustomerSession(value) {
+  return crypto.createHmac('sha256', process.env.SESSION_SECRET).update(`customer:${value}`).digest('hex');
+}
+
+function getCustomerSessionId(req) {
+  const token = parseCookies(req.get('cookie'))[customerCookieName];
+  if (!token) return null;
+
+  const signatureSeparator = token.lastIndexOf('.');
+  if (signatureSeparator < 1) return null;
+  const value = token.slice(0, signatureSeparator);
+  const signature = token.slice(signatureSeparator + 1);
+  const [customerId, expiresAt, nonce] = value.split('.');
+  if (!orderIdPattern.test(customerId) || !/^\d+$/.test(expiresAt) ||
+      !/^[a-f0-9]{32}$/i.test(nonce) || Number(expiresAt) <= Date.now() ||
+      !/^[a-f0-9]{64}$/i.test(signature)) return null;
+
+  const expected = Buffer.from(signCustomerSession(value), 'hex');
+  const actual = Buffer.from(signature, 'hex');
+  return crypto.timingSafeEqual(expected, actual) ? customerId : null;
+}
+
+async function requireCustomer(req, res, next) {
+  const customerId = getCustomerSessionId(req);
+  if (!customerId) return res.status(401).json({ error: 'Entre na sua conta para continuar.' });
+
+  try {
+    const result = await pool.query(
+      'SELECT id, name, email, phone, cpf FROM customers WHERE id = $1',
+      [customerId]
+    );
+    if (!result.rowCount) return res.status(401).json({ error: 'Sua sessão expirou. Entre novamente.' });
+    req.customer = result.rows[0];
+    next();
+  } catch (error) {
+    console.error('Falha ao validar sessão do cliente:', error.message);
+    res.status(500).json({ error: 'Não foi possível validar sua sessão.' });
+  }
+}
+
+async function hashPassword(password) {
+  const salt = crypto.randomBytes(16);
+  const derivedKey = await scrypt(password, salt, 64, { N: 16384, r: 8, p: 1, maxmem: 64 * 1024 * 1024 });
+  return `scrypt$${salt.toString('hex')}$${derivedKey.toString('hex')}`;
+}
+
+async function verifyPassword(password, storedHash) {
+  const [, saltHex, keyHex] = String(storedHash).split('$');
+  if (!/^[a-f0-9]{32}$/i.test(saltHex || '') || !/^[a-f0-9]{128}$/i.test(keyHex || '')) return false;
+  const actual = await scrypt(password, Buffer.from(saltHex, 'hex'), 64, {
+    N: 16384, r: 8, p: 1, maxmem: 64 * 1024 * 1024
+  });
+  return crypto.timingSafeEqual(actual, Buffer.from(keyHex, 'hex'));
+}
+
+function setCustomerSession(res, customerId) {
+  const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000;
+  const value = `${customerId}.${expiresAt}.${crypto.randomBytes(16).toString('hex')}`;
+  const token = `${value}.${signCustomerSession(value)}`;
+  res.cookie(customerCookieName, token, {
+    httpOnly: true,
+    secure: baseUrl.startsWith('https://'),
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+}
+
+function clearCustomerSession(res) {
+  res.clearCookie(customerCookieName, {
+    httpOnly: true,
+    secure: baseUrl.startsWith('https://'),
+    sameSite: 'strict',
+    path: '/'
+  });
 }
 
 function isSellerAuthenticated(req) {
@@ -209,6 +281,14 @@ const sellerLoginLimiter = rateLimit({
   message: { error: 'Muitas tentativas. Aguarde 15 minutos e tente novamente.' }
 });
 
+const customerAuthLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Muitas tentativas. Aguarde 15 minutos e tente novamente.' }
+});
+
 app.get('/api/health', async (_req, res) => {
   try {
     await pool.query('SELECT 1');
@@ -219,8 +299,131 @@ app.get('/api/health', async (_req, res) => {
   }
 });
 
-app.post('/api/checkout', async (req, res) => {
-  const order = calculateOrder(req.body);
+app.post('/api/customer/register', requireSameOrigin, customerAuthLimiter, async (req, res) => {
+  const name = req.body?.name;
+  const email = req.body?.email;
+  const password = req.body?.password;
+  const gmailPattern = /^[a-z0-9]([a-z0-9.]*[a-z0-9])?@gmail\.com$/;
+  if (!isNonEmptyString(name, 120) || !/^[a-zA-ZÀ-ÿ\s]+$/.test(name.trim())) {
+    return badRequest(res, 'Informe um nome válido, usando apenas letras.');
+  }
+  if (typeof email !== 'string' || email.length > 254 ||
+      !gmailPattern.test(email.trim().toLowerCase()) || email.trim().includes('..')) {
+    return badRequest(res, 'Informe um endereço Gmail válido.');
+  }
+  if (typeof password !== 'string' || password.length < 8 || Buffer.byteLength(password, 'utf8') > 128) {
+    return badRequest(res, 'A senha deve ter entre 8 e 128 bytes.');
+  }
+
+  try {
+    const passwordHash = await hashPassword(password);
+    const result = await pool.query(
+      `INSERT INTO customers (name, email, password_hash)
+       VALUES ($1, $2, $3)
+       RETURNING id, name, email, phone, cpf`,
+      [name.trim(), email.trim().toLowerCase(), passwordHash]
+    );
+    const customer = result.rows[0];
+    setCustomerSession(res, customer.id);
+    res.status(201).json({ customer });
+  } catch (error) {
+    if (error.code === '23505') return res.status(409).json({ error: 'Este e-mail já tem uma conta.' });
+    console.error('Falha ao criar conta de cliente:', error.message);
+    res.status(500).json({ error: 'Não foi possível criar sua conta.' });
+  }
+});
+
+app.post('/api/customer/login', requireSameOrigin, customerAuthLimiter, async (req, res) => {
+  const email = req.body?.email;
+  const password = req.body?.password;
+  if (typeof email !== 'string' || email.length > 254 ||
+      typeof password !== 'string' || password.length > 128) {
+    return badRequest(res, 'Informe seu e-mail e senha.');
+  }
+
+  try {
+    const result = await pool.query(
+      'SELECT id, name, email, phone, cpf, password_hash FROM customers WHERE email = $1',
+      [email.trim().toLowerCase()]
+    );
+    const customer = result.rows[0];
+    if (!customer || !await verifyPassword(password, customer.password_hash)) {
+      return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
+    }
+    setCustomerSession(res, customer.id);
+    delete customer.password_hash;
+    res.json({ customer });
+  } catch (error) {
+    console.error('Falha no login do cliente:', error.message);
+    res.status(500).json({ error: 'Não foi possível entrar na sua conta.' });
+  }
+});
+
+app.get('/api/customer/session', requireCustomer, (req, res) => {
+  res.json({ customer: req.customer });
+});
+
+app.post('/api/customer/logout', requireSameOrigin, (_req, res) => {
+  clearCustomerSession(res);
+  res.sendStatus(204);
+});
+
+app.put('/api/customer/profile', requireSameOrigin, requireCustomer, async (req, res) => {
+  const { name, email, phone = '', cpf = '' } = req.body || {};
+  if (!isNonEmptyString(name, 120) || !/^[a-zA-ZÀ-ÿ\s]+$/.test(name.trim())) {
+    return badRequest(res, 'Informe um nome válido, usando apenas letras.');
+  }
+  if (typeof email !== 'string' || email.length > 254 ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    return badRequest(res, 'Informe um e-mail válido.');
+  }
+  if (typeof phone !== 'string' || phone.length > 30 || typeof cpf !== 'string' || cpf.length > 20) {
+    return badRequest(res, 'Telefone ou CPF inválido.');
+  }
+
+  try {
+    const result = await pool.query(
+      `UPDATE customers
+       SET name = $1, email = $2, phone = $3, cpf = $4, updated_at = NOW()
+       WHERE id = $5
+       RETURNING id, name, email, phone, cpf`,
+      [name.trim(), email.trim().toLowerCase(), phone.trim(), cpf.trim(), req.customer.id]
+    );
+    res.json({ customer: result.rows[0] });
+  } catch (error) {
+    if (error.code === '23505') return res.status(409).json({ error: 'Este e-mail já está em uso.' });
+    console.error('Falha ao atualizar perfil do cliente:', error.message);
+    res.status(500).json({ error: 'Não foi possível atualizar seu perfil.' });
+  }
+});
+
+app.post('/api/customer/change-password', requireSameOrigin, requireCustomer, async (req, res) => {
+  const currentPassword = req.body?.currentPassword;
+  const newPassword = req.body?.newPassword;
+  if (typeof currentPassword !== 'string' || typeof newPassword !== 'string' ||
+      newPassword.length < 8 || Buffer.byteLength(newPassword, 'utf8') > 128) {
+    return badRequest(res, 'A nova senha deve ter entre 8 e 128 bytes.');
+  }
+
+  try {
+    const result = await pool.query('SELECT password_hash FROM customers WHERE id = $1', [req.customer.id]);
+    if (!result.rowCount || !await verifyPassword(currentPassword, result.rows[0].password_hash)) {
+      return res.status(401).json({ error: 'A senha atual está incorreta.' });
+    }
+    const passwordHash = await hashPassword(newPassword);
+    await pool.query(
+      'UPDATE customers SET password_hash = $1, updated_at = NOW() WHERE id = $2',
+      [passwordHash, req.customer.id]
+    );
+    res.json({ updated: true });
+  } catch (error) {
+    console.error('Falha ao alterar senha do cliente:', error.message);
+    res.status(500).json({ error: 'Não foi possível alterar sua senha.' });
+  }
+});
+
+app.post('/api/checkout', requireCustomer, async (req, res) => {
+  const order = calculateOrder(req.body, req.customer);
   if (order.error) return badRequest(res, order.error);
 
   const id = crypto.randomUUID();
@@ -423,6 +626,16 @@ async function start() {
     ALTER TABLE orders ADD COLUMN IF NOT EXISTS paid_at TIMESTAMPTZ;
     CREATE UNIQUE INDEX IF NOT EXISTS orders_pix_txid_idx ON orders (pix_txid) WHERE pix_txid IS NOT NULL;
     CREATE INDEX IF NOT EXISTS orders_created_at_idx ON orders (created_at DESC);
+    CREATE TABLE IF NOT EXISTS customers (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      phone TEXT NOT NULL DEFAULT '',
+      cpf TEXT NOT NULL DEFAULT '',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
   `);
   app.listen(port, () => console.log(`Urban Flow rodando em ${baseUrl}`));
 }

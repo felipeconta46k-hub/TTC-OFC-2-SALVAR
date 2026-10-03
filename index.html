@@ -567,7 +567,7 @@
             <label for="registerPassword">Senha</label>
             <div class="input-icon-wrap">
               <span class="input-icon">🔒</span>
-              <input type="password" id="registerPassword" placeholder="Mín. 6 caracteres" required autocomplete="new-password">
+              <input type="password" id="registerPassword" placeholder="Mín. 8 caracteres" required autocomplete="new-password" minlength="8" maxlength="128">
               <button type="button" class="toggle-pass" onclick="togglePass('registerPassword',this)" aria-label="Mostrar senha">👁️</button>
             </div>
           </div>
@@ -575,7 +575,7 @@
             <label for="registerConfirm">Confirmar Senha</label>
             <div class="input-icon-wrap">
               <span class="input-icon">🔒</span>
-              <input type="password" id="registerConfirm" placeholder="Repita a senha" required autocomplete="new-password">
+              <input type="password" id="registerConfirm" placeholder="Repita a senha" required autocomplete="new-password" minlength="8" maxlength="128">
             </div>
           </div>
           <button type="submit" class="btn-submit" id="btnRegister">

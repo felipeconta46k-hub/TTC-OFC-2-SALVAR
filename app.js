@@ -257,8 +257,10 @@ const HEART_EMPTY  = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none
 /* ─────────────────────────── ESTADO ─────────────────────────── */
 let cart           = JSON.parse(localStorage.getItem('uf_cart'))     || [];
 let wishlist       = JSON.parse(localStorage.getItem('uf_wishlist')) || [];
-let currentUser    = JSON.parse(localStorage.getItem('uf_user'))     || null;
-let authGateActive = !currentUser;
+localStorage.removeItem('uf_users');
+localStorage.removeItem('uf_user');
+let currentUser    = null;
+let authGateActive = true;
 let orders         = JSON.parse(localStorage.getItem('uf_orders'))   || [];
 let reviews        = JSON.parse(localStorage.getItem('uf_reviews'))  || {};
 let recentlyViewed = JSON.parse(localStorage.getItem('uf_recent'))   || [];
@@ -321,6 +323,7 @@ function init() {
   navigateTo(lastPage === 'videos' ? 'home' : lastPage);
   window.scrollTo({ top: 0, behavior: 'instant' });
   if (authGateActive) openModal();
+  restoreCustomerSession();
 }
 
 /* ═══ SKELETON ═══ */
@@ -2327,7 +2330,7 @@ function renderEditProfileForm() {
     </div>`;
 }
 
-function saveProfileEdits() { 
+async function saveProfileEdits() {
   const name = document.getElementById('editName')?.value.trim();
   const email = document.getElementById('editEmail')?.value.trim();
   const phone = document.getElementById('editPhone')?.value.trim();
@@ -2335,15 +2338,21 @@ function saveProfileEdits() {
   const msgEl = document.getElementById('editProfileMsg');
   if (!name || name.length < 2) { if (msgEl) { msgEl.innerHTML = '<div class="pf-error">Nome inválido</div>'; } return; }
   if (!email || !email.includes('@')) { if (msgEl) { msgEl.innerHTML = '<div class="pf-error">E-mail inválido</div>'; } return; }
-  // Update user data
-  const users = JSON.parse(localStorage.getItem('uf_users')) || [];
-  const userIdx = users.findIndex(u => u.email === currentUser.email);
-  currentUser = { ...currentUser, name, email, phone, cpf };
-  if (userIdx > -1) { users[userIdx] = { ...users[userIdx], name, email, phone, cpf }; localStorage.setItem('uf_users', JSON.stringify(users)); }
-  localStorage.setItem('uf_user', JSON.stringify(currentUser));
-  updateUserUI();
-  if (msgEl) msgEl.innerHTML = '<div class="pf-success">✓ Perfil atualizado!</div>';
-  setTimeout(() => renderProfile(), 1500);
+  try {
+    const response = await fetch('/api/customer/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone, cpf })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Não foi possível atualizar seu perfil.');
+    currentUser = data.customer;
+    updateUserUI();
+    if (msgEl) msgEl.innerHTML = '<div class="pf-success">✓ Perfil atualizado!</div>';
+    setTimeout(() => renderProfile(), 1500);
+  } catch (error) {
+    if (msgEl) msgEl.innerHTML = `<div class="pf-error">${error.message}</div>`;
+  }
 }
 
 function renderSecurityForm() {
@@ -2391,7 +2400,7 @@ function togglePassField(id, btn) {
   btn.textContent = input.type === 'password' ? '' : '🙈';
 }
 
-function changePassword() {
+async function changePassword() {
   const current = document.getElementById('currentPass')?.value;
   const newP = document.getElementById('newPass')?.value;
   const confirm = document.getElementById('confirmPass')?.value;
@@ -2399,15 +2408,21 @@ function changePassword() {
   const showErr = m => { if (msgEl) msgEl.innerHTML = `<div class="pf-error">${m}</div>`; };
   const showOk = m => { if (msgEl) msgEl.innerHTML = `<div class="pf-success">${m}</div>`; };
   if (!current) return showErr('⚠️ Digite sua senha atual');
-  if (!newP || newP.length < 6) return showErr('⚠️ Nova senha com mínimo 6 caracteres');
+  if (!newP || newP.length < 8) return showErr('⚠️ Nova senha com mínimo 8 caracteres');
   if (newP !== confirm) return showErr('⚠️ As senhas não coincidem');
-  const users = JSON.parse(localStorage.getItem('uf_users')) || [];
-  const userIdx = users.findIndex(u => u.email === currentUser.email);
-  if (userIdx === -1 || users[userIdx].password !== current) return showErr('⚠️ Senha atual incorreta');
-  users[userIdx].password = newP;
-  localStorage.setItem('uf_users', JSON.stringify(users));
-  showOk('✓ Senha alterada com sucesso!');
-  ['currentPass','newPass','confirmPass'].forEach(id => { const el = document.getElementById(id); if (el) el.value=''; });
+  try {
+    const response = await fetch('/api/customer/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword: current, newPassword: newP })
+    });
+    const data = response.status === 204 ? {} : await response.json();
+    if (!response.ok) throw new Error(data.error || 'Não foi possível alterar sua senha.');
+    showOk('✓ Senha alterada com sucesso!');
+    ['currentPass','newPass','confirmPass'].forEach(id => { const el = document.getElementById(id); if (el) el.value=''; });
+  } catch (error) {
+    showErr(`⚠️ ${error.message}`);
+  }
 }
 
 
@@ -2793,58 +2808,79 @@ function resetSubmitBtn(btnId, label) {
   if (text) { text.textContent = label; text.style.opacity = '1'; }
   if (spin) spin.style.display = 'none';
 }
-function handleLogin(e) {
+async function restoreCustomerSession() {
+  try {
+    const response = await fetch('/api/customer/session');
+    if (!response.ok) return;
+    const data = await response.json();
+    currentUser = data.customer;
+    authGateActive = false;
+    updateUserUI();
+    closeModal();
+  } catch (error) {
+    showNotification('Não foi possível verificar sua sessão. Confira sua conexão e entre novamente.', 'warn');
+  }
+}
+
+async function handleLogin(e) {
   e.preventDefault();
   setSubmitLoading('btnLogin', true);
-  setTimeout(() => {
+  const errorEl = document.getElementById('loginError');
+  errorEl.classList.remove('active');
+  try {
     const email = document.getElementById('loginEmail').value.trim();
     const pass  = document.getElementById('loginPassword').value;
-    const users = JSON.parse(localStorage.getItem('uf_users')) || [];
-    const user  = users.find(u => u.email === email && u.password === pass);
-    if (user) {
-      currentUser = { name: user.name, email: user.email };
-      localStorage.setItem('uf_user', JSON.stringify(currentUser));
-      authGateActive = false;
-      updateUserUI(); closeModal();
-      showNotification(`👋 Bem-vindo de volta, ${user.name}!`);
-    } else {
-      const el = document.getElementById('loginError');
-      el.innerHTML = '⚠️ Email ou senha incorretos'; el.classList.add('active');
-      setSubmitLoading('btnLogin', false);
-    }
-  }, 400);
+    const response = await fetch('/api/customer/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Não foi possível entrar na sua conta.');
+    currentUser = data.customer;
+    authGateActive = false;
+    updateUserUI();
+    closeModal();
+    showNotification(`👋 Bem-vindo de volta, ${currentUser.name}!`);
+  } catch (error) {
+    errorEl.textContent = `⚠️ ${error.message}`;
+    errorEl.classList.add('active');
+  } finally {
+    setSubmitLoading('btnLogin', false);
+  }
 }
-function handleRegister(e) {
+async function handleRegister(e) {
   e.preventDefault();
   setSubmitLoading('btnRegister', true);
-  setTimeout(() => {
-    const name  = document.getElementById('registerName').value.trim();
-    const email = document.getElementById('registerEmail').value.trim();
-    const pass  = document.getElementById('registerPassword').value;
-    const conf  = document.getElementById('registerConfirm').value;
-    const err   = document.getElementById('registerError');
-    const showErr = msg => { err.innerHTML = msg; err.classList.add('active'); setSubmitLoading('btnRegister', false); };
-    if (!name || !/^[a-zA-ZÀ-ÿ\s]+$/.test(name)) return showErr('⚠️ Nome deve conter apenas letras (sem números ou símbolos)');
-    const gmailRegex = /^[a-z0-9]([a-z0-9.]*[a-z0-9])?@gmail\.com$/;
-    if (!gmailRegex.test(email.toLowerCase()) || email.toLowerCase().includes('..')) return showErr('⚠️ Use um e-mail Gmail válido (letras, números e pontos, sem caracteres especiais)');
-    if (pass.length < 6) return showErr('⚠️ Senha com mínimo 6 caracteres');
-    if (pass !== conf)   return showErr('⚠️ As senhas não coincidem');
-    const users = JSON.parse(localStorage.getItem('uf_users')) || [];
-    if (users.find(u => u.email === email)) return showErr('⚠️ Email já cadastrado');
-    users.push({ name, email, password: pass });
-    localStorage.setItem('uf_users', JSON.stringify(users));
-    currentUser = { name, email };
-    localStorage.setItem('uf_user', JSON.stringify(currentUser));
+  const name = document.getElementById('registerName').value.trim();
+  const email = document.getElementById('registerEmail').value.trim();
+  const password = document.getElementById('registerPassword').value;
+  const confirmation = document.getElementById('registerConfirm').value;
+  const errorEl = document.getElementById('registerError');
+  errorEl.classList.remove('active');
+  try {
+    if (password.length < 8) throw new Error('A senha deve ter no mínimo 8 caracteres.');
+    if (password !== confirmation) throw new Error('As senhas não coincidem.');
+    const response = await fetch('/api/customer/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Não foi possível criar sua conta.');
+    currentUser = data.customer;
     authGateActive = false;
     updateUserUI(); closeModal();
     showNotification(`🎉 Conta criada! Bem-vindo, ${name}!`);
-  }, 500);
+  } catch (error) {
+    errorEl.textContent = `⚠️ ${error.message}`;
+    errorEl.classList.add('active');
+  } finally {
+    setSubmitLoading('btnRegister', false);
+  }
 }
 function handleLogout() {
-  currentUser = null; authGateActive = true; localStorage.removeItem('uf_user'); updateUserUI();
-  document.getElementById('userDropdown').classList.remove('active');
-  openModal();
-  showNotification('👋 Entre novamente para continuar');
+  logout();
 }
 
 /* ═══ USER UI ═══ */
@@ -3266,10 +3302,16 @@ function escapeAIHtml(str) {
   return d.innerHTML;
 }
 
-function logout() {
+async function logout() {
+  try {
+    const response = await fetch('/api/customer/logout', { method: 'POST' });
+    if (!response.ok) throw new Error('Não foi possível encerrar a sessão.');
+  } catch (error) {
+    showNotification(error.message, 'warn');
+    return;
+  }
   currentUser = null;
   authGateActive = true;
-  localStorage.removeItem('uf_user');
   updateUserUI();
   navigateTo('home');
   openModal();
