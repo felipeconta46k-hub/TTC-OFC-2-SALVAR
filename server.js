@@ -11,7 +11,7 @@ const products = require('./catalog');
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
-const baseUrl = (process.env.APP_BASE_URL || `http://localhost:${port}`).replace(/\/+$/, '');
+const baseUrl = (process.env.RENDER_EXTERNAL_URL || process.env.APP_BASE_URL || `http://localhost:${port}`).replace(/\/+$/, '');
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const orderIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const sellerCookieName = 'uf_seller_session';
